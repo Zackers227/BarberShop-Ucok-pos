@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2C3E50">
+    <meta name="description" content="Sistem POS Barbershop dengan printer thermal">
+    
+    <title>IniNotes POS - Barbershop</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/images/icon-192.png">
+    <link rel="apple-touch-icon" href="/images/icon-192.png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>💈 IniNotes POS</h1>
+                <p>Sistem Barbershop</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="screen">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <button id="menuBtn" class="btn-icon">☰</button>
+                <h1>IniNotes POS</h1>
+            </div>
+            <div class="header-right">
+                <span id="currentTime"></span>
+                <span id="userName"></span>
+                <button id="logoutBtn" class="btn btn-small">Logout</button>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar" class="sidebar">
+            <ul>
+                <li><a href="#" data-view="pos" class="active">🛒 Kasir</a></li>
+                <li><a href="#" data-view="transactions">📋 Transaksi</a></li>
+                <li><a href="#" data-view="customers">👥 Pelanggan</a></li>
+                <li><a href="#" data-view="services">✂️ Layanan</a></li>
+                <li><a href="#" data-view="products">📦 Produk</a></li>
+                <li><a href="#" data-view="kapsters">👨‍💼 Kapster</a></li>
+                <li><a href="#" data-view="reports">📊 Laporan</a></li>
+                <li><a href="#" data-view="shift">💰 Shift Kasir</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="mainContent" class="main-content">
+            <!-- POS View -->
+            <div id="posView" class="view active">
+                <div class="pos-container">
+                    <!-- Left: Item Selection -->
+                    <div class="pos-left">
+                        <div class="section-header">
+                            <h2>Pilih Layanan & Produk</h2>
+                            <div class="tabs">
+                                <button class="tab active" data-tab="services">Layanan</button>
+                                <button class="tab" data-tab="products">Produk</button>
+                            </div>
+                        </div>
+
+                        <!-- Services Tab -->
+                        <div id="servicesTab" class="tab-content active">
+                            <div id="servicesList" class="items-grid"></div>
+                        </div>
+
+                        <!-- Products Tab -->
+                        <div id="productsTab" class="tab-content">
+                            <div id="productsList" class="items-grid"></div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Cart & Payment -->
+                    <div class="pos-right">
+                        <div class="cart-section">
+                            <h3>Keranjang</h3>
+                            
+                            <!-- Customer & Kapster -->
+                            <div class="transaction-info">
+                                <div class="form-group">
+                                    <label>Pelanggan</label>
+                                    <select id="customerSelect">
+                                        <option value="">Walk-in</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Kapster</label>
+                                    <select id="kapsterSelect" required>
+                                        <option value="">Pilih Kapster</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Cart Items -->
+                            <div id="cartItems" class="cart-items"></div>
+
+                            <!-- Summary -->
+                            <div class="cart-summary">
+                                <div class="summary-row">
+                                    <span>Subtotal:</span>
+                                    <span id="subtotal">Rp 0</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Diskon:</span>
+                                    <span id="discount">Rp 0</span>
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total:</span>
+                                    <span id="total">Rp 0</span>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="cart-actions">
+                                <button id="applyDiscountBtn" class="btn btn-secondary">Diskon</button>
+                                <button id="clearCartBtn" class="btn btn-danger">Clear</button>
+                                <button id="paymentBtn" class="btn btn-primary btn-large">Bayar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Views (placeholder) -->
+            <div id="transactionsView" class="view">
+                <h2>Riwayat Transaksi</h2>
+                <div id="transactionsList"></div>
+            </div>
+
+            <div id="customersView" class="view">
+                <h2>Data Pelanggan</h2>
+                <button id="addCustomerBtn" class="btn btn-primary">Tambah Pelanggan</button>
+                <div id="customersList"></div>
+            </div>
+
+            <div id="servicesView" class="view">
+                <h2>Data Layanan</h2>
+                <button id="addServiceBtn" class="btn btn-primary">Tambah Layanan</button>
+                <div id="servicesDataList"></div>
+            </div>
+
+            <div id="productsView" class="view">
+                <h2>Data Produk</h2>
+                <button id="addProductBtn" class="btn btn-primary">Tambah Produk</button>
+                <div id="productsDataList"></div>
+            </div>
+
+            <div id="kapstersView" class="view">
+                <h2>Data Kapster</h2>
+                <button id="addKapsterBtn" class="btn btn-primary">Tambah Kapster</button>
+                <div id="kapstersList"></div>
+            </div>
+
+            <div id="reportsView" class="view">
+                <h2>Laporan</h2>
+                <div id="reportsContent"></div>
+            </div>
+
+            <div id="shiftView" class="view">
+                <h2>Shift Kasir</h2>
+                <div id="shiftContent"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Pembayaran</h2>
+            <div id="paymentForm"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/api.js"></script>
+    <script src="/js/cart.js"></script>
+    <script src="/js/printer.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/sw-register.js"></script>
+</body>
+</html>
