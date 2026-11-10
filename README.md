@@ -2,12 +2,14 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Node](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)
+![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
 **Sistem Point of Sale (POS) modern untuk barbershop dengan printer thermal 58mm**
+
+**🚀 Versi 2.0 - Rewritten dengan Next.js untuk deployment Vercel**
 
 [Fitur](#-fitur-utama) • [Quick Start](#-quick-start) • [Dokumentasi](#-dokumentasi) • [Demo](#-demo) • [Support](#-support)
 
@@ -23,10 +25,19 @@ IniNotes POS adalah sistem Point of Sale lengkap yang dirancang khusus untuk keb
 
 - ✅ **Gratis & Open Source** - Lisensi MIT, bebas digunakan komersial
 - ✅ **Mudah Digunakan** - Interface intuitif, training minimal
-- ✅ **Offline-First** - Tetap jalan tanpa internet
+- ✅ **Cloud-Based** - Deploy di Vercel, akses dari mana saja
 - ✅ **Tablet-Optimized** - Desain khusus untuk tablet Android
 - ✅ **Printer Thermal** - Support printer thermal 58mm via Bluetooth
-- ✅ **No Subscription** - Sekali install, pakai selamanya
+- ✅ **No Subscription** - Gratis selamanya di Vercel Free Tier
+
+### ⚡ Tech Stack (v2.0)
+
+- **Frontend**: Next.js 14 (React)
+- **Backend**: Next.js API Routes (Serverless)
+- **Database**: PostgreSQL (Supabase)
+- **Deployment**: Vercel
+- **Auth**: JWT Bearer Token
+- **PWA**: Installable di Android
 
 ---
 
