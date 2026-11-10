@@ -54,13 +54,6 @@ export default async function handler(req, res) {
     console.log('[LOGIN] Generating token...');
     const token = generateToken(user.id, user.username, user.role);
 
-    // Log activity
-    console.log('[LOGIN] Logging activity...');
-    await query(
-      'INSERT INTO activity_logs (user_id, action, description) VALUES ($1, $2, $3)',
-      [user.id, 'login', `User ${user.username} berhasil login`]
-    );
-
     console.log('[LOGIN] Login successful!');
 
     // Return user data tanpa password
