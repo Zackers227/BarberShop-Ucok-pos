@@ -1,0 +1,84 @@
+const { withAuth } = require('../../../lib/auth');
+const { query } = require('../../../lib/db');
+
+async function handler(req, res) {
+  try {
+    if (req.method === 'GET') {
+      // Get shifts with filters
+      const { user_id, date, status, limit = 50, offset = 0 } = req.query;
+
+      let sql = `
+        SELECT s.*, u.name as user_name
+        FROM shifts s
+        LEFT JOIN users u ON s.user_id = u.id
+        WHERE 1=1
+      `;
+      const params = [];
+      let paramIndex = 1;
+
+      if (user_id) {
+        sql += ` AND s.user_id = $${paramIndex}`;
+        params.push(user_id);
+        paramIndex++;
+      }
+
+      if (date) {
+        sql += ` AND DATE(s.opened_at) = $${paramIndex}`;
+        params.push(date);
+        paramIndex++;
+      }
+
+      if (status === 'open') {
+        sql += ` AND s.closed_at IS NULL`;
+      } else if (status === 'closed') {
+        sql += ` AND s.closed_at IS NOT NULL`;
+      }
+
+      sql += ` ORDER BY s.id DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
+      params.push(parseInt(limit), parseInt(offset));
+
+      const result = await query(sql, params);
+      return res.status(200).json(result.rows);
+    }
+
+    if (req.method === 'POST') {
+      // Open shift
+      const { opening_balance, notes } = req.body;
+
+      // Check if ada shift yang masih terbuka
+      const openShift = await query(
+        'SELECT id FROM shifts WHERE user_id = $1 AND closed_at IS NULL',
+        [req.user.id]
+      );
+
+      if (openShift.rows.length > 0) {
+        return res.status(400).json({ error: 'Anda masih memiliki shift yang belum ditutup' });
+      }
+
+      const result = await query(
+        `INSERT INTO shifts (user_id, opening_balance, notes)
+         VALUES ($1, $2, $3)
+         RETURNING *`,
+        [req.user.id, opening_balance || 0, notes || null]
+      );
+
+      // Log activity
+      await query(
+        'INSERT INTO activity_logs (user_id, action, description) VALUES ($1, $2, $3)',
+        [req.user.id, 'open_shift', `Shift dibuka dengan saldo awal Rp ${opening_balance || 0}`]
+      );
+
+      return res.status(201).json({
+        message: 'Shift berhasil dibuka',
+        data: result.rows[0]
+      });
+    }
+
+    return res.status(405).json({ error: 'Method not allowed' });
+  } catch (error) {
+    console.error('Shifts API error:', error);
+    return res.status(500).json({ error: 'Terjadi kesalahan server' });
+  }
+}
+
+export default withAuth(handler);
