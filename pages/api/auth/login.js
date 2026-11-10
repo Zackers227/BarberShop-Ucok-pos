@@ -54,13 +54,6 @@ export default async function handler(req, res) {
     console.log('[LOGIN] Generating token...');
     const token = generateToken(user.id, user.username, user.role);
 
-    // Update last login
-    console.log('[LOGIN] Updating last_login...');
-    await query(
-      'UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = $1',
-      [user.id]
-    );
-
     // Log activity
     console.log('[LOGIN] Logging activity...');
     await query(
@@ -76,7 +69,7 @@ export default async function handler(req, res) {
       user: {
         id: user.id,
         username: user.username,
-        name: user.name,
+        name: user.full_name,
         role: user.role,
         email: user.email
       }
