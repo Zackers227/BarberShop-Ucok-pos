@@ -44,7 +44,7 @@ async function handler(req, res) {
         // Update transaction status to completed
         await client.query(
           `UPDATE transactions 
-           SET status = 'completed', updated_at = CURRENT_TIMESTAMP
+           SET status = 'completed'
            WHERE id = $1`,
           [id]
         );
@@ -62,6 +62,30 @@ async function handler(req, res) {
               payment.notes || null
             ]
           );
+        }
+
+        // Get transaction details to update stock
+        const detailsResult = await client.query(
+          'SELECT * FROM transaction_details WHERE transaction_id = $1',
+          [id]
+        );
+
+        // Update stock for products (if any)
+        for (const detail of detailsResult.rows) {
+          if (detail.item_type === 'PRODUCT' || detail.item_type === 'product') {
+            // Deduct stock
+            await client.query(
+              'UPDATE products SET stock = stock - $1 WHERE id = $2',
+              [detail.quantity, detail.item_id]
+            );
+
+            // Record stock history
+            await client.query(
+              `INSERT INTO stock_history (product_id, type, quantity, notes, user_id)
+               VALUES ($1, 'out', $2, $3, $4)`,
+              [detail.item_id, detail.quantity, `Transaksi ${transaction.transaction_no}`, transaction.user_id]
+            );
+          }
         }
 
         // Update customer stats if exists
