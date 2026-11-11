@@ -60,7 +60,7 @@ async function handler(req, res) {
            COALESCE(SUM(td.subtotal), 0) as total_revenue
          FROM transaction_details td
          JOIN transactions t ON td.transaction_id = t.id
-         WHERE td.item_type = 'service' AND DATE(t.created_at) = $1 AND t.status = 'completed'
+         WHERE UPPER(td.item_type) = 'SERVICE' AND DATE(t.created_at) = $1 AND t.status = 'completed'
          GROUP BY td.item_name
          ORDER BY quantity_sold DESC
          LIMIT 10`,
@@ -75,7 +75,7 @@ async function handler(req, res) {
            COALESCE(SUM(td.subtotal), 0) as total_revenue
          FROM transaction_details td
          JOIN transactions t ON td.transaction_id = t.id
-         WHERE td.item_type = 'product' AND DATE(t.created_at) = $1 AND t.status = 'completed'
+         WHERE UPPER(td.item_type) = 'PRODUCT' AND DATE(t.created_at) = $1 AND t.status = 'completed'
          GROUP BY td.item_name
          ORDER BY quantity_sold DESC
          LIMIT 10`,
