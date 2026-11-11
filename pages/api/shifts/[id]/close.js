@@ -78,15 +78,19 @@ async function handler(req, res) {
              closing_balance = $1,
              expected_balance = $2,
              difference = $3,
-             notes = CASE WHEN $4 IS NOT NULL AND $4 != '' THEN COALESCE(notes || ' | ', '') || $4 ELSE notes END
+             notes = CASE 
+               WHEN $4 IS NOT NULL AND $4 != '' THEN 
+                 CASE WHEN notes IS NOT NULL THEN notes || ' | ' || $4 ELSE $4 END
+               ELSE notes 
+             END
          WHERE id = $5
          RETURNING *`,
         [
-          closingBalance,
-          expectedBalance,
-          difference,
-          notes || null,
-          id
+          closingBalance,    // $1 - DECIMAL
+          expectedBalance,   // $2 - DECIMAL
+          difference,        // $3 - DECIMAL
+          notes || null,     // $4 - TEXT
+          id                 // $5 - INTEGER
         ]
       );
 
