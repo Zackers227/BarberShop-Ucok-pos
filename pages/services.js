@@ -31,7 +31,7 @@ export default function Services() {
     }
 
     fetchServices(token);
-  }, [router]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchServices = async (token) => {
     try {

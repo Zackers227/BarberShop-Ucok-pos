@@ -33,7 +33,7 @@ export default function Products() {
     }
 
     fetchProducts(token);
-  }, [router]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchProducts = async (token) => {
     try {

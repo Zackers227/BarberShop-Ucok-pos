@@ -30,7 +30,7 @@ export default function Shifts() {
     }
 
     fetchShifts(token);
-  }, [router]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchShifts = async (token) => {
     try {

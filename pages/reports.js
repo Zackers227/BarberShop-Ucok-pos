@@ -25,7 +25,7 @@ export default function Reports() {
     }
 
     setLoading(false);
-  }, [router]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchReport = async () => {
     const token = localStorage.getItem('token');
@@ -58,7 +58,7 @@ export default function Reports() {
     if (!loading) {
       fetchReport();
     }
-  }, [reportType, selectedDate, selectedMonth, loading]);
+  }, [reportType, selectedDate, selectedMonth, loading]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const printReport = () => {
     window.print();

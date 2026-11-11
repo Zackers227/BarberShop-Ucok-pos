@@ -28,7 +28,7 @@ export default function Transactions() {
     }
 
     fetchTransactions(token);
-  }, [router]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchTransactions = async (token) => {
     try {

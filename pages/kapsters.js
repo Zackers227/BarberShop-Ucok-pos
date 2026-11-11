@@ -31,7 +31,7 @@ export default function Kapsters() {
     }
 
     fetchKapsters(token);
-  }, [router]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchKapsters = async (token) => {
     try {

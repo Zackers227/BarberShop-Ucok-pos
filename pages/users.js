@@ -39,7 +39,7 @@ export default function Users() {
     }
 
     fetchUsers(token);
-  }, [router]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchUsers = async (token) => {
     try {
