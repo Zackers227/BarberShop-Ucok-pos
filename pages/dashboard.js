@@ -93,6 +93,12 @@ export default function Dashboard() {
               <div className="action-desc">Buka/tutup shift kerja</div>
             </button>
 
+            <button className="action-card" onClick={() => router.push('/pending-transactions')}>
+              <div className="action-icon">⏸️</div>
+              <div className="action-title">Transaksi Pending</div>
+              <div className="action-desc">Belum dibayar</div>
+            </button>
+
             <button className="action-card" onClick={handleDailyReport}>
               <div className="action-icon">📊</div>
               <div className="action-title">Laporan Harian</div>

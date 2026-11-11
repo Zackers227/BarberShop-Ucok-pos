@@ -162,7 +162,7 @@ export default function Transaction() {
     return paid >= total ? paid - total : 0;
   };
 
-  const handleSubmitTransaction = async () => {
+  const handleSubmitTransaction = async (isPending = false) => {
     if (!selectedKapster) {
       alert('Pilih kapster terlebih dahulu!');
       return;
@@ -173,9 +173,12 @@ export default function Transaction() {
       return;
     }
 
-    if (paymentMethod === 'TUNAI' && parseFloat(paymentAmount) < calculateTotal()) {
-      alert('Jumlah pembayaran kurang!');
-      return;
+    // For completed transaction, validate payment
+    if (!isPending) {
+      if (paymentMethod === 'TUNAI' && parseFloat(paymentAmount) < calculateTotal()) {
+        alert('Jumlah pembayaran kurang!');
+        return;
+      }
     }
 
     setProcessing(true);
@@ -183,21 +186,22 @@ export default function Transaction() {
     try {
       const token = localStorage.getItem('token');
       
-      // Prepare payment data
+      // Prepare payment data (only for completed transactions)
       const paymentData = [];
-      if (paymentMethod === 'TUNAI') {
-        paymentData.push({
-          payment_method: 'TUNAI',
-          amount: parseFloat(paymentAmount) || calculateTotal(),
-          reference_no: null
-        });
-      } else {
-        // For non-cash, amount = total
-        paymentData.push({
-          payment_method: paymentMethod,
-          amount: calculateTotal(),
-          reference_no: null
-        });
+      if (!isPending) {
+        if (paymentMethod === 'TUNAI') {
+          paymentData.push({
+            payment_method: 'TUNAI',
+            amount: parseFloat(paymentAmount) || calculateTotal(),
+            reference_no: null
+          });
+        } else {
+          paymentData.push({
+            payment_method: paymentMethod,
+            amount: calculateTotal(),
+            reference_no: null
+          });
+        }
       }
 
       const response = await fetch('/api/transactions', {
@@ -219,13 +223,18 @@ export default function Transaction() {
           discount_id: selectedDiscount || null,
           discount_amount: calculateDiscount(),
           payments: paymentData,
-          notes: null
+          notes: null,
+          status: isPending ? 'pending' : 'completed'
         })
       });
 
       if (response.ok) {
         const result = await response.json();
-        alert(`Transaksi berhasil! No: ${result.transaction.transaction_no}`);
+        if (isPending) {
+          alert(`Transaksi pending berhasil disimpan!\nNo: ${result.transaction.transaction_no}\n\nProses pembayaran nanti di menu Transaksi Pending.`);
+        } else {
+          alert(`Transaksi berhasil! No: ${result.transaction.transaction_no}`);
+        }
         
         // Reset form
         setCart([]);
@@ -234,8 +243,12 @@ export default function Transaction() {
         setSelectedDiscount('');
         setPaymentAmount('');
         
-        // Redirect ke riwayat atau dashboard
-        router.push('/transactions');
+        // Redirect
+        if (isPending) {
+          router.push('/pending-transactions');
+        } else {
+          router.push('/transactions');
+        }
       } else {
         const error = await response.json();
         alert('Error: ' + error.error);
@@ -441,10 +454,20 @@ export default function Transaction() {
 
                 <button
                   className="btn btn-success btn-block btn-lg"
-                  onClick={handleSubmitTransaction}
+                  onClick={() => handleSubmitTransaction(false)}
                   disabled={processing || cart.length === 0}
+                  style={{ marginBottom: '10px' }}
                 >
                   {processing ? 'Memproses...' : '✅ Proses Transaksi'}
+                </button>
+
+                <button
+                  className="btn btn-warning btn-block btn-lg"
+                  onClick={() => handleSubmitTransaction(true)}
+                  disabled={processing || cart.length === 0}
+                  style={{ backgroundColor: '#ff9800', borderColor: '#ff9800' }}
+                >
+                  {processing ? 'Menyimpan...' : '⏸️ Simpan Pending (Bayar Nanti)'}
                 </button>
               </div>
             </div>

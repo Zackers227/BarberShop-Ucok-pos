@@ -79,7 +79,8 @@ async function handler(req, res) {
         discount_id,
         discount_amount,
         payments, // [{ payment_method, amount, reference_no }]
-        notes
+        notes,
+        status = 'completed' // 'pending' or 'completed'
       } = req.body;
 
       // Validasi
@@ -87,7 +88,8 @@ async function handler(req, res) {
         return res.status(400).json({ error: 'Item transaksi tidak boleh kosong' });
       }
 
-      if (!payments || payments.length === 0) {
+      // For completed transactions, payment is required
+      if (status === 'completed' && (!payments || payments.length === 0)) {
         return res.status(400).json({ error: 'Metode pembayaran harus dipilih' });
       }
 
@@ -95,10 +97,12 @@ async function handler(req, res) {
       const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       const total = subtotal - (discount_amount || 0);
 
-      // Validasi total pembayaran
-      const totalPayment = payments.reduce((sum, p) => sum + p.amount, 0);
-      if (totalPayment < total) {
-        return res.status(400).json({ error: 'Total pembayaran kurang dari total transaksi' });
+      // Validasi total pembayaran untuk completed transaction
+      if (status === 'completed' && payments && payments.length > 0) {
+        const totalPayment = payments.reduce((sum, p) => sum + p.amount, 0);
+        if (totalPayment < total) {
+          return res.status(400).json({ error: 'Total pembayaran kurang dari total transaksi' });
+        }
       }
 
       // Generate nomor transaksi
@@ -121,8 +125,8 @@ async function handler(req, res) {
         const transactionResult = await client.query(
           `INSERT INTO transactions (
             transaction_no, shift_id, customer_id, kapster_id, user_id,
-            subtotal, discount_id, discount_amount, total, notes
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            subtotal, discount_id, discount_amount, total, notes, status
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
           RETURNING *`,
           [
             transaction_no,
@@ -134,7 +138,8 @@ async function handler(req, res) {
             discount_id || null,
             discount_amount || 0,
             total,
-            notes || null
+            notes || null,
+            status
           ]
         );
 
@@ -173,23 +178,25 @@ async function handler(req, res) {
           }
         }
 
-        // Insert pembayaran
-        for (const payment of payments) {
-          await client.query(
-            `INSERT INTO payments (transaction_id, payment_method, amount, reference_no, notes)
-             VALUES ($1, $2, $3, $4, $5)`,
-            [
-              transaction_id,
-              payment.payment_method,
-              payment.amount,
-              payment.reference_no || null,
-              payment.notes || null
-            ]
-          );
+        // Insert pembayaran (only for completed transactions)
+        if (status === 'completed' && payments && payments.length > 0) {
+          for (const payment of payments) {
+            await client.query(
+              `INSERT INTO payments (transaction_id, payment_method, amount, reference_no, notes)
+               VALUES ($1, $2, $3, $4, $5)`,
+              [
+                transaction_id,
+                payment.payment_method,
+                payment.amount,
+                payment.reference_no || null,
+                payment.notes || null
+              ]
+            );
+          }
         }
 
-        // Update customer stats jika ada
-        if (customer_id) {
+        // Update customer stats (only for completed transactions)
+        if (customer_id && status === 'completed') {
           await client.query(
             `UPDATE customers 
              SET total_visits = total_visits + 1,
