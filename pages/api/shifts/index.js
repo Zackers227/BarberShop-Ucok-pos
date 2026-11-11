@@ -38,7 +38,29 @@ async function handler(req, res) {
       params.push(parseInt(limit), parseInt(offset));
 
       const result = await query(sql, params);
-      return res.status(200).json(result.rows);
+      
+      // Calculate real-time stats for each shift
+      const shiftsWithStats = await Promise.all(
+        result.rows.map(async (shift) => {
+          // Get transaction stats for this shift
+          const statsResult = await query(
+            `SELECT 
+               COUNT(*) as total_transactions,
+               COALESCE(SUM(total), 0) as total_sales
+             FROM transactions
+             WHERE shift_id = $1 AND status = 'completed'`,
+            [shift.id]
+          );
+          
+          return {
+            ...shift,
+            total_transactions: parseInt(statsResult.rows[0].total_transactions) || 0,
+            total_sales: parseFloat(statsResult.rows[0].total_sales) || 0
+          };
+        })
+      );
+      
+      return res.status(200).json(shiftsWithStats);
     }
 
     if (req.method === 'POST') {
