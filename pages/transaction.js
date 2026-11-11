@@ -25,7 +25,16 @@ export default function Transaction() {
   // Modal state
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [showProductModal, setShowProductModal] = useState(false);
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [processing, setProcessing] = useState(false);
+  
+  // Customer form
+  const [newCustomer, setNewCustomer] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    gender: ''
+  });
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -63,6 +72,42 @@ export default function Transaction() {
       setDiscounts(await discountsRes.json());
     } catch (error) {
       console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleAddCustomer = async () => {
+    if (!newCustomer.name || !newCustomer.phone) {
+      alert('Nama dan nomor HP harus diisi!');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('/api/customers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(newCustomer)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert('Customer berhasil ditambahkan!');
+        setShowCustomerModal(false);
+        setNewCustomer({ name: '', phone: '', email: '', gender: '' });
+        
+        // Refresh customer list and select the new one
+        await fetchData(token);
+        setSelectedCustomer(result.data.id);
+      } else {
+        const error = await response.json();
+        alert('Error: ' + error.error);
+      }
+    } catch (error) {
+      console.error('Error adding customer:', error);
+      alert('Terjadi kesalahan');
     }
   };
 
@@ -137,6 +182,24 @@ export default function Transaction() {
 
     try {
       const token = localStorage.getItem('token');
+      
+      // Prepare payment data
+      const paymentData = [];
+      if (paymentMethod === 'TUNAI') {
+        paymentData.push({
+          payment_method: 'TUNAI',
+          amount: parseFloat(paymentAmount) || calculateTotal(),
+          reference_no: null
+        });
+      } else {
+        // For non-cash, amount = total
+        paymentData.push({
+          payment_method: paymentMethod,
+          amount: calculateTotal(),
+          reference_no: null
+        });
+      }
+
       const response = await fetch('/api/transactions', {
         method: 'POST',
         headers: {
@@ -149,20 +212,20 @@ export default function Transaction() {
           items: cart.map(item => ({
             item_id: item.itemId,
             item_type: item.type,
+            item_name: item.name,
             quantity: item.quantity,
             price: item.price
           })),
           discount_id: selectedDiscount || null,
-          payment_method: paymentMethod,
-          subtotal: calculateSubtotal(),
           discount_amount: calculateDiscount(),
-          total: calculateTotal()
+          payments: paymentData,
+          notes: null
         })
       });
 
       if (response.ok) {
         const result = await response.json();
-        alert(`Transaksi berhasil! ID: ${result.id}`);
+        alert(`Transaksi berhasil! No: ${result.transaction.transaction_no}`);
         
         // Reset form
         setCart([]);
@@ -221,14 +284,28 @@ export default function Transaction() {
                 
                 <div className="form-group">
                   <label>Customer (Opsional)</label>
-                  <select value={selectedCustomer} onChange={(e) => setSelectedCustomer(e.target.value)}>
-                    <option value="">-- Walk-in Customer --</option>
-                    {customers.map(c => (
-                      <option key={c.id} value={c.id}>
-                        {c.name} - {c.phone}
-                      </option>
-                    ))}
-                  </select>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <select 
+                      value={selectedCustomer} 
+                      onChange={(e) => setSelectedCustomer(e.target.value)}
+                      style={{ flex: 1 }}
+                    >
+                      <option value="">-- Walk-in Customer --</option>
+                      {customers.map(c => (
+                        <option key={c.id} value={c.id}>
+                          {c.name} - {c.phone}
+                        </option>
+                      ))}
+                    </select>
+                    <button 
+                      type="button"
+                      className="btn btn-primary" 
+                      onClick={() => setShowCustomerModal(true)}
+                      style={{ whiteSpace: 'nowrap' }}
+                    >
+                      ➕ Baru
+                    </button>
+                  </div>
                 </div>
 
                 <div className="form-group">
@@ -416,6 +493,63 @@ export default function Transaction() {
               <button className="btn btn-secondary btn-block" onClick={() => setShowProductModal(false)}>
                 Tutup
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Customer Baru */}
+        {showCustomerModal && (
+          <div className="modal-overlay" onClick={() => setShowCustomerModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <h3>👤 Tambah Customer Baru</h3>
+              <div className="form-group">
+                <label>Nama Lengkap *</label>
+                <input
+                  type="text"
+                  value={newCustomer.name}
+                  onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+                  placeholder="Nama customer"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Nomor HP *</label>
+                <input
+                  type="tel"
+                  value={newCustomer.phone}
+                  onChange={(e) => setNewCustomer({ ...newCustomer, phone: e.target.value })}
+                  placeholder="08xx-xxxx-xxxx"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Email (Opsional)</label>
+                <input
+                  type="email"
+                  value={newCustomer.email}
+                  onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                  placeholder="email@example.com"
+                />
+              </div>
+              <div className="form-group">
+                <label>Jenis Kelamin</label>
+                <select
+                  value={newCustomer.gender}
+                  onChange={(e) => setNewCustomer({ ...newCustomer, gender: e.target.value })}
+                >
+                  <option value="">-- Pilih --</option>
+                  <option value="LAKI-LAKI">Laki-laki</option>
+                  <option value="PEREMPUAN">Perempuan</option>
+                </select>
+              </div>
+              <div className="button-group">
+                <button className="btn btn-secondary" onClick={() => setShowCustomerModal(false)}>
+                  Batal
+                </button>
+                <button className="btn btn-primary" onClick={handleAddCustomer}>
+                  Simpan
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -140,6 +140,12 @@ export default function Dashboard() {
                   <div className="action-desc">Tambah/edit kasir</div>
                 </button>
 
+                <button className="action-card" onClick={() => router.push('/customers')}>
+                  <div className="action-icon">🧑‍🤝‍🧑</div>
+                  <div className="action-title">Kelola Customer</div>
+                  <div className="action-desc">Database pelanggan</div>
+                </button>
+
                 <button className="action-card" onClick={() => router.push('/kapsters')}>
                   <div className="action-icon">💈</div>
                   <div className="action-title">Kelola Kapster</div>
