@@ -97,12 +97,6 @@ export default function Login() {
               </div>
             )}
           </form>
-
-          <div className="login-info">
-            <p>Default Login:</p>
-            <p><strong>Admin:</strong> admin / admin123</p>
-            <p><strong>Kasir:</strong> kasir1 / kasir123</p>
-          </div>
         </div>
       </div>
     </>
