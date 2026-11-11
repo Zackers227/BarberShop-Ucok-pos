@@ -7,16 +7,21 @@ async function handler(req, res) {
   try {
     if (req.method === 'POST') {
       const { closing_balance, ending_cash, notes } = req.body;
+      
+      console.log('Close shift request:', { id, body: req.body });
+      
       const actualClosingBalance = ending_cash || closing_balance || 0; // Support both field names
 
       // Get shift
       const shiftResult = await query('SELECT * FROM shifts WHERE id = $1', [id]);
 
       if (shiftResult.rows.length === 0) {
+        console.error('Shift not found:', id);
         return res.status(404).json({ error: 'Shift tidak ditemukan' });
       }
 
       const shift = shiftResult.rows[0];
+      console.log('Shift found:', { shift_id: shift.id, user_id: shift.user_id, closed_at: shift.closed_at });
 
       if (shift.closed_at) {
         return res.status(400).json({ error: 'Shift sudah ditutup' });
@@ -27,6 +32,7 @@ async function handler(req, res) {
       }
 
       // Get total transaksi dalam shift
+      console.log('Calculating shift stats for shift_id:', id);
       const statsResult = await query(
         `SELECT 
            COUNT(*) as total_transactions,
@@ -38,8 +44,17 @@ async function handler(req, res) {
       );
 
       const stats = statsResult.rows[0];
+      console.log('Shift stats:', stats);
+      
       const expectedBalance = parseFloat(shift.opening_balance || 0) + parseFloat(stats.total_sales || 0);
       const difference = parseFloat(actualClosingBalance) - expectedBalance;
+      
+      console.log('Balances:', {
+        opening: shift.opening_balance,
+        closing: actualClosingBalance,
+        expected: expectedBalance,
+        difference: difference
+      });
 
       // Update shift
       const result = await query(
@@ -60,7 +75,7 @@ async function handler(req, res) {
         ]
       );
 
-      // Activity log removed - table schema mismatch
+      console.log('Shift closed successfully:', result.rows[0].id);
 
       return res.status(200).json({
         message: 'Shift berhasil ditutup',
@@ -71,7 +86,15 @@ async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
     console.error('Close shift error:', error);
-    return res.status(500).json({ error: 'Terjadi kesalahan server' });
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      code: error.code
+    });
+    return res.status(500).json({ 
+      error: 'Terjadi kesalahan server',
+      details: error.message 
+    });
   }
 }
 
