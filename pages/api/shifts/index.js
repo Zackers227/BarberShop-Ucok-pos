@@ -43,7 +43,8 @@ async function handler(req, res) {
 
     if (req.method === 'POST') {
       // Open shift
-      const { opening_balance, notes } = req.body;
+      const { starting_cash, opening_balance, notes } = req.body;
+      const initialCash = starting_cash || opening_balance || 0; // Support both field names
 
       // Check if ada shift yang masih terbuka
       const openShift = await query(
@@ -59,7 +60,7 @@ async function handler(req, res) {
         `INSERT INTO shifts (user_id, opening_balance, notes)
          VALUES ($1, $2, $3)
          RETURNING *`,
-        [req.user.id, opening_balance || 0, notes || null]
+        [req.user.id, initialCash, notes || null]
       );
 
       // Activity log removed - table schema mismatch
