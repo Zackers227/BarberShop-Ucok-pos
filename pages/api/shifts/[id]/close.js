@@ -71,26 +71,24 @@ async function handler(req, res) {
         difference: difference
       });
 
-      // Update shift
+      // Update shift - simplified query without complex CASE for notes
+      const updateNotes = notes ? (shift.notes ? `${shift.notes} | ${notes}` : notes) : shift.notes;
+      
       const result = await query(
         `UPDATE shifts
          SET closed_at = CURRENT_TIMESTAMP,
              closing_balance = $1,
              expected_balance = $2,
              difference = $3,
-             notes = CASE 
-               WHEN $4 IS NOT NULL AND $4 != '' THEN 
-                 CASE WHEN notes IS NOT NULL THEN notes || ' | ' || $4 ELSE $4 END
-               ELSE notes 
-             END
+             notes = $4
          WHERE id = $5
          RETURNING *`,
         [
-          closingBalance,    // $1 - DECIMAL
-          expectedBalance,   // $2 - DECIMAL
-          difference,        // $3 - DECIMAL
-          notes || null,     // $4 - TEXT
-          id                 // $5 - INTEGER
+          closingBalance,
+          expectedBalance,
+          difference,
+          updateNotes,
+          id
         ]
       );
 
