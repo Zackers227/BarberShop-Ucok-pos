@@ -8,7 +8,7 @@ async function handler(req, res) {
       const { user_id, date, status, limit = 50, offset = 0 } = req.query;
 
       let sql = `
-        SELECT s.*, u.name as user_name
+        SELECT s.*, u.full_name as cashier_name
         FROM shifts s
         LEFT JOIN users u ON s.user_id = u.id
         WHERE 1=1

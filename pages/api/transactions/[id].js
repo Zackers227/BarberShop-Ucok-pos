@@ -11,7 +11,7 @@ async function handler(req, res) {
         `SELECT t.*, 
                 c.name as customer_name, c.phone as customer_phone,
                 k.name as kapster_name,
-                u.name as cashier_name,
+                u.full_name as cashier_name,
                 d.name as discount_name
          FROM transactions t
          LEFT JOIN customers c ON t.customer_id = c.id

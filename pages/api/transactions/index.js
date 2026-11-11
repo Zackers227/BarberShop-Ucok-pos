@@ -35,7 +35,7 @@ async function handler(req, res) {
         SELECT t.*, 
                c.name as customer_name,
                k.name as kapster_name,
-               u.name as cashier_name
+               u.full_name as cashier_name
         FROM transactions t
         LEFT JOIN customers c ON t.customer_id = c.id
         LEFT JOIN kapsters k ON t.kapster_id = k.id
@@ -215,7 +215,7 @@ async function handler(req, res) {
           `SELECT t.*, 
                   c.name as customer_name,
                   k.name as kapster_name,
-                  u.name as cashier_name
+                  u.full_name as cashier_name
            FROM transactions t
            LEFT JOIN customers c ON t.customer_id = c.id
            LEFT JOIN kapsters k ON t.kapster_id = k.id
