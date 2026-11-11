@@ -96,13 +96,21 @@ export default function Shifts() {
   };
 
   const handleCloseShift = async () => {
-    if (!formData.ending_cash) {
-      alert('Masukkan saldo akhir!');
+    if (!formData.ending_cash || formData.ending_cash === '' || parseFloat(formData.ending_cash) < 0) {
+      alert('Masukkan saldo akhir yang valid!');
       return;
     }
 
     try {
       const token = localStorage.getItem('token');
+      const endingCashValue = parseFloat(formData.ending_cash);
+      
+      console.log('Closing shift with data:', {
+        shift_id: currentShift.id,
+        ending_cash: endingCashValue,
+        notes: formData.notes
+      });
+
       const response = await fetch(`/api/shifts/${currentShift.id}/close`, {
         method: 'POST',
         headers: {
@@ -110,10 +118,13 @@ export default function Shifts() {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          ending_cash: parseFloat(formData.ending_cash),
-          notes: formData.notes
+          ending_cash: endingCashValue,
+          notes: formData.notes || ''
         })
       });
+
+      const responseData = await response.json();
+      console.log('Close shift response:', responseData);
 
       if (response.ok) {
         alert('Shift berhasil ditutup!');
@@ -121,12 +132,13 @@ export default function Shifts() {
         setFormData({ starting_cash: '', ending_cash: '', notes: '' });
         fetchShifts(token);
       } else {
-        const error = await response.json();
-        alert('Error: ' + error.error);
+        console.error('Close shift error:', responseData);
+        alert('Error: ' + (responseData.error || 'Terjadi kesalahan') + 
+              (responseData.details ? '\n\nDetail: ' + responseData.details : ''));
       }
     } catch (error) {
       console.error('Error closing shift:', error);
-      alert('Terjadi kesalahan');
+      alert('Terjadi kesalahan koneksi: ' + error.message);
     }
   };
 
@@ -330,6 +342,19 @@ export default function Shifts() {
                   value={formData.ending_cash}
                   onChange={(e) => setFormData({ ...formData, ending_cash: e.target.value })}
                   placeholder="0"
+                  required
+                  min="0"
+                  step="1000"
+                  style={{ 
+                    cursor: 'text',
+                    pointerEvents: 'auto',
+                    userSelect: 'text',
+                    WebkitUserSelect: 'text',
+                    MozUserSelect: 'text',
+                    msUserSelect: 'text'
+                  }}
+                  autoComplete="off"
+                  inputMode="numeric"
                 />
               </div>
               {formData.ending_cash && (

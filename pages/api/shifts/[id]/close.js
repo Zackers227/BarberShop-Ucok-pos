@@ -46,12 +46,27 @@ async function handler(req, res) {
       const stats = statsResult.rows[0];
       console.log('Shift stats:', stats);
       
-      const expectedBalance = parseFloat(shift.opening_balance || 0) + parseFloat(stats.total_sales || 0);
-      const difference = parseFloat(actualClosingBalance) - expectedBalance;
+      // Safeguard: ensure all values are valid numbers
+      const openingBalance = parseFloat(shift.opening_balance) || 0;
+      const totalSales = parseFloat(stats.total_sales) || 0;
+      const closingBalance = parseFloat(actualClosingBalance);
+      
+      // Validate closing balance is a valid number
+      if (isNaN(closingBalance) || closingBalance < 0) {
+        console.error('Invalid closing balance:', actualClosingBalance);
+        return res.status(400).json({ 
+          error: 'Saldo akhir tidak valid',
+          details: `Nilai yang diterima: ${actualClosingBalance}`
+        });
+      }
+      
+      const expectedBalance = openingBalance + totalSales;
+      const difference = closingBalance - expectedBalance;
       
       console.log('Balances:', {
-        opening: shift.opening_balance,
-        closing: actualClosingBalance,
+        opening: openingBalance,
+        closing: closingBalance,
+        total_sales: totalSales,
         expected: expectedBalance,
         difference: difference
       });
@@ -63,14 +78,14 @@ async function handler(req, res) {
              closing_balance = $1,
              expected_balance = $2,
              difference = $3,
-             notes = CASE WHEN $4 IS NOT NULL THEN COALESCE(notes || ' | ', '') || $4 ELSE notes END
+             notes = CASE WHEN $4 IS NOT NULL AND $4 != '' THEN COALESCE(notes || ' | ', '') || $4 ELSE notes END
          WHERE id = $5
          RETURNING *`,
         [
-          actualClosingBalance,
+          closingBalance,
           expectedBalance,
           difference,
-          notes,
+          notes || null,
           id
         ]
       );
