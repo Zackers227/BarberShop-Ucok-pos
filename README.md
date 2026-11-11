@@ -1,483 +1,319 @@
-# 💈 IniNotes POS - Sistem Barbershop
+# 💈 Barbershop Ucok POS
 
-<div align="center">
+Sistem Point of Sale (POS) modern untuk barbershop dengan fitur lengkap manajemen transaksi, laporan, dan administrasi.
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+## 🚀 Demo Live
 
-**Sistem Point of Sale (POS) modern untuk barbershop dengan printer thermal 58mm**
+**Production URL:** https://barber-shop-ucok-pos.vercel.app
 
-**🚀 Versi 2.0 - Rewritten dengan Next.js untuk deployment Vercel**
-
-[Fitur](#-fitur-utama) • [Quick Start](#-quick-start) • [Dokumentasi](#-dokumentasi) • [Demo](#-demo) • [Support](#-support)
-
-</div>
-
----
-
-## 📖 Tentang Project
-
-IniNotes POS adalah sistem Point of Sale lengkap yang dirancang khusus untuk kebutuhan barbershop modern. Dibangun sebagai Progressive Web App (PWA) yang dapat diakses dari tablet Android, sistem ini mendukung printer thermal 58mm untuk mencetak struk transaksi.
-
-### 🎯 Kenapa IniNotes POS?
-
-- ✅ **Gratis & Open Source** - Lisensi MIT, bebas digunakan komersial
-- ✅ **Mudah Digunakan** - Interface intuitif, training minimal
-- ✅ **Cloud-Based** - Deploy di Vercel, akses dari mana saja
-- ✅ **Tablet-Optimized** - Desain khusus untuk tablet Android
-- ✅ **Printer Thermal** - Support printer thermal 58mm via Bluetooth
-- ✅ **No Subscription** - Gratis selamanya di Vercel Free Tier
-
-### ⚡ Tech Stack (v2.0)
-
-- **Frontend**: Next.js 14 (React)
-- **Backend**: Next.js API Routes (Serverless)
-- **Database**: PostgreSQL (Supabase)
-- **Deployment**: Vercel
-- **Auth**: JWT Bearer Token
-- **PWA**: Installable di Android
-
----
-
-## ⚡ Quick Start
-
-```bash
-# 1. Install dependencies
-npm install
-
-# 2. Setup database
-npm run migrate && npm run seed
-
-# 3. Jalankan server
-npm start
-
-# 4. Buka browser
-# http://localhost:3001  ← PORT 3001
-# Login: admin / admin123
-```
-
-📱 **Untuk tablet:** Akses `http://[IP-SERVER]:3001` dari browser Chrome
-
-🌐 **Untuk online:** Baca [DEPLOY_ONLINE.md](DEPLOY_ONLINE.md) atau [SOLUSI_PORT_DAN_ONLINE.md](SOLUSI_PORT_DAN_ONLINE.md)
-
-📚 **Butuh panduan lengkap?** Baca [QUICKSTART.md](QUICKSTART.md)
-
----
+### Login Credentials
+- **Owner:** `admin` / `admin123`
+- **Kasir:** `kasir1` / `kasir123`
 
 ## ✨ Fitur Utama
 
-### Master Data
-- **Layanan**: Potong rambut, cukur, creambath, dll (nama, harga, durasi)
-- **Produk**: Pomade, shampoo, dll (stok, harga beli/jual)
-- **Kapster**: Data kapster dengan persentase komisi
-- **Pelanggan**: Database pelanggan dengan riwayat kunjungan
-- **Pengguna**: Manajemen kasir dengan hak akses
+### 🛒 Transaksi
+- Form transaksi lengkap dengan keranjang belanja
+- Pilih customer (walk-in atau registered)
+- Pilih kapster
+- Tambah layanan (haircut, styling, dll)
+- Tambah produk (pomade, shampoo, dll)
+- Terapkan diskon (percentage atau fixed amount)
+- Multiple payment methods: Tunai, QRIS, Transfer, Debit
+- Hitung otomatis subtotal, diskon, total, dan kembalian
+- Void transaksi (batalkan)
 
-### Transaksi
-- Keranjang multi-item (layanan + produk)
-- Diskon (nominal/persen), promo, voucher member
-- Split payment (tunai + QRIS/transfer)
-- Antrian/booking (opsional)
-- Void/refund dengan otorisasi owner
+### 📊 Manajemen Shift
+- Buka shift dengan modal awal
+- Track transaksi per shift
+- Tutup shift dengan perhitungan kas
+- Deteksi selisih kas (lebih/kurang)
+- Riwayat shift lengkap
 
-### Pembayaran
-- **Tunai**: Input uang diterima, hitung kembalian otomatis
-- **QRIS**: Statis (konfirmasi manual) atau dinamis (Midtrans/Xendit)
-- **Transfer/Debit**: Catat nomor referensi
+### 📈 Laporan
+- **Laporan Harian:** Total pendapatan, transaksi, customer
+- **Laporan Bulanan:** Analisis bulanan lengkap
+- Breakdown per metode pembayaran
+- Top 5 layanan terlaris
+- Top 5 produk terlaris
+- Performa per kapster
+- Export/print laporan
 
-### Laporan
-- Penjualan harian/bulanan
-- Pendapatan per kapster + komisi
-- Layanan terlaris
-- Stok menipis (alert otomatis)
-- Rekap per metode bayar
-- Laporan kas (buka/tutup shift, selisih kas)
+### 👥 Kelola Member (Owner Only)
+- Tambah/edit/hapus user/kasir
+- Role management (Owner/Kasir)
+- Active/inactive status
+- Reset password
 
-### Cetak Struk 58mm
-Format struk thermal optimized untuk lebar 58mm (~32 karakter):
-- Logo/nama barbershop, alamat, telepon
-- No. transaksi unik (BB-YYYYMMDD-XXX)
-- Tanggal-jam, nama kasir, nama kapster
-- Daftar item lengkap (qty, harga)
-- Subtotal, diskon, total
-- Metode bayar, tunai, kembalian
-- Ucapan terima kasih + info promo
-- Cetak ulang struk (tandai "COPY")
+### 💈 Kelola Kapster
+- Tambah/edit/hapus kapster
+- Set komisi per kapster
+- Track performa kapster
 
-## Teknologi
+### ✂️ Kelola Layanan
+- Tambah/edit/hapus layanan
+- Set harga dan durasi
+- Deskripsi layanan
 
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | HTML5, CSS3, Vanilla JavaScript |
-| **Backend** | Node.js, Express.js |
-| **Database** | SQLite (dev), PostgreSQL (prod) |
-| **Auth** | JWT (JSON Web Token) |
-| **PWA** | Service Worker, IndexedDB |
-| **Printer** | ESC/POS, Web Bluetooth API |
+### 🧴 Kelola Produk
+- Tambah/edit/hapus produk
+- Manajemen stok
+- Alert stok rendah
+- Harga jual dan modal
 
-### Key Dependencies
-```json
-{
-  "express": "Web server framework",
-  "sqlite3": "Database engine",
-  "jsonwebtoken": "Authentication",
-  "bcryptjs": "Password hashing",
-  "cors": "Cross-origin support"
-}
-```
+### 👤 Kelola Customer
+- Database customer
+- Track riwayat kunjungan
+- Program loyalty (coming soon)
 
----
+## 🛠️ Tech Stack
 
-## 📁 Struktur Project
+- **Frontend:** Next.js 14, React
+- **Backend:** Next.js API Routes (Serverless)
+- **Database:** PostgreSQL (Supabase)
+- **Deployment:** Vercel
+- **Authentication:** JWT
+- **Styling:** Custom CSS
 
-```
-ininotes-pos/
-├── client/          # Frontend (PWA)
-│   ├── css/         # Styles
-│   ├── js/          # JavaScript
-│   └── images/      # Assets
-├── server/          # Backend API
-│   ├── controllers/ # Business logic
-│   ├── routes/      # API endpoints
-│   └── middleware/  # Auth & validation
-├── database/        # Database & migrations
-├── scripts/         # Utility scripts
-└── docs/            # Documentation
-```
+## 📦 Installation
 
----
+### Prerequisites
+- Node.js 18+
+- npm atau yarn
+- PostgreSQL database (Supabase recommended)
 
-## 📚 Dokumentasi
+### Setup Lokal
 
-| Dokumen | Deskripsi |
-|---------|-----------|
-| [QUICKSTART.md](QUICKSTART.md) | Setup dalam 5 menit |
-| [INSTALL.md](INSTALL.md) | Panduan instalasi lengkap |
-| [USAGE.md](USAGE.md) | Manual pengguna |
-| [API.md](API.md) | API documentation |
-| [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) | Project overview |
-
----
-
-## 🎯 Demo & Testing
-
-### Login Credentials (Setelah Seed)
-
-| Role | Username | Password |
-|------|----------|----------|
-| Owner | `admin` | `admin123` |
-| Kasir | `kasir1` | `kasir123` |
-
-### Sample Data
-- ✅ 6 Layanan (Potong, Cukur, Creambath, dll)
-- ✅ 6 Produk (Pomade, Shampoo, dll)
-- ✅ 3 Kapster dengan komisi
-- ✅ 3 Diskon/Promo aktif
-
-### Test Scenario
-```
-1. Login sebagai admin
-2. Buka shift (modal Rp 500.000)
-3. Buat transaksi:
-   - Pilih kapster: Budi Santoso
-   - Layanan: Potong Rambut (Rp 35.000)
-   - Produk: Pomade (Rp 65.000)
-   - Diskon: MEMBER10 (10%)
-   - Total: Rp 90.000
-   - Bayar tunai: Rp 100.000
-4. Cetak struk
-5. Lihat laporan dashboard
-6. Tutup shift
-```
-
----
-
-## 🔧 Utility Commands
-
+1. **Clone repository**
 ```bash
-# Database
-npm run migrate          # Create tables
-npm run seed             # Insert sample data
-npm run backup           # Backup database
-
-# User Management  
-npm run create-admin     # Create new admin
-npm run reset-password   # Reset user password
-
-# Development
-npm run dev              # Dev mode with auto-reload
-npm start                # Production mode
+git clone https://github.com/Zackers227/BarberShop-Ucok-pos.git
+cd BarberShop-Ucok-pos
 ```
 
----
-
-## 🚀 Deployment
-
-### Local Network (Recommended)
-1. Windows PC sebagai server
-2. Tablet Android sebagai client
-3. WiFi lokal yang sama
-
-### Cloud Deployment
-- Deploy ke: AWS EC2, DigitalOcean, Heroku
-- Database: PostgreSQL
-- Domain: Beli domain + SSL cert
-- Monitoring: PM2, New Relic
-
----
-
-## 🛡️ Security
-
-### Frontend
-- **HTML5 + CSS3 + Vanilla JavaScript**
-- Responsive design untuk tablet Android
-- Offline-first dengan Service Worker & IndexedDB
-- WebUSB/Bluetooth untuk printer thermal
-- Progressive Web App (PWA) - bisa di-install di tablet
-
-### Backend
-- **Node.js + Express**
-- Database: SQLite (development) / PostgreSQL (production)
-- API RESTful
-- Autentikasi JWT
-
-### Printer
-- ESC/POS protocol
-- Koneksi USB/Bluetooth
-- Library: escpos-js / WebUSB API
-- Fallback: CSS print @page width 58mm
-
-## Struktur Database
-
-- `users` - Data pengguna/kasir
-- `kapsters` - Data kapster + komisi
-- `services` - Master layanan
-- `products` - Master produk + stok
-- `customers` - Data pelanggan
-- `transactions` - Header transaksi
-- `transaction_details` - Detail item transaksi
-- `payments` - Detail pembayaran (multi payment)
-- `shifts` - Shift kasir (buka/tutup)
-- `discounts` - Master diskon/promo
-
-## Alur Penggunaan
-
-1. **Buka Kasir** → Login → Buka shift (catat modal awal)
-2. **Pelanggan Datang** → Daftarkan/pilih pelanggan (atau walk-in)
-3. **Pilih Layanan** → Tambahkan ke keranjang
-4. **Pilih Produk** → Tambahkan ke keranjang (opsional)
-5. **Pilih Kapster** → Yang mengerjakan layanan
-6. **Hitung Total** → Terapkan diskon/voucher jika ada
-7. **Bayar** → Pilih metode (tunai/QRIS/transfer/debit)
-8. **Cetak Struk** → Otomatis setelah pembayaran
-9. **Tutup Kasir** → Rekap harian, hitung selisih kas
-
-## Instalasi & Setup
-
+2. **Install dependencies**
 ```bash
-# Clone repository
-git clone [repo-url]
-cd ininotes
-
-# Install dependencies
 npm install
-
-# Setup database
-npm run migrate
-
-# Seed data (opsional)
-npm run seed
-
-# Development
-npm run dev
-
-# Production
-npm start
 ```
 
-## Akses dari Tablet Android
-
-1. Pastikan tablet dan server dalam 1 jaringan WiFi
-2. Akses via browser: `http://[IP-SERVER]:3000`
-3. Install sebagai PWA: Menu → "Add to Home Screen"
-4. Hubungkan printer thermal via Bluetooth
-
-## Konfigurasi Printer
-
-1. Buka Pengaturan → Printer
-2. Scan perangkat Bluetooth
-3. Pair dengan printer thermal 58mm
-4. Test print untuk verifikasi
-5. Simpan pengaturan
-
-## Offline Mode
-
-Sistem tetap berjalan tanpa internet:
-- Transaksi tersimpan lokal (IndexedDB)
-- Sync otomatis saat online kembali
-- Queue printer jika koneksi terputus
-
-## Backup & Keamanan
-
-### Security Features
-- ✅ JWT authentication dengan expiry
-- ✅ Password hashing (bcrypt)
-- ✅ Role-based access control
-- ✅ SQL injection protection
-- ✅ XSS protection (helmet)
-- ✅ Activity logging
-- ✅ Secure session management
-
-### Backup Strategy
+3. **Setup environment variables**
 ```bash
-# Manual backup
-npm run backup
-
-# Scheduled backup (Windows Task Scheduler)
-# Run daily at 23:00
+cp .env.example .env
 ```
 
-**Backup location:** `backup/pos_backup_YYYYMMDD_HHMMSS.db`
+Edit `.env`:
+```env
+DATABASE_URL=postgresql://user:password@host:port/database
+JWT_SECRET=your-secret-key-here
+```
 
----
+4. **Setup database**
+```bash
+# Jalankan schema PostgreSQL
+node database/migrate-pg.js
 
-## 📊 Performance
+# Atau manual import
+psql -h host -U user -d database -f database/schema-pg.sql
+```
 
-- ⚡ Initial load: < 2 detik
-- ⚡ Transaction: < 500ms
-- ⚡ Print receipt: < 1 detik
-- ⚡ Offline sync: < 5 detik
+5. **Seed data (optional)**
+```bash
+node database/seed.js
+```
 
-### Optimization
-- Database indexes
-- Response compression
-- Static file caching
-- Service worker caching
-- Lazy loading
+6. **Run development server**
+```bash
+npm run dev
+```
 
----
+Buka http://localhost:3000
 
-## 🌐 Browser Support
+## 🌐 Deployment ke Vercel
 
-| Platform | Browser | Version |
-|----------|---------|---------|
-| Desktop | Chrome | 90+ |
-| Desktop | Firefox | 88+ |
-| Desktop | Edge | 90+ |
-| Android | Chrome | 90+ |
-| iOS | Safari | 14+ |
+### Langkah Deploy
 
----
+1. **Push ke GitHub**
+```bash
+git add .
+git commit -m "Ready for deployment"
+git push origin main
+```
 
-## 🤝 Contributing
+2. **Deploy ke Vercel**
+```bash
+npm i -g vercel
+vercel login
+vercel --prod
+```
 
-Contributions welcome! Please:
+3. **Set Environment Variables**
+```bash
+vercel env add DATABASE_URL production
+vercel env add JWT_SECRET production
+```
 
-1. Fork repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
+Atau via Vercel Dashboard:
+- Buka project di https://vercel.com
+- Settings → Environment Variables
+- Tambahkan `DATABASE_URL` dan `JWT_SECRET`
 
----
+### Database Setup (Supabase)
 
-## 🗺️ Roadmap
+1. Buat project di https://supabase.com
+2. Pilih region: Southeast Asia (Singapore)
+3. Buka SQL Editor
+4. Copy-paste isi `database/schema-pg.sql`
+5. Execute
+6. Copy connection string (Transaction Pooler) dari Settings → Database
+7. Format: `postgresql://postgres.[ref]:[password]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres`
 
-### Version 1.1 (Q1 2027)
-- [ ] WhatsApp notification
-- [ ] Dynamic QRIS (Midtrans/Xendit)
-- [ ] Excel export reports
-- [ ] Multi-branch support
+## 📱 Screenshot
 
-### Version 2.0 (Q3 2027)
-- [ ] Native Android app (Flutter)
-- [ ] Membership card scanner
-- [ ] Loyalty program
-- [ ] Advanced inventory
+### Login Page
+![Login](docs/login.png)
 
----
+### Dashboard
+![Dashboard](docs/dashboard.png)
 
-## ❓ FAQ
+### Transaction Form
+![Transaction](docs/transaction.png)
 
-**Q: Apakah gratis?**  
-A: Ya, 100% gratis dengan lisensi MIT.
+### Reports
+![Reports](docs/reports.png)
 
-**Q: Bisa pakai di HP?**  
-A: Bisa, tapi optimal di tablet (7" ke atas).
+## 🗂️ Struktur Database
 
-**Q: Harus punya internet?**  
-A: Tidak, bisa offline. Internet hanya untuk sync data.
+### Tables (13 total)
+1. **users** - User/kasir management
+2. **kapsters** - Data kapster
+3. **customers** - Data customer
+4. **services** - Layanan barbershop
+5. **products** - Produk dijual
+6. **discounts** - Promo/diskon
+7. **shifts** - Shift kasir
+8. **transactions** - Header transaksi
+9. **transaction_items** - Detail items transaksi
+10. **payments** - Payment details
+11. **inventory_logs** - Log perubahan stok
+12. **customer_visits** - Riwayat kunjungan
+13. **commissions** - Komisi kapster
 
-**Q: Support printer apa saja?**  
-A: Semua thermal printer 58mm dengan ESC/POS protocol.
+## 🔒 Security Features
 
-**Q: Bisa custom?**  
-A: Ya, open source jadi bisa dimodifikasi sesuai kebutuhan.
+- JWT Authentication
+- Password hashing (bcrypt)
+- Role-based access control (RBAC)
+- Protected API routes
+- SQL injection prevention (parameterized queries)
+- XSS protection
 
----
+## 📊 API Endpoints
 
-## 📞 Support
+### Authentication
+- `POST /api/auth/login` - Login
+- `POST /api/auth/logout` - Logout
+- `GET /api/auth/me` - Get current user
 
-Butuh bantuan? Hubungi kami:
+### Transactions
+- `GET /api/transactions` - List transaksi
+- `POST /api/transactions` - Buat transaksi baru
+- `GET /api/transactions/[id]` - Detail transaksi
+- `POST /api/transactions/[id]/void` - Void transaksi
 
-- 📧 **Email:** support@ininotes.com
-- 💬 **WhatsApp:** +62 812-3456-7890
-- 🌐 **Website:** https://ininotes.com
-- 📱 **Telegram:** @ininotes
+### Shifts
+- `GET /api/shifts` - List shifts
+- `POST /api/shifts` - Buka shift
+- `POST /api/shifts/[id]/close` - Tutup shift
 
-**Jam Support:** Senin-Jumat, 09:00-17:00 WIB
+### Reports
+- `GET /api/reports/daily?date=YYYY-MM-DD` - Laporan harian
+- `GET /api/reports/monthly?month=YYYY-MM` - Laporan bulanan
 
----
+### Management (Owner Only)
+- `GET /api/users` - List user
+- `POST /api/users` - Tambah user
+- `PUT /api/users/[id]` - Update user
+- `DELETE /api/users/[id]` - Hapus user
+
+### Master Data
+- CRUD endpoints untuk: `/api/kapsters`, `/api/services`, `/api/products`, `/api/customers`, `/api/discounts`
+
+## 🎨 UI/UX Features
+
+- Modern gradient design
+- Responsive layout (mobile-friendly)
+- Smooth animations
+- Card-based components
+- Modal dialogs
+- Toast notifications
+- Loading states
+- Empty states
+- Error handling
 
 ## 📝 Changelog
 
-### v1.0.0 (2026-11-09)
-- 🎉 Initial release
-- ✅ Complete POS functionality
-- ✅ Thermal printer support
-- ✅ PWA with offline mode
-- ✅ Multi-user & role management
-- ✅ Comprehensive reporting
+### Version 2.0.0 (Latest)
+- ✅ Rewrite dari Express.js ke Next.js
+- ✅ Serverless architecture
+- ✅ Complete transaction flow
 - ✅ Shift management
+- ✅ Daily & monthly reports
+- ✅ User management (Owner only)
+- ✅ Master data management
+- ✅ Modern UI redesign
+- ✅ Responsive design
 
----
+### Version 1.0.0
+- Initial release dengan Express.js
+- Basic POS features
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```
-MIT License - Copyright (c) 2026 IniNotes POS
+## 👨‍💻 Author
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction...
-```
+**Barbershop Ucok POS**
+- GitHub: [@Zackers227](https://github.com/Zackers227)
+- Repository: [BarberShop-Ucok-pos](https://github.com/Zackers227/BarberShop-Ucok-pos)
+
+## 🆘 Support
+
+Jika mengalami masalah:
+1. Check [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) untuk dokumentasi lengkap
+2. Check [INSTALL.md](INSTALL.md) untuk panduan instalasi
+3. Check [API.md](API.md) untuk dokumentasi API
+4. Open an issue di GitHub
+
+## 🎯 Roadmap
+
+### Coming Soon
+- [ ] Print struk thermal 58mm
+- [ ] Customer loyalty program
+- [ ] Appointment booking
+- [ ] WhatsApp notification
+- [ ] Multi-branch support
+- [ ] Advanced analytics
+- [ ] Expense tracking
+- [ ] Employee attendance
+
+## 📞 Contact
+
+Untuk pertanyaan atau kerjasama:
+- Email: support@barbershopucok.com
+- Website: https://barber-shop-ucok-pos.vercel.app
 
 ---
 
-## 🙏 Acknowledgments
+**Made with ❤️ for Barbershop Ucok**
 
-- Built with ❤️ for Indonesian Barbershops
-- Inspired by modern POS systems
-- Thanks to open source community
-
----
-
-## 📈 Stats
-
-![GitHub stars](https://img.shields.io/github/stars/yourusername/ininotes-pos?style=social)
-![GitHub forks](https://img.shields.io/github/forks/yourusername/ininotes-pos?style=social)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/ininotes-pos)
-
----
-
-<div align="center">
-
-**[⬆ Back to Top](#-ininotes-pos---sistem-barbershop)**
-
-Made with 💈 by [IniNotes Team](https://ininotes.com)
-
-</div>
+*Last Updated: November 2026*

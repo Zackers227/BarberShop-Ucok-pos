@@ -1,337 +1,395 @@
-# 📚 Indeks Dokumentasi IniNotes POS
+# 📚 DOCUMENTATION INDEX
 
-Panduan navigasi untuk semua dokumentasi project.
+Selamat datang di dokumentasi Barbershop Ucok POS System v2.0!
 
----
+## 📖 Daftar Dokumentasi
 
-## 🚀 Untuk Pemula
+### 1. [README.md](README.md) ⭐
+**Halaman utama project** dengan overview fitur lengkap, tech stack, dan panduan deployment.
+- Fitur-fitur lengkap POS
+- Tech stack (Next.js + Supabase)
+- Installation guide
+- Deployment guide (Vercel)
+- API endpoints overview
+- Roadmap
 
-Baru mulai? Ikuti urutan ini:
+### 2. [QUICKSTART.md](QUICKSTART.md) 🚀
+**Panduan cepat** untuk menjalankan aplikasi dalam 5 menit.
+- Setup lokal cepat
+- Run development server
+- Login credentials
+- First transaction
 
-1. **[README.md](README.md)** ← Mulai di sini
-   - Overview project
-   - Fitur utama
-   - Tech stack
+### 3. [INSTALL.md](INSTALL.md) 🛠️
+**Panduan instalasi lengkap** step-by-step untuk development dan production.
+- Prerequisites (Node.js 18+)
+- Environment setup
+- Database migration
+- Seed data
+- Troubleshooting
 
-2. **[QUICKSTART.md](QUICKSTART.md)** ← Setup 5 menit
-   - Instalasi cepat
-   - First transaction
-   - Troubleshooting dasar
+### 4. [API.md](API.md) 📡
+**Dokumentasi lengkap API endpoints** dengan contoh request/response.
+- Authentication endpoints
+- Transaction endpoints
+- Shift endpoints
+- Report endpoints (daily/monthly)
+- Management endpoints (users)
+- Master data endpoints (kapsters, services, products, customers, discounts)
 
-3. **[USAGE.md](USAGE.md)** ← Manual pengguna
-   - Alur transaksi lengkap
-   - Tips & trik
-   - FAQ pengguna
+### 5. [DEPLOY_VERCEL.md](DEPLOY_VERCEL.md) ☁️
+**Panduan deploy ke Vercel** dengan Supabase PostgreSQL.
+- Setup Supabase project
+- Configure connection pooler
+- Vercel environment variables
+- Production deployment
+- SSL configuration
 
----
+### 6. [DEPLOY_ONLINE.md](DEPLOY_ONLINE.md) 🌐
+**Panduan deploy ke platform hosting** online lainnya.
+- Alternative hosting options
+- VPS deployment (DigitalOcean, AWS, etc)
+- Docker deployment
+- Railway/Render deployment
 
-## 💻 Untuk Developer
+### 7. [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) 📋
+**Ringkasan teknis project**: teknologi, arsitektur, dan struktur.
+- Tech stack details (Next.js 14, PostgreSQL)
+- Serverless architecture
+- File structure
+- Database schema (13 tables)
+- Migration from Express.js
 
-Ingin develop atau customize?
+### 8. [CHANGELOG.md](CHANGELOG.md) 📝
+**Catatan perubahan** dan update aplikasi.
+- Version history
+- New features (v2.0.0 - Complete rewrite)
+- Bug fixes
+- Breaking changes
 
-1. **[INSTALL.md](INSTALL.md)**
-   - Instalasi detail
-   - Konfigurasi server
-   - Setup production
+### 9. [REWRITE_SUMMARY.md](REWRITE_SUMMARY.md) 🔄
+**Dokumentasi proses rewrite** dari Express.js ke Next.js.
+- Why rewrite? (Vercel serverless compatibility)
+- Migration process
+- Express.js → Next.js API routes conversion
+- Changes made (23 endpoints converted)
+- Lessons learned
 
-2. **[API.md](API.md)**
-   - API documentation
-   - Request/response examples
-   - Authentication flow
+## 🎯 Panduan Berdasarkan Kebutuhan
 
-3. **[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)**
-   - Arsitektur sistem
-   - Database schema
-   - Code structure
+### 🆕 Untuk Developer Baru
+1. ✅ Baca [README.md](README.md) untuk overview lengkap
+2. ✅ Ikuti [QUICKSTART.md](QUICKSTART.md) untuk setup cepat
+3. ✅ Pelajari [API.md](API.md) untuk memahami API
+4. ✅ Cek [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) untuk arsitektur
 
-4. **[CHANGELOG.md](CHANGELOG.md)**
-   - Version history
-   - Breaking changes
-   - Upgrade guide
+### 🚀 Untuk Deploy Production
+1. ✅ Baca [INSTALL.md](INSTALL.md) untuk setup environment
+2. ✅ Setup database dengan panduan di [DEPLOY_VERCEL.md](DEPLOY_VERCEL.md)
+3. ✅ Deploy mengikuti [DEPLOY_VERCEL.md](DEPLOY_VERCEL.md)
+4. ✅ Test semua fitur di production
 
----
+### 🔧 Untuk Maintainer
+1. ✅ Cek [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) untuk arsitektur
+2. ✅ Update [CHANGELOG.md](CHANGELOG.md) setiap ada perubahan
+3. ✅ Baca [REWRITE_SUMMARY.md](REWRITE_SUMMARY.md) untuk context historical
+4. ✅ Review [API.md](API.md) saat menambah endpoint baru
 
-## 🎯 Untuk Owner/Manager
+### 👥 Untuk Pengguna/Owner
+1. ✅ Akses https://barber-shop-ucok-pos.vercel.app
+2. ✅ Login dengan credentials yang diberikan
+3. ✅ Pelajari fitur-fitur di [README.md](README.md)
+4. ✅ Pelajari laporan di section Reports
 
-Fokus bisnis dan laporan:
+## 📊 Fitur Lengkap v2.0
 
-1. **[USAGE.md](USAGE.md)** - Bagian:
-   - Shift management (Buka/tutup shift)
-   - Laporan (Sales, Kapster, Top services)
-   - Void transaksi
+### ✅ Transaksi (NEW!)
+- Form transaksi dengan keranjang belanja
+- Pilih customer & kapster
+- Multiple payment methods (Tunai, QRIS, Transfer, Debit)
+- Auto calculate subtotal, discount, total, change
+- Void transaksi
+- Transaction history
 
-2. **[INSTALL.md](INSTALL.md)** - Bagian:
-   - Backup data
-   - Security checklist
-   - Auto start server
+### ✅ Manajemen Shift (NEW!)
+- Buka shift dengan modal awal
+- Track transaksi per shift
+- Tutup shift dengan perhitungan kas
+- Deteksi selisih kas (lebih/kurang)
+- Riwayat shift lengkap
 
----
+### ✅ Laporan (NEW!)
+- **Laporan Harian**: Total pendapatan, transaksi, customer, average
+- **Laporan Bulanan**: Analisis bulanan lengkap
+- Breakdown per metode pembayaran
+- Top 5 layanan terlaris
+- Top 5 produk terlaris
+- Performa per kapster
+- Print/export laporan
 
-## 📊 Dokumentasi by Topic
+### ✅ Kelola Member - Owner Only (NEW!)
+- Tambah/edit/hapus user/kasir
+- Role management (Owner/Kasir)
+- Active/inactive status
+- Password reset
+- Security: Only owner can access
 
-### Installation & Setup
-- [QUICKSTART.md](QUICKSTART.md) - Quick 5-minute setup
-- [INSTALL.md](INSTALL.md) - Detailed installation guide
-- `.env.example` - Environment configuration template
+### ✅ Master Data Management
+- **Kelola Kapster**: Tambah/edit/hapus, set komisi
+- **Kelola Layanan**: Pricing, duration, description
+- **Kelola Produk**: Stock management, low stock alert
+- **Kelola Customer**: Database customer, visit tracking
+- **Kelola Diskon**: Percentage or fixed amount
 
-### User Guides
-- [USAGE.md](USAGE.md) - Complete user manual
-- Section: Alur Kerja Harian
-- Section: Fitur Manajemen Data
-- Section: Laporan
+## 🔑 Login Credentials
 
-### Technical Documentation
-- [API.md](API.md) - REST API reference
-- [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) - Technical overview
-- [CHANGELOG.md](CHANGELOG.md) - Version history
-- `database/schema.sql` - Database structure
+**Production:** https://barber-shop-ucok-pos.vercel.app
 
-### Project Information
-- [README.md](README.md) - Project overview
-- [LICENSE](LICENSE) - MIT License
-- [CHANGELOG.md](CHANGELOG.md) - Release notes
+| Role | Username | Password | Access Level |
+|------|----------|----------|--------------|
+| Owner | admin | admin123 | Full access (all features) |
+| Kasir | kasir1 | kasir123 | Limited (no user management) |
 
----
+## 🗄️ Database Schema
 
-## 📁 File Reference
+### 13 Tables (PostgreSQL)
+1. **users** - User/kasir management
+2. **kapsters** - Data kapster (commission rate)
+3. **customers** - Customer database (phone, visit count)
+4. **services** - Layanan barbershop (price, duration)
+5. **products** - Produk (stock, min_stock, alert)
+6. **discounts** - Promo/diskon (percentage/fixed)
+7. **shifts** - Shift kasir (opening/closing)
+8. **transactions** - Transaction headers
+9. **transaction_items** - Transaction line items
+10. **payments** - Payment details
+11. **inventory_logs** - Stock change history
+12. **customer_visits** - Visit tracking
+13. **commissions** - Kapster commissions
 
-### Documentation Files
+## 🎨 Tech Stack v2.0
+
+### Frontend
+- **Framework:** Next.js 14 (React)
+- **Styling:** Custom CSS (modern gradient design)
+- **State:** React Hooks (useState, useEffect)
+- **Routing:** Next.js Router
+
+### Backend
+- **Runtime:** Node.js (serverless)
+- **Framework:** Next.js API Routes
+- **Database:** PostgreSQL (Supabase)
+- **Connection:** pg + connection pooling
+- **Auth:** JWT + bcrypt
+
+### Deployment
+- **Platform:** Vercel (serverless)
+- **Database Host:** Supabase (Singapore region)
+- **CDN:** Vercel Edge Network
+- **Domain:** vercel.app
+
+### Security
+- JWT Authentication
+- Password hashing (bcrypt, 10 rounds)
+- Role-based access control (RBAC)
+- SQL injection prevention (parameterized queries)
+- XSS protection
+
+## 📁 Project Structure
+
 ```
-├── README.md                    # 🏠 Main project page
-├── QUICKSTART.md               # ⚡ 5-minute setup
-├── INSTALL.md                  # 🔧 Installation guide
-├── USAGE.md                    # 📖 User manual
-├── API.md                      # 🔌 API documentation
-├── PROJECT_SUMMARY.md          # 📊 Technical summary
-├── CHANGELOG.md                # 📝 Version history
-├── DOCUMENTATION_INDEX.md      # 📚 This file
-└── LICENSE                     # ⚖️ MIT License
+Barbershop/
+├── pages/                      # Next.js pages & API routes
+│   ├── api/                   # API endpoints (serverless)
+│   │   ├── auth/             # Login, logout, me
+│   │   ├── transactions/     # CRUD transactions
+│   │   ├── shifts/           # Shift management
+│   │   ├── reports/          # Daily & monthly reports
+│   │   ├── users/            # User management (owner only)
+│   │   ├── kapsters/         # Kapster CRUD
+│   │   ├── services/         # Service CRUD
+│   │   ├── products/         # Product CRUD
+│   │   ├── customers/        # Customer CRUD
+│   │   └── discounts/        # Discount CRUD
+│   ├── dashboard.js          # Main dashboard
+│   ├── login.js              # Login page
+│   ├── transaction.js        # Transaction form (NEW!)
+│   ├── transactions.js       # Transaction history (NEW!)
+│   ├── shifts.js             # Shift management (NEW!)
+│   ├── reports.js            # Reports page (NEW!)
+│   ├── users.js              # User management (NEW!)
+│   ├── kapsters.js           # Kapster management (NEW!)
+│   ├── services.js           # Service management (NEW!)
+│   └── products.js           # Product management (NEW!)
+├── lib/                       # Utility libraries
+│   ├── db.js                 # Database connection pool
+│   └── auth.js               # JWT middleware
+├── public/                    # Static assets
+│   ├── css/
+│   │   ├── styles.css        # Global styles (modern theme)
+│   │   ├── transaction.css   # Transaction page styles
+│   │   ├── table.css         # Table & list styles
+│   │   └── reports.css       # Report print styles
+│   └── js/                   # (legacy, not used in v2.0)
+├── database/                  # Database files
+│   ├── schema-pg.sql         # PostgreSQL schema
+│   └── migrate-pg.js         # Migration script
+├── scripts/                   # Utility scripts
+│   ├── create-admin.js       # Create admin user
+│   └── reset-password.js     # Reset user password
+├── .env                       # Environment variables (git-ignored)
+├── .env.example              # Environment template
+├── next.config.js            # Next.js configuration
+├── vercel.json               # Vercel deployment config
+└── package.json              # Dependencies
 ```
 
-### Source Code
-```
-├── server/                     # Backend Node.js
-│   ├── index.js               # Main server
-│   ├── config/                # Configuration
-│   ├── controllers/           # Business logic
-│   ├── routes/                # API endpoints
-│   └── middleware/            # Auth & validation
-├── client/                     # Frontend PWA
-│   ├── index.html             # Main HTML
-│   ├── css/styles.css         # Styling
-│   ├── js/                    # JavaScript
-│   └── manifest.json          # PWA config
-├── database/                   # Database
-│   ├── schema.sql             # DB structure
-│   ├── migrate.js             # Migration script
-│   └── seed.js                # Sample data
-└── scripts/                    # Utilities
-    ├── create-admin.js        # Create admin
-    ├── reset-password.js      # Reset password
-    └── backup-db.js           # Backup DB
-```
+## 📞 Support & Contact
 
----
+### GitHub
+- **Repository:** https://github.com/Zackers227/BarberShop-Ucok-pos
+- **Issues:** https://github.com/Zackers227/BarberShop-Ucok-pos/issues
+- **Pull Requests:** Welcome!
 
-## 🔍 Cari Topik Spesifik
+### Production
+- **Live Demo:** https://barber-shop-ucok-pos.vercel.app
+- **Status:** ✅ Active & Stable
+- **Uptime:** Monitored by Vercel
 
-### Authentication & Security
-- API.md → Auth Endpoints
-- INSTALL.md → Security Checklist
-- server/middleware/auth.js
+### Contact
+- **Email:** support@barbershopucok.com
+- **GitHub:** [@Zackers227](https://github.com/Zackers227)
 
-### Database
-- PROJECT_SUMMARY.md → Database Schema
-- database/schema.sql → Table structure
-- API.md → All endpoints
+## 🚀 Quick Links
 
-### Printer Integration
-- USAGE.md → Printer Setup
-- client/js/printer.js → Printer code
-- README.md → Printer section
+- [🌐 Live Demo](https://barber-shop-ucok-pos.vercel.app)
+- [📦 GitHub Repository](https://github.com/Zackers227/BarberShop-Ucok-pos)
+- [☁️ Supabase Dashboard](https://supabase.com/dashboard)
+- [🚀 Vercel Dashboard](https://vercel.com/dashboard)
+- [📚 Next.js Docs](https://nextjs.org/docs)
+- [🐘 PostgreSQL Docs](https://www.postgresql.org/docs/)
 
-### Reporting
-- USAGE.md → Laporan section
-- API.md → Reports Endpoints
-- server/routes/reportRoutes.js
+## 📈 Project Status
 
-### Shift Management
-- USAGE.md → Shift Kasir
-- API.md → Shifts Endpoints
-- server/routes/shiftRoutes.js
+- ✅ **Version:** 2.0.0 (Complete Rewrite)
+- ✅ **Status:** Production Ready
+- ✅ **Last Updated:** November 11, 2026
+- ✅ **Active Development:** Yes
+- ✅ **Test Coverage:** Manual testing complete
+- ✅ **Documentation:** Complete
+- ✅ **Migration:** Express.js → Next.js (Success)
 
-### Transactions
-- USAGE.md → Proses Transaksi
-- API.md → Transactions Endpoints
-- server/controllers/transactionController.js
+## 🎯 Roadmap
 
-### Offline Mode
-- README.md → Offline Mode
-- client/service-worker.js
-- client/js/sw-register.js
+### Version 2.1 (Coming Soon)
+- [ ] Print struk thermal 58mm
+- [ ] WhatsApp notification
+- [ ] Customer loyalty program
+- [ ] Appointment booking system
 
----
+### Version 2.2 (Future)
+- [ ] Multi-branch support
+- [ ] Advanced analytics dashboard
+- [ ] Expense tracking
+- [ ] Employee attendance
+- [ ] Mobile app (React Native)
 
-## 📌 Quick Links
+## 🔍 Quick Search Guide
 
-### Common Tasks
+### Mencari Topik Spesifik?
 
-**Install & Run:**
-```bash
-npm install
-npm run migrate && npm run seed
-npm start
-```
-📖 Detail: [QUICKSTART.md](QUICKSTART.md)
-
-**Create Admin:**
-```bash
-npm run create-admin
-```
-📖 Detail: [INSTALL.md](INSTALL.md)
-
-**Backup Database:**
-```bash
-npm run backup
-```
-📖 Detail: [INSTALL.md](INSTALL.md#backup-data)
-
-**Reset Password:**
-```bash
-npm run reset-password
-```
-📖 Detail: [INSTALL.md](INSTALL.md#troubleshooting)
-
-**API Testing:**
-```bash
-curl -X POST http://localhost:3000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin123"}'
-```
-📖 Detail: [API.md](API.md)
-
----
+| Topik | File |
+|-------|------|
+| Login gagal | [API.md](API.md) → Auth Endpoints |
+| Database setup | [DEPLOY_VERCEL.md](DEPLOY_VERCEL.md) → Supabase Setup |
+| Environment variables | [INSTALL.md](INSTALL.md) → Configuration |
+| API authentication | [API.md](API.md) → Authentication |
+| Deployment error | [DEPLOY_VERCEL.md](DEPLOY_VERCEL.md) → Troubleshooting |
+| User management | [README.md](README.md) → Kelola Member |
+| Transaction flow | [README.md](README.md) → Transaksi |
+| Shift management | [README.md](README.md) → Manajemen Shift |
+| Reports | [README.md](README.md) → Laporan |
+| Database schema | [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) → Database |
+| Tech stack | [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) → Tech Stack |
+| Migration notes | [REWRITE_SUMMARY.md](REWRITE_SUMMARY.md) |
 
 ## 🆘 Troubleshooting
 
-Cari solusi masalah:
+### Common Issues
 
-| Masalah | Lihat |
-|---------|-------|
-| Server tidak jalan | [INSTALL.md](INSTALL.md#troubleshooting) |
-| Tidak bisa akses dari tablet | [QUICKSTART.md](QUICKSTART.md#troubleshooting) |
-| Printer tidak terdeteksi | [USAGE.md](USAGE.md#troubleshooting-umum) |
-| Database error | [INSTALL.md](INSTALL.md#troubleshooting) |
-| Login gagal | [API.md](API.md#error-responses) |
-| Struk tidak lengkap | [USAGE.md](USAGE.md#troubleshooting-umum) |
+| Problem | Solution |
+|---------|----------|
+| Cannot connect to database | Check `DATABASE_URL` in `.env`, use Connection Pooler port 6543 |
+| 401 Unauthorized | Check JWT token, login again |
+| 403 Forbidden | Check user role, some features are owner-only |
+| Build failed | Check Node.js version (18+), run `npm install` |
+| Login doesn't work | Check database, verify password hash matches |
+| API endpoint 404 | Check route path, ensure API file exists |
+| Vercel deployment failed | Check environment variables, view build logs |
 
----
+### Getting Help
 
-## 📞 Need Help?
+1. **Check Documentation**
+   - Search this index
+   - Read relevant .md file
+   - Check troubleshooting sections
 
-Tidak menemukan yang Anda cari?
+2. **GitHub Issues**
+   - Search existing issues
+   - Create new issue with details
+   - Include error messages & logs
 
-1. **Search dalam docs:**
-   - Windows: `Ctrl + F`
-   - Mac: `Cmd + F`
-
-2. **Cek FAQ:**
-   - [README.md](README.md#faq)
-   - [USAGE.md](USAGE.md#troubleshooting-umum)
-
-3. **Contact Support:**
-   - Email: support@ininotes.com
-   - WhatsApp: +62 812-3456-7890
-   - Telegram: @ininotes
-
----
-
-## 🎓 Learning Path
-
-### Path 1: Kasir/Operator
-```
-1. README.md (Overview)
-   ↓
-2. QUICKSTART.md (Setup)
-   ↓
-3. USAGE.md Section 1-3 (Daily workflow)
-   ↓
-4. USAGE.md Section 4-5 (Advanced features)
-```
-
-### Path 2: Owner/Manager
-```
-1. README.md (Overview)
-   ↓
-2. INSTALL.md (Full installation)
-   ↓
-3. USAGE.md (Complete manual)
-   ↓
-4. USAGE.md - Laporan (Reports)
-```
-
-### Path 3: Developer
-```
-1. README.md (Overview)
-   ↓
-2. PROJECT_SUMMARY.md (Architecture)
-   ↓
-3. API.md (API reference)
-   ↓
-4. Code exploration (server/ & client/)
-   ↓
-5. CHANGELOG.md (Version tracking)
-```
-
----
-
-## 📊 Documentation Stats
-
-- **Total Pages:** 8
-- **Total Words:** ~15,000+
-- **Code Examples:** 100+
-- **API Endpoints:** 30+
-- **Tables:** 20+
-- **Command Examples:** 50+
+3. **Contact Support**
+   - Email with screenshots
+   - Provide reproduction steps
+   - Include environment info
 
 ---
 
 ## ✅ Documentation Checklist
 
-Pastikan Anda sudah membaca:
-
-**Untuk Semua User:**
-- [ ] README.md - Overview
-- [ ] QUICKSTART.md - Setup
-- [ ] USAGE.md - Basic usage
-
-**Untuk Owner:**
-- [ ] INSTALL.md - Installation
-- [ ] USAGE.md - Laporan & Shift
-- [ ] README.md - Backup & Security
+**Untuk User Baru:**
+- [ ] Baca README.md (overview)
+- [ ] Baca QUICKSTART.md (setup)
+- [ ] Login ke production
+- [ ] Test transaksi
 
 **Untuk Developer:**
-- [ ] PROJECT_SUMMARY.md - Architecture
-- [ ] API.md - API documentation
-- [ ] CHANGELOG.md - Version history
-- [ ] Code exploration
+- [ ] Clone repository
+- [ ] Setup environment
+- [ ] Read PROJECT_SUMMARY.md
+- [ ] Read API.md
+- [ ] Explore codebase
 
----
-
-## 🔄 Documentation Updates
-
-Dokumentasi ini di-update seiring perkembangan project.
-
-**Last Updated:** 2026-11-09  
-**Version:** 1.0.0  
-**Status:** ✅ Complete
+**Untuk Owner:**
+- [ ] Understand all features
+- [ ] Learn report generation
+- [ ] Learn user management
+- [ ] Setup backup strategy
 
 ---
 
 <div align="center">
 
-**[⬆ Back to Top](#-indeks-dokumentasi-ininotes-pos)**
+## 📊 Documentation Stats
 
-Made with 💈 by [IniNotes Team](https://ininotes.com)
+| Metric | Value |
+|--------|-------|
+| Total Pages | 9 |
+| API Endpoints | 30+ |
+| Features | 8 major features |
+| Database Tables | 13 |
+| Code Examples | 100+ |
+| Lines of Documentation | 3000+ |
+
+---
+
+**Made with ❤️ for Barbershop Ucok**
+
+**Last Updated:** November 11, 2026  
+**Version:** 2.0.0  
+**Status:** ✅ Production Ready
+
+[⬆ Back to Top](#-documentation-index)
 
 </div>
