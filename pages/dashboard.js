@@ -30,19 +30,23 @@ export default function Dashboard() {
   };
 
   const handleOpenShift = () => {
-    alert('Fitur Buka Shift akan segera tersedia!');
+    router.push('/shifts');
   };
 
   const handleCloseShift = () => {
-    alert('Fitur Tutup Shift akan segera tersedia!');
+    router.push('/shifts');
   };
 
   const handleDailyReport = () => {
-    alert('Fitur Laporan Harian akan segera tersedia!');
+    router.push('/reports');
   };
 
   const handleHistory = () => {
-    alert('Fitur Riwayat Transaksi akan segera tersedia!');
+    router.push('/transactions');
+  };
+
+  const handleNewTransaction = () => {
+    router.push('/transaction');
   };
 
   if (loading) {
@@ -112,17 +116,16 @@ export default function Dashboard() {
             </button>
           </div>
 
-          {/* Transaction Section - Coming Soon */}
+          {/* Transaction Section */}
           <div className="transaction-section">
             <div className="section-header">
               <h2>Transaksi Baru</h2>
-              <p className="coming-soon">🚧 Fitur transaksi sedang dalam pengembangan</p>
             </div>
 
             <div className="placeholder-content">
-              <div className="placeholder-icon">🛠️</div>
+              <div className="placeholder-icon">🛒</div>
               <h3>Form Transaksi POS</h3>
-              <p>Fitur ini akan memungkinkan Anda untuk:</p>
+              <p>Fitur yang tersedia:</p>
               <ul>
                 <li>✅ Pilih customer & kapster</li>
                 <li>✅ Tambah layanan & produk ke keranjang</li>
@@ -130,9 +133,43 @@ export default function Dashboard() {
                 <li>✅ Proses pembayaran (Tunai/QRIS/Transfer)</li>
                 <li>✅ Cetak struk thermal 58mm</li>
               </ul>
-              <p className="note">💡 Hubungi developer untuk aktivasi fitur</p>
+              <button className="btn btn-success btn-lg" onClick={handleNewTransaction}>
+                🛒 Mulai Transaksi Baru
+              </button>
             </div>
           </div>
+
+          {/* Management Section - Owner Only */}
+          {user?.role === 'OWNER' && (
+            <div className="card">
+              <h3>⚙️ Manajemen (Owner Only)</h3>
+              <div className="quick-actions-grid">
+                <button className="action-card" onClick={() => router.push('/users')}>
+                  <div className="action-icon">👥</div>
+                  <div className="action-title">Kelola User</div>
+                  <div className="action-desc">Tambah/edit kasir</div>
+                </button>
+
+                <button className="action-card" onClick={() => router.push('/kapsters')}>
+                  <div className="action-icon">💈</div>
+                  <div className="action-title">Kelola Kapster</div>
+                  <div className="action-desc">Manajemen kapster</div>
+                </button>
+
+                <button className="action-card" onClick={() => router.push('/services')}>
+                  <div className="action-icon">✂️</div>
+                  <div className="action-title">Kelola Layanan</div>
+                  <div className="action-desc">Atur layanan</div>
+                </button>
+
+                <button className="action-card" onClick={() => router.push('/products')}>
+                  <div className="action-icon">🧴</div>
+                  <div className="action-title">Kelola Produk</div>
+                  <div className="action-desc">Manajemen produk</div>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Footer */}

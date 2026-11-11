@@ -1,0 +1,153 @@
+/* Report Styles */
+
+.report-controls {
+    display: grid;
+    grid-template-columns: 200px 200px auto;
+    gap: 16px;
+    align-items: end;
+}
+
+.report-content {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.report-header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 3px solid var(--primary);
+}
+
+.report-header h2 {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.report-header p {
+    color: var(--secondary);
+    font-size: 1.1rem;
+}
+
+.report-period {
+    font-weight: 700;
+    color: var(--dark);
+    font-size: 1.2rem !important;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.summary-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: 12px;
+    border: 2px solid #bae6fd;
+}
+
+.summary-icon {
+    font-size: 3rem;
+}
+
+.summary-info {
+    flex: 1;
+}
+
+.summary-label {
+    font-size: 0.9rem;
+    color: var(--secondary);
+    margin-bottom: 4px;
+}
+
+.summary-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.report-section {
+    margin-bottom: 24px;
+}
+
+.report-section h3 {
+    margin-bottom: 16px;
+    color: var(--dark);
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.report-footer {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 2px solid #e2e8f0;
+    text-align: center;
+    color: var(--secondary);
+    font-size: 0.9rem;
+}
+
+.report-footer p {
+    margin: 4px 0;
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .page-container {
+        background: white !important;
+    }
+
+    .report-content {
+        box-shadow: none;
+        padding: 20px;
+    }
+
+    .summary-card {
+        break-inside: avoid;
+    }
+
+    .report-section {
+        break-inside: avoid;
+    }
+
+    .data-table {
+        font-size: 0.85rem;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 8px;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .report-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .report-content {
+        padding: 20px;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}
