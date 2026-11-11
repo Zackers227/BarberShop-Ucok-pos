@@ -1,171 +1,144 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Dashboard() {
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // Check authentication
-      const token = localStorage.getItem('token');
-      if (!token) {
-        window.location.href = '/login';
-        return;
-      }
+    // Check authentication
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const userData = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
 
-      // Load scripts
-      const scripts = [
-        '/js/api.js',
-        '/js/cart.js',
-        '/js/printer.js',
-        '/js/app.js'
-      ];
-
-      scripts.forEach(src => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        document.body.appendChild(script);
-      });
+    if (!token) {
+      router.push('/login');
+      return;
     }
-  }, []);
+
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+    setLoading(false);
+  }, [router]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    router.push('/login');
+  };
+
+  const handleOpenShift = () => {
+    alert('Fitur Buka Shift akan segera tersedia!');
+  };
+
+  const handleCloseShift = () => {
+    alert('Fitur Tutup Shift akan segera tersedia!');
+  };
+
+  const handleDailyReport = () => {
+    alert('Fitur Laporan Harian akan segera tersedia!');
+  };
+
+  const handleHistory = () => {
+    alert('Fitur Riwayat Transaksi akan segera tersedia!');
+  };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <h2>Loading...</h2>
+      </div>
+    );
+  }
 
   return (
     <>
       <Head>
         <title>Dashboard - Barbershop Ucok POS</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/css/styles.css" />
       </Head>
 
-      <div id="app">
+      <div className="dashboard-container">
         {/* Navbar */}
         <nav className="navbar">
           <div className="navbar-brand">
-            <h2>💈 Barbershop Ucok</h2>
+            <h2>💈 Barbershop Ucok POS</h2>
           </div>
           <div className="navbar-menu">
-            <span id="userName">Loading...</span>
-            <button className="btn btn-sm btn-danger" id="logoutBtn">Logout</button>
+            <span className="user-info">
+              👤 {user?.name || user?.username} 
+              <span className="user-role">({user?.role})</span>
+            </span>
+            <button className="btn btn-danger btn-sm" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         </nav>
 
         {/* Main Content */}
-        <div className="container">
-          <div className="row">
-            {/* Left Column - Form */}
-            <div className="col-8">
-              <div className="card">
-                <div className="card-header">
-                  <h3>Transaksi Baru</h3>
-                </div>
-                <div className="card-body">
-                  {/* Customer Selection */}
-                  <div className="form-group">
-                    <label>Customer (Optional)</label>
-                    <select id="customerSelect" className="form-control">
-                      <option value="">Walk-in Customer</option>
-                    </select>
-                  </div>
-
-                  {/* Kapster Selection */}
-                  <div className="form-group">
-                    <label>Kapster</label>
-                    <select id="kapsterSelect" className="form-control" required>
-                      <option value="">Pilih Kapster</option>
-                    </select>
-                  </div>
-
-                  {/* Services */}
-                  <div className="form-group">
-                    <label>Layanan</label>
-                    <div id="servicesList" className="items-grid"></div>
-                  </div>
-
-                  {/* Products */}
-                  <div className="form-group">
-                    <label>Produk</label>
-                    <div id="productsList" className="items-grid"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column - Cart */}
-            <div className="col-4">
-              <div className="card cart-card">
-                <div className="card-header">
-                  <h3>Keranjang</h3>
-                </div>
-                <div className="card-body">
-                  <div id="cartItems" className="cart-items">
-                    <p className="text-muted">Keranjang kosong</p>
-                  </div>
-
-                  <div className="cart-summary">
-                    <div className="summary-row">
-                      <span>Subtotal:</span>
-                      <span id="subtotal">Rp 0</span>
-                    </div>
-                    <div className="summary-row">
-                      <span>Diskon:</span>
-                      <span id="discount">Rp 0</span>
-                    </div>
-                    <div className="summary-row total">
-                      <span><strong>Total:</strong></span>
-                      <span id="total"><strong>Rp 0</strong></span>
-                    </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label>Metode Bayar</label>
-                    <select id="paymentMethod" className="form-control">
-                      <option value="cash">Tunai</option>
-                      <option value="qris">QRIS</option>
-                      <option value="transfer">Transfer</option>
-                      <option value="debit">Debit</option>
-                    </select>
-                  </div>
-
-                  <div className="form-group" id="cashPaymentGroup">
-                    <label>Uang Diterima</label>
-                    <input type="number" id="cashReceived" className="form-control" placeholder="0" />
-                    <small>Kembalian: <span id="change">Rp 0</span></small>
-                  </div>
-
-                  <button id="processPaymentBtn" className="btn btn-success btn-block btn-lg">
-                    Proses Pembayaran
-                  </button>
-
-                  <button id="clearCartBtn" className="btn btn-outline-danger btn-block">
-                    Clear Cart
-                  </button>
-                </div>
-              </div>
-            </div>
+        <div className="main-content">
+          <div className="welcome-card">
+            <h1>Selamat Datang, {user?.name || user?.username}! 👋</h1>
+            <p>Sistem POS Barbershop siap digunakan</p>
           </div>
 
           {/* Quick Actions */}
-          <div className="row mt-3">
-            <div className="col-12">
-              <div className="card">
-                <div className="card-body">
-                  <div className="quick-actions">
-                    <button className="btn btn-outline-primary" id="openShiftBtn">
-                      📂 Buka Shift
-                    </button>
-                    <button className="btn btn-outline-warning" id="closeShiftBtn">
-                      📁 Tutup Shift
-                    </button>
-                    <button className="btn btn-outline-info" id="dailyReportBtn">
-                      📊 Laporan Harian
-                    </button>
-                    <button className="btn btn-outline-secondary" id="historyBtn">
-                      📜 Riwayat Transaksi
-                    </button>
-                  </div>
-                </div>
-              </div>
+          <div className="quick-actions-grid">
+            <button className="action-card" onClick={handleOpenShift}>
+              <div className="action-icon">📂</div>
+              <div className="action-title">Buka Shift</div>
+              <div className="action-desc">Mulai shift kerja baru</div>
+            </button>
+
+            <button className="action-card" onClick={handleCloseShift}>
+              <div className="action-icon">📁</div>
+              <div className="action-title">Tutup Shift</div>
+              <div className="action-desc">Selesai shift & rekap</div>
+            </button>
+
+            <button className="action-card" onClick={handleDailyReport}>
+              <div className="action-icon">📊</div>
+              <div className="action-title">Laporan Harian</div>
+              <div className="action-desc">Lihat laporan hari ini</div>
+            </button>
+
+            <button className="action-card" onClick={handleHistory}>
+              <div className="action-icon">📜</div>
+              <div className="action-title">Riwayat Transaksi</div>
+              <div className="action-desc">Cek transaksi sebelumnya</div>
+            </button>
+          </div>
+
+          {/* Transaction Section - Coming Soon */}
+          <div className="transaction-section">
+            <div className="section-header">
+              <h2>Transaksi Baru</h2>
+              <p className="coming-soon">🚧 Fitur transaksi sedang dalam pengembangan</p>
+            </div>
+
+            <div className="placeholder-content">
+              <div className="placeholder-icon">🛠️</div>
+              <h3>Form Transaksi POS</h3>
+              <p>Fitur ini akan memungkinkan Anda untuk:</p>
+              <ul>
+                <li>✅ Pilih customer & kapster</li>
+                <li>✅ Tambah layanan & produk ke keranjang</li>
+                <li>✅ Terapkan diskon</li>
+                <li>✅ Proses pembayaran (Tunai/QRIS/Transfer)</li>
+                <li>✅ Cetak struk thermal 58mm</li>
+              </ul>
+              <p className="note">💡 Hubungi developer untuk aktivasi fitur</p>
             </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="dashboard-footer">
+          <p>© 2026 Barbershop Ucok POS | Versi 2.0 | Powered by Next.js</p>
+        </footer>
       </div>
     </>
   );
