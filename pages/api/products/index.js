@@ -5,7 +5,7 @@ async function handler(req, res) {
   try {
     if (req.method === 'GET') {
       const result = await query(
-        'SELECT * FROM products WHERE is_active = true ORDER BY name'
+        'SELECT id, name, sku, selling_price as price, stock, min_stock, unit, description, is_active FROM products WHERE is_active = true ORDER BY name'
       );
       return res.status(200).json(result.rows);
     }
@@ -18,7 +18,7 @@ async function handler(req, res) {
       }
 
       const result = await query(
-        'INSERT INTO products (name, sku, price, stock, min_stock, description) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+        'INSERT INTO products (name, sku, selling_price, stock, min_stock, description) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, sku, selling_price as price, stock, min_stock, description',
         [name, sku || null, price, stock || 0, min_stock || 5, description || null]
       );
 

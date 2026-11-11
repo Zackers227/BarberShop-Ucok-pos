@@ -102,9 +102,9 @@ export default function Transaction() {
     
     const subtotal = calculateSubtotal();
     if (discount.type === 'PERCENTAGE') {
-      return subtotal * (discount.amount / 100);
+      return subtotal * (discount.value / 100);
     }
-    return discount.amount;
+    return discount.value;
   };
 
   const calculateTotal = () => {
@@ -263,7 +263,7 @@ export default function Transaction() {
                     <option value="">-- Tanpa Diskon --</option>
                     {discounts.map(d => (
                       <option key={d.id} value={d.id}>
-                        {d.name} - {d.type === 'PERCENTAGE' ? `${d.amount}%` : `Rp ${d.amount.toLocaleString()}`}
+                        {d.name} - {d.type === 'PERCENTAGE' ? `${d.value}%` : `Rp ${d.value.toLocaleString()}`}
                       </option>
                     ))}
                   </select>

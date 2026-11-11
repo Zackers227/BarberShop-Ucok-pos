@@ -6,7 +6,10 @@ async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      const result = await query('SELECT * FROM products WHERE id = $1', [id]);
+      const result = await query(
+        'SELECT id, name, sku, selling_price as price, stock, min_stock, unit, description, is_active FROM products WHERE id = $1', 
+        [id]
+      );
       if (result.rows.length === 0) {
         return res.status(404).json({ error: 'Produk tidak ditemukan' });
       }
@@ -18,9 +21,9 @@ async function handler(req, res) {
 
       const result = await query(
         `UPDATE products 
-         SET name = $1, sku = $2, price = $3, stock = $4, min_stock = $5, description = $6, is_active = $7, updated_at = CURRENT_TIMESTAMP
+         SET name = $1, sku = $2, selling_price = $3, stock = $4, min_stock = $5, description = $6, is_active = $7, updated_at = CURRENT_TIMESTAMP
          WHERE id = $8
-         RETURNING *`,
+         RETURNING id, name, sku, selling_price as price, stock, min_stock, description, is_active`,
         [name, sku, price, stock, min_stock, description, is_active !== undefined ? is_active : true, id]
       );
 
