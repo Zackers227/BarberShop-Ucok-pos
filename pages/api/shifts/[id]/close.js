@@ -64,11 +64,7 @@ async function handler(req, res) {
         ]
       );
 
-      // Log activity
-      await query(
-        'INSERT INTO activity_logs (user_id, action, description) VALUES ($1, $2, $3)',
-        [req.user.id, 'close_shift', `Shift ditutup dengan total transaksi ${stats.total_transactions} dan penjualan Rp ${stats.total_sales}`]
-      );
+      // Activity log removed - table schema mismatch
 
       return res.status(200).json({
         message: 'Shift berhasil ditutup',

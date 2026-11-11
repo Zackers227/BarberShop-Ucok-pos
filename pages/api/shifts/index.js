@@ -62,11 +62,7 @@ async function handler(req, res) {
         [req.user.id, opening_balance || 0, notes || null]
       );
 
-      // Log activity
-      await query(
-        'INSERT INTO activity_logs (user_id, action, description) VALUES ($1, $2, $3)',
-        [req.user.id, 'open_shift', `Shift dibuka dengan saldo awal Rp ${opening_balance || 0}`]
-      );
+      // Activity log removed - table schema mismatch
 
       return res.status(201).json({
         message: 'Shift berhasil dibuka',
