@@ -33,10 +33,6 @@ export default function Dashboard() {
     router.push('/shifts');
   };
 
-  const handleCloseShift = () => {
-    router.push('/shifts');
-  };
-
   const handleDailyReport = () => {
     router.push('/reports');
   };
@@ -73,7 +69,7 @@ export default function Dashboard() {
           </div>
           <div className="navbar-menu">
             <span className="user-info">
-              👤 {user?.name || user?.username} 
+              👤 {user?.full_name || user?.username} 
               <span className="user-role">({user?.role})</span>
             </span>
             <button className="btn btn-danger btn-sm" onClick={handleLogout}>
@@ -85,7 +81,7 @@ export default function Dashboard() {
         {/* Main Content */}
         <div className="main-content">
           <div className="welcome-card">
-            <h1>Selamat Datang, {user?.name || user?.username}! 👋</h1>
+            <h1>Selamat Datang, {user?.full_name || user?.username}! 👋</h1>
             <p>Sistem POS Barbershop siap digunakan</p>
           </div>
 
@@ -93,14 +89,8 @@ export default function Dashboard() {
           <div className="quick-actions-grid">
             <button className="action-card" onClick={handleOpenShift}>
               <div className="action-icon">📂</div>
-              <div className="action-title">Buka Shift</div>
-              <div className="action-desc">Mulai shift kerja baru</div>
-            </button>
-
-            <button className="action-card" onClick={handleCloseShift}>
-              <div className="action-icon">📁</div>
-              <div className="action-title">Tutup Shift</div>
-              <div className="action-desc">Selesai shift & rekap</div>
+              <div className="action-title">Kelola Shift</div>
+              <div className="action-desc">Buka/tutup shift kerja</div>
             </button>
 
             <button className="action-card" onClick={handleDailyReport}>

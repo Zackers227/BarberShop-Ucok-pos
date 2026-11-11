@@ -15,6 +15,16 @@ export default function Shifts() {
     ending_cash: '',
     notes: ''
   });
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update current time every second
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -40,8 +50,8 @@ export default function Shifts() {
       const data = await response.json();
       setShifts(data);
       
-      // Find active shift
-      const active = data.find(s => s.status === 'OPEN');
+      // Find active shift (shift without closed_at is active)
+      const active = data.find(s => !s.closed_at);
       setCurrentShift(active || null);
     } catch (error) {
       console.error('Error fetching shifts:', error);
@@ -157,7 +167,7 @@ export default function Shifts() {
                   <p><strong>Shift ID:</strong> #{currentShift.id}</p>
                   <p><strong>Dibuka oleh:</strong> {currentShift.cashier_name}</p>
                   <p><strong>Waktu Buka:</strong> {new Date(currentShift.opened_at).toLocaleString('id-ID')}</p>
-                  <p><strong>Modal Awal:</strong> Rp {currentShift.starting_cash?.toLocaleString()}</p>
+                  <p><strong>Modal Awal:</strong> Rp {currentShift.opening_balance?.toLocaleString() || '0'}</p>
                   <p><strong>Total Transaksi:</strong> {currentShift.total_transactions || 0}</p>
                   <p><strong>Total Penjualan:</strong> Rp {currentShift.total_sales?.toLocaleString() || 0}</p>
                 </div>
@@ -202,8 +212,8 @@ export default function Shifts() {
                     </tr>
                   ) : (
                     shifts.map(shift => {
-                      const expected = (shift.starting_cash || 0) + (shift.total_sales || 0);
-                      const actual = shift.ending_cash || 0;
+                      const expected = (parseFloat(shift.opening_balance) || 0) + (parseFloat(shift.total_sales) || 0);
+                      const actual = parseFloat(shift.closing_balance) || 0;
                       const diff = actual - expected;
                       
                       return (
@@ -212,15 +222,15 @@ export default function Shifts() {
                           <td>{shift.cashier_name}</td>
                           <td>{new Date(shift.opened_at).toLocaleString('id-ID')}</td>
                           <td>{shift.closed_at ? new Date(shift.closed_at).toLocaleString('id-ID') : '-'}</td>
-                          <td className="text-right">Rp {shift.starting_cash?.toLocaleString()}</td>
+                          <td className="text-right">Rp {shift.opening_balance?.toLocaleString() || '0'}</td>
                           <td className="text-right">Rp {shift.total_sales?.toLocaleString() || 0}</td>
-                          <td className="text-right">Rp {shift.ending_cash?.toLocaleString() || '-'}</td>
+                          <td className="text-right">Rp {shift.closing_balance?.toLocaleString() || '-'}</td>
                           <td className={`text-right ${diff > 0 ? 'text-success' : diff < 0 ? 'text-danger' : ''}`}>
-                            {shift.status === 'CLOSED' ? `Rp ${diff.toLocaleString()}` : '-'}
+                            {shift.closed_at ? `Rp ${diff.toLocaleString()}` : '-'}
                           </td>
                           <td>
-                            <span className={`badge ${shift.status === 'OPEN' ? 'badge-success' : 'badge-secondary'}`}>
-                              {shift.status === 'OPEN' ? 'Aktif' : 'Tutup'}
+                            <span className={`badge ${!shift.closed_at ? 'badge-success' : 'badge-secondary'}`}>
+                              {!shift.closed_at ? 'Aktif' : 'Tutup'}
                             </span>
                           </td>
                         </tr>
@@ -238,6 +248,23 @@ export default function Shifts() {
           <div className="modal-overlay" onClick={() => setShowOpenModal(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <h3>🔓 Buka Shift Baru</h3>
+              <div className="form-group">
+                <label>Waktu Buka Shift</label>
+                <input
+                  type="text"
+                  value={currentTime.toLocaleString('id-ID', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                  })}
+                  readOnly
+                  style={{ backgroundColor: '#f0f0f0', cursor: 'not-allowed' }}
+                />
+              </div>
               <div className="form-group">
                 <label>Modal Awal *</label>
                 <input
@@ -273,11 +300,28 @@ export default function Shifts() {
           <div className="modal-overlay" onClick={() => setShowCloseModal(false)}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <h3>🔒 Tutup Shift</h3>
+              <div className="form-group">
+                <label>Waktu Tutup Shift</label>
+                <input
+                  type="text"
+                  value={currentTime.toLocaleString('id-ID', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                  })}
+                  readOnly
+                  style={{ backgroundColor: '#f0f0f0', cursor: 'not-allowed' }}
+                />
+              </div>
               <div className="shift-summary">
-                <p><strong>Modal Awal:</strong> Rp {currentShift.starting_cash?.toLocaleString()}</p>
+                <p><strong>Modal Awal:</strong> Rp {currentShift.opening_balance?.toLocaleString() || '0'}</p>
                 <p><strong>Total Penjualan:</strong> Rp {currentShift.total_sales?.toLocaleString() || 0}</p>
                 <p><strong>Total Transaksi:</strong> {currentShift.total_transactions || 0}</p>
-                <p className="text-success"><strong>Saldo yang Diharapkan:</strong> Rp {((currentShift.starting_cash || 0) + (currentShift.total_sales || 0)).toLocaleString()}</p>
+                <p className="text-success"><strong>Saldo yang Diharapkan:</strong> Rp {((parseFloat(currentShift.opening_balance) || 0) + (parseFloat(currentShift.total_sales) || 0)).toLocaleString()}</p>
               </div>
               <div className="form-group">
                 <label>Saldo Akhir (Hitung Kas) *</label>
@@ -291,11 +335,11 @@ export default function Shifts() {
               {formData.ending_cash && (
                 <div className="difference-alert">
                   <p>Selisih: <strong className={
-                    parseFloat(formData.ending_cash) - (currentShift.starting_cash + (currentShift.total_sales || 0)) >= 0 
+                    parseFloat(formData.ending_cash) - ((parseFloat(currentShift.opening_balance) || 0) + (parseFloat(currentShift.total_sales) || 0)) >= 0 
                       ? 'text-success' 
                       : 'text-danger'
                   }>
-                    Rp {(parseFloat(formData.ending_cash) - (currentShift.starting_cash + (currentShift.total_sales || 0))).toLocaleString()}
+                    Rp {(parseFloat(formData.ending_cash) - ((parseFloat(currentShift.opening_balance) || 0) + (parseFloat(currentShift.total_sales) || 0))).toLocaleString()}
                   </strong></p>
                 </div>
               )}

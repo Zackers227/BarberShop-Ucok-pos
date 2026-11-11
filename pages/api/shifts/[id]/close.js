@@ -6,7 +6,8 @@ async function handler(req, res) {
 
   try {
     if (req.method === 'POST') {
-      const { closing_balance, actual_cash, notes } = req.body;
+      const { closing_balance, ending_cash, notes } = req.body;
+      const actualClosingBalance = ending_cash || closing_balance || 0; // Support both field names
 
       // Get shift
       const shiftResult = await query('SELECT * FROM shifts WHERE id = $1', [id]);
@@ -21,7 +22,7 @@ async function handler(req, res) {
         return res.status(400).json({ error: 'Shift sudah ditutup' });
       }
 
-      if (shift.user_id !== req.user.id && req.user.role !== 'admin') {
+      if (shift.user_id !== req.user.id && req.user.role !== 'OWNER') {
         return res.status(403).json({ error: 'Anda tidak berhak menutup shift ini' });
       }
 
@@ -37,28 +38,23 @@ async function handler(req, res) {
       );
 
       const stats = statsResult.rows[0];
-      const cash_difference = actual_cash - closing_balance;
+      const expectedBalance = parseFloat(shift.opening_balance || 0) + parseFloat(stats.total_sales || 0);
+      const difference = parseFloat(actualClosingBalance) - expectedBalance;
 
       // Update shift
       const result = await query(
         `UPDATE shifts
          SET closed_at = CURRENT_TIMESTAMP,
              closing_balance = $1,
-             actual_cash = $2,
-             cash_difference = $3,
-             total_transactions = $4,
-             total_sales = $5,
-             total_discounts = $6,
-             notes = CASE WHEN $7 IS NOT NULL THEN notes || ' | ' || $7 ELSE notes END
-         WHERE id = $8
+             expected_balance = $2,
+             difference = $3,
+             notes = CASE WHEN $4 IS NOT NULL THEN COALESCE(notes || ' | ', '') || $4 ELSE notes END
+         WHERE id = $5
          RETURNING *`,
         [
-          closing_balance,
-          actual_cash,
-          cash_difference,
-          stats.total_transactions,
-          stats.total_sales,
-          stats.total_discounts,
+          actualClosingBalance,
+          expectedBalance,
+          difference,
           notes,
           id
         ]
