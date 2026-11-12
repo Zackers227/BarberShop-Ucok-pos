@@ -49,16 +49,8 @@ export default function TransactionDetail() {
   };
 
   const handlePrint = () => {
-    // Add print class to body for better print styling
-    document.body.classList.add('printing');
-    
-    // Trigger print
-    window.print();
-    
-    // Remove print class after print dialog closes
-    setTimeout(() => {
-      document.body.classList.remove('printing');
-    }, 1000);
+    // Open dedicated print page optimized for 58mm thermal printer
+    window.open(`/print/${id}`, '_blank', 'width=400,height=600');
   };
 
   const handleVoid = async () => {
@@ -128,18 +120,23 @@ export default function TransactionDetail() {
       <style jsx global>{`
         @media print {
           @page {
-            margin: 1cm;
-            size: A4;
+            size: 58mm auto;
+            margin: 0;
+          }
+          
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
           }
           
           body {
             background: white !important;
             color: black !important;
-          }
-          
-          * {
-            box-shadow: none !important;
-            text-shadow: none !important;
+            width: 58mm;
+            font-family: 'Courier New', monospace;
+            font-size: 11pt;
+            line-height: 1.3;
           }
         }
       `}</style>
