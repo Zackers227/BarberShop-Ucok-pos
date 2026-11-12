@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Logo from '../components/Logo';
 
 export default function Reports() {
   const router = useRouter();
@@ -79,7 +80,7 @@ export default function Reports() {
       <div className="page-container">
         <nav className="navbar no-print">
           <div className="navbar-brand">
-            <h2>💈 Barbershop Ucok POS</h2>
+            <Logo size="small" />
           </div>
           <div className="navbar-menu">
             <button className="btn btn-secondary btn-sm" onClick={() => router.push('/dashboard')}>
@@ -139,7 +140,8 @@ export default function Reports() {
             <div className="report-content">
               {/* Header */}
               <div className="report-header">
-                <h2>Barbershop Ucok</h2>
+                <h2>MENSURFACE</h2>
+                <p style={{ fontSize: '0.9rem', letterSpacing: '2px', color: '#666' }}>- BARBER AND SHOP -</p>
                 <p>Laporan {reportType === 'daily' ? 'Harian' : 'Bulanan'}</p>
                 <p className="report-period">
                   {reportType === 'daily' 

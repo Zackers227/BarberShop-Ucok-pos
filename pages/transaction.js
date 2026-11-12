@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Logo from '../components/Logo';
 
 export default function Transaction() {
   const router = useRouter();
@@ -311,7 +312,7 @@ export default function Transaction() {
       <div className="page-container">
         <nav className="navbar">
           <div className="navbar-brand">
-            <h2>💈 Barbershop Ucok POS</h2>
+            <Logo size="small" />
           </div>
           <div className="navbar-menu">
             <button className="btn btn-secondary btn-sm" onClick={() => router.push('/dashboard')}>

@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Logo from '../../components/Logo';
 
 export default function TransactionDetail() {
   const router = useRouter();
@@ -468,7 +469,7 @@ export default function TransactionDetail() {
       <div className="detail-container">
         <nav className="navbar printable">
           <div className="navbar-brand">
-            <h2>💈 Barbershop Ucok POS</h2>
+            <Logo size="small" />
           </div>
           <div className="navbar-menu no-print">
             <button className="btn btn-secondary btn-sm" onClick={() => router.push('/transactions')}>
@@ -501,15 +502,10 @@ export default function TransactionDetail() {
               paddingBottom: '1rem',
               borderBottom: '2px solid #E5E7EB'
             }}>
-              <h1 style={{ 
-                fontSize: '1.75rem', 
-                color: '#111827',
-                marginBottom: '0.5rem',
-                fontFamily: 'Poppins, sans-serif'
-              }}>
-                💈 Barbershop Ucok
-              </h1>
-              <p style={{ fontSize: '1rem', color: '#6B7280' }}>Invoice #{transaction.id}</p>
+              <div style={{ display: 'inline-block' }}>
+                <Logo size="medium" />
+              </div>
+              <p style={{ fontSize: '1rem', color: '#6B7280', marginTop: '0.5rem' }}>Invoice #{transaction.id}</p>
             </div>
           </div>
 

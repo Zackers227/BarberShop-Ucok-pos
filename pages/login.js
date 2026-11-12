@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Logo from '../components/Logo';
 
 export default function Login() {
   const router = useRouter();
@@ -56,10 +57,7 @@ export default function Login() {
       
       <div className="login-container">
         <div className="login-box">
-          <div className="logo">
-            <h1>💈 Barbershop Ucok</h1>
-            <p>Point of Sale System</p>
-          </div>
+          <Logo size="large" />
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">

@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { hasPermission } from '../lib/permissions';
+import Logo from '../components/Logo';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -88,7 +89,7 @@ export default function Dashboard() {
         {/* Navbar */}
         <nav className="navbar">
           <div className="navbar-brand">
-            <h2>💈 Barbershop Ucok POS</h2>
+            <Logo size="small" />
           </div>
           <div className="navbar-menu">
             <span className="user-info">
@@ -281,7 +282,7 @@ export default function Dashboard() {
 
         {/* Footer */}
         <footer className="dashboard-footer">
-          <p>© 2026 Barbershop Ucok POS | Versi 2.0 | Powered by Next.js</p>
+          <p>© 2026 MENSURFACE Barber and Shop | Versi 2.1 | Powered by Next.js</p>
         </footer>
       </div>
     </>

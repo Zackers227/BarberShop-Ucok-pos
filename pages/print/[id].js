@@ -77,7 +77,8 @@ export default function PrintReceipt() {
         .header h1 {
           font-size: 14pt;
           font-weight: bold;
-          margin-bottom: 1mm;
+          margin-bottom: 0.5mm;
+          letter-spacing: 0;
         }
 
         .header p {
@@ -189,7 +190,8 @@ export default function PrintReceipt() {
       <div className="receipt">
         {/* Header */}
         <div className="header">
-          <h1>BARBERSHOP UCOK</h1>
+          <h1>MENSURFACE</h1>
+          <p style={{ fontSize: '9pt', letterSpacing: '2px' }}>- BARBER AND SHOP -</p>
           <p>Jl. Contoh No. 123</p>
           <p>Telp: 0812-3456-7890</p>
         </div>
