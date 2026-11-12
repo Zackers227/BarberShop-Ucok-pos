@@ -262,10 +262,19 @@ export default function Transaction() {
 
       if (response.ok) {
         const result = await response.json();
-        if (isPending) {
-          alert(`Transaksi pending berhasil disimpan!\nNo: ${result.transaction.transaction_no}\n\nProses pembayaran nanti di menu Transaksi Pending.`);
+        
+        // Auto print untuk transaksi completed (bukan pending)
+        if (!isPending) {
+          // Open print page in new window and auto-print
+          const printWindow = window.open(
+            `/print/${result.transaction.id}`,
+            '_blank',
+            'width=800,height=600'
+          );
+          
+          alert(`Transaksi berhasil! No: ${result.transaction.transaction_no}\n\nStruk sedang dicetak...`);
         } else {
-          alert(`Transaksi berhasil! No: ${result.transaction.transaction_no}`);
+          alert(`Transaksi pending berhasil disimpan!\nNo: ${result.transaction.transaction_no}\n\nProses pembayaran nanti di menu Transaksi Pending.`);
         }
         
         // Reset form

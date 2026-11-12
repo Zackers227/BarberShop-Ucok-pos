@@ -93,7 +93,15 @@ export default function PendingTransactions() {
 
       if (response.ok) {
         const result = await response.json();
-        alert(`Pembayaran berhasil!\nNo: ${result.transaction.transaction_no}`);
+        
+        // Auto print struk setelah pembayaran berhasil
+        const printWindow = window.open(
+          `/print/${selectedTransaction.id}`,
+          '_blank',
+          'width=800,height=600'
+        );
+        
+        alert(`Pembayaran berhasil!\nNo: ${result.transaction.transaction_no}\n\nStruk sedang dicetak...`);
         setShowPaymentModal(false);
         setSelectedTransaction(null);
         setPaymentAmount('');
