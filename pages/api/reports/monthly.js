@@ -11,7 +11,10 @@ async function handler(req, res) {
       }
 
       const startDate = `${year}-${String(month).padStart(2, '0')}-01`;
-      const endDate = `${year}-${String(month).padStart(2, '0')}-31`;
+      
+      // Calculate last day of month properly
+      const lastDay = new Date(parseInt(year), parseInt(month), 0).getDate();
+      const endDate = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
 
       // Summary transaksi (match daily report format)
       const summaryResult = await query(
