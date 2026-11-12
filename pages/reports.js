@@ -36,7 +36,9 @@ export default function Reports() {
       if (reportType === 'daily') {
         url = `/api/reports/daily?date=${selectedDate}`;
       } else {
-        url = `/api/reports/monthly?month=${selectedMonth}`;
+        // Parse selectedMonth (YYYY-MM) into year and month
+        const [year, month] = selectedMonth.split('-');
+        url = `/api/reports/monthly?year=${year}&month=${month}`;
       }
 
       const response = await fetch(url, {
@@ -47,11 +49,12 @@ export default function Reports() {
         const data = await response.json();
         setReportData(data);
       } else {
-        alert('Error fetching report');
+        const error = await response.json();
+        alert('Error fetching report: ' + (error.error || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Terjadi kesalahan');
+      alert('Terjadi kesalahan: ' + error.message);
     }
   };
 
