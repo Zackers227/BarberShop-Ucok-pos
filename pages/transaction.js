@@ -282,14 +282,15 @@ export default function Transaction() {
           
           alertMessage += `\n\nStruk sedang dicetak...`;
           
-          // Open print page in new window and auto-print
+          // Alert dulu, baru open print window setelah user klik OK
+          alert(alertMessage);
+          
+          // Open print page SETELAH alert (agar tidak diblock browser)
           window.open(
             `/print/${result.transaction.id}`,
             '_blank',
             'width=800,height=600'
           );
-          
-          alert(alertMessage);
         } else {
           alert(`Transaksi pending berhasil disimpan!\nNo: ${result.transaction.transaction_no}\n\nProses pembayaran nanti di menu Transaksi Pending.`);
         }

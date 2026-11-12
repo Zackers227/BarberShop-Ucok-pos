@@ -111,14 +111,16 @@ export default function PendingTransactions() {
         
         alertMessage += `\n\nStruk sedang dicetak...`;
         
-        // Auto print struk setelah pembayaran berhasil
+        // Alert dulu, baru open print window setelah user klik OK
+        alert(alertMessage);
+        
+        // Auto print struk SETELAH alert (agar tidak diblock browser)
         window.open(
           `/print/${selectedTransaction.id}`,
           '_blank',
           'width=800,height=600'
         );
         
-        alert(alertMessage);
         setShowPaymentModal(false);
         setSelectedTransaction(null);
         setPaymentAmount('');
