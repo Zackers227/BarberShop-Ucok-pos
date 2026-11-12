@@ -27,9 +27,10 @@ Access: `http://localhost:3001`
 ## ✨ Features
 
 - ✅ **Transaction Management** - Cart system, multiple payment methods
-- ✅ **Shift Management** - Open/close shift with cash counting
+- ✅ **Shift Management** - Open/close shift with cash counting, shift status on dashboard
 - ✅ **Reports** - Daily & monthly reports with charts
-- ✅ **User Management** - CRUD users (Owner only)
+- ✅ **User Management** - CRUD users with granular permissions (Owner only)
+- ✅ **Permission System** - 11 granular permissions for fine-grained access control
 - ✅ **Kapster Management** - Manage barbers with commission tracking
 - ✅ **Service Management** - CRUD services with pricing
 - ✅ **Product Management** - Stock management with alerts
@@ -37,6 +38,8 @@ Access: `http://localhost:3001`
 - ✅ **Discount System** - Voucher codes and promotions
 - ✅ **Multi-Payment** - Cash, QRIS, Transfer, Debit/Credit
 - ✅ **Void Transactions** - Cancel transactions with reason
+- ✅ **Thermal Printing** - Optimized for 58mm thermal printers (mobile-friendly)
+- ✅ **Mobile Support** - Full support for Android tablets with Bluetooth printing
 - ✅ **Modern UI** - Gradient backgrounds, glassmorphism effects
 
 ---
@@ -137,6 +140,7 @@ Automatically closes any orphaned shifts in the database.
 
 ### Key Tables:
 - **users** - Authentication & authorization
+- **user_permissions** - Granular access control (11 permissions)
 - **shifts** - Cash management per shift
 - **transactions** - Sales records
 - **transaction_details** - Line items
@@ -172,6 +176,8 @@ Verify:
 
 ## 📚 Documentation
 
+- **DEPLOYMENT_SUMMARY.md** - Latest deployment and thermal print features
+- **MOBILE_PRINTING_GUIDE.md** - Complete guide for Android/iOS mobile printing
 - **SHIFT_FIX_SUMMARY.md** - Details on shift management fixes
 - **PROJECT_SUMMARY.md** - Complete project documentation
 - **API.md** - API endpoint documentation
@@ -222,7 +228,18 @@ Verify:
 
 ## 🔄 Recent Updates
 
-**v2.0 (Latest) - Nov 11, 2026**
+**v2.1 (Latest) - Nov 12, 2026**
+- ✅ **NEW:** Optimized thermal printing for 58mm printers
+- ✅ **NEW:** Dedicated print page with larger fonts and compact layout
+- ✅ **NEW:** Mobile printing guide for Android/iOS
+- ✅ **NEW:** Granular permission system (11 permissions)
+- ✅ **NEW:** Shift status display on dashboard with warnings
+- ✅ **NEW:** Shift validation for transactions
+- ✅ Fixed role checking (case-insensitive)
+- ✅ Enhanced user management with permission controls
+- ✅ Dashboard menu based on user permissions
+
+**v2.0 - Nov 11, 2026**
 - ✅ Fixed shift opening issues
 - ✅ Added automatic timestamps
 - ✅ Aligned field names with database schema
@@ -252,6 +269,46 @@ MIT License - Free to use and modify
 
 ---
 
+## 🖨️ Thermal Printing
+
+**NEW!** Optimized for 58mm thermal printers with mobile support.
+
+### Features:
+- ✅ Larger fonts (10-14pt) optimized for thermal paper
+- ✅ Compact layout with minimal margins
+- ✅ Monospace font for better thermal printing
+- ✅ Auto-print on page load
+- ✅ Mobile-friendly (Android Bluetooth support)
+
+### Quick Setup:
+1. Pair Bluetooth thermal printer with Android device
+2. Open transaction detail
+3. Click "🖨️ Cetak" button
+4. Select printer and print size (58mm)
+
+📖 **Full guide:** See `MOBILE_PRINTING_GUIDE.md`
+
+---
+
+## 🔐 Permission System
+
+**11 Granular Permissions:**
+1. Dashboard access
+2. View transactions
+3. Create transactions
+4. Manage shifts
+5. View reports
+6. Manage customers
+7. Manage kapsters
+8. Manage services
+9. Manage products
+10. Manage discounts
+11. Manage users (Owner only by default)
+
+**Configure:** Users page → Edit user → Check permissions
+
+---
+
 **Made with ❤️ for Barbershop Ucok**
 
-*Last Updated: November 11, 2026*
+*Last Updated: November 12, 2026*
