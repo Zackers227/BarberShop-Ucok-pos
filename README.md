@@ -1,319 +1,257 @@
-# 💈 Barbershop Ucok POS
+# 💈 Barbershop Ucok POS v2.0
 
-Sistem Point of Sale (POS) modern untuk barbershop dengan fitur lengkap manajemen transaksi, laporan, dan administrasi.
+Complete Point of Sale system for barbershop built with **Next.js 14** and **PostgreSQL (Supabase)**.
 
-## 🚀 Demo Live
+---
 
-**Production URL:** https://barber-shop-ucok-pos.vercel.app
+## 🚀 Quick Start
 
-### Login Credentials
-- **Owner:** `admin` / `admin123`
-- **Kasir:** `kasir1` / `kasir123`
-
-## ✨ Fitur Utama
-
-### 🛒 Transaksi
-- Form transaksi lengkap dengan keranjang belanja
-- Pilih customer (walk-in atau registered)
-- Pilih kapster
-- Tambah layanan (haircut, styling, dll)
-- Tambah produk (pomade, shampoo, dll)
-- Terapkan diskon (percentage atau fixed amount)
-- Multiple payment methods: Tunai, QRIS, Transfer, Debit
-- Hitung otomatis subtotal, diskon, total, dan kembalian
-- Void transaksi (batalkan)
-
-### 📊 Manajemen Shift
-- Buka shift dengan modal awal
-- Track transaksi per shift
-- Tutup shift dengan perhitungan kas
-- Deteksi selisih kas (lebih/kurang)
-- Riwayat shift lengkap
-
-### 📈 Laporan
-- **Laporan Harian:** Total pendapatan, transaksi, customer
-- **Laporan Bulanan:** Analisis bulanan lengkap
-- Breakdown per metode pembayaran
-- Top 5 layanan terlaris
-- Top 5 produk terlaris
-- Performa per kapster
-- Export/print laporan
-
-### 👥 Kelola Member (Owner Only)
-- Tambah/edit/hapus user/kasir
-- Role management (Owner/Kasir)
-- Active/inactive status
-- Reset password
-
-### 💈 Kelola Kapster
-- Tambah/edit/hapus kapster
-- Set komisi per kapster
-- Track performa kapster
-
-### ✂️ Kelola Layanan
-- Tambah/edit/hapus layanan
-- Set harga dan durasi
-- Deskripsi layanan
-
-### 🧴 Kelola Produk
-- Tambah/edit/hapus produk
-- Manajemen stok
-- Alert stok rendah
-- Harga jual dan modal
-
-### 👤 Kelola Customer
-- Database customer
-- Track riwayat kunjungan
-- Program loyalty (coming soon)
-
-## 🛠️ Tech Stack
-
-- **Frontend:** Next.js 14, React
-- **Backend:** Next.js API Routes (Serverless)
-- **Database:** PostgreSQL (Supabase)
-- **Deployment:** Vercel
-- **Authentication:** JWT
-- **Styling:** Custom CSS
-
-## 📦 Installation
-
-### Prerequisites
-- Node.js 18+
-- npm atau yarn
-- PostgreSQL database (Supabase recommended)
-
-### Setup Lokal
-
-1. **Clone repository**
-```bash
-git clone https://github.com/Zackers227/BarberShop-Ucok-pos.git
-cd BarberShop-Ucok-pos
-```
-
-2. **Install dependencies**
 ```bash
 npm install
-```
-
-3. **Setup environment variables**
-```bash
-cp .env.example .env
-```
-
-Edit `.env`:
-```env
-DATABASE_URL=postgresql://user:password@host:port/database
-JWT_SECRET=your-secret-key-here
-```
-
-4. **Setup database**
-```bash
-# Jalankan schema PostgreSQL
-node database/migrate-pg.js
-
-# Atau manual import
-psql -h host -U user -d database -f database/schema-pg.sql
-```
-
-5. **Seed data (optional)**
-```bash
-node database/seed.js
-```
-
-6. **Run development server**
-```bash
 npm run dev
 ```
 
-Buka http://localhost:3000
+Access: `http://localhost:3001`
 
-## 🌐 Deployment ke Vercel
+---
 
-### Langkah Deploy
+## 🔐 Login Credentials
 
-1. **Push ke GitHub**
-```bash
-git add .
-git commit -m "Ready for deployment"
-git push origin main
+| Role  | Username | Password  | Access Level          |
+|-------|----------|-----------|-----------------------|
+| Owner | admin    | admin123  | Full access (all features) |
+| Kasir | kasir1   | kasir123  | Limited (no user management) |
+
+---
+
+## ✨ Features
+
+- ✅ **Transaction Management** - Cart system, multiple payment methods
+- ✅ **Shift Management** - Open/close shift with cash counting
+- ✅ **Reports** - Daily & monthly reports with charts
+- ✅ **User Management** - CRUD users (Owner only)
+- ✅ **Kapster Management** - Manage barbers with commission tracking
+- ✅ **Service Management** - CRUD services with pricing
+- ✅ **Product Management** - Stock management with alerts
+- ✅ **Customer Management** - Track customer visits and spending
+- ✅ **Discount System** - Voucher codes and promotions
+- ✅ **Multi-Payment** - Cash, QRIS, Transfer, Debit/Credit
+- ✅ **Void Transactions** - Cancel transactions with reason
+- ✅ **Modern UI** - Gradient backgrounds, glassmorphism effects
+
+---
+
+## �️ Database
+
+**Provider:** Supabase PostgreSQL  
+**Region:** Singapore (ap-southeast-1)  
+**Port:** 6543 (Connection Pooler)  
+**Tables:** 13 tables with full relational schema
+
+### Connection String:
+```
+postgresql://postgres.wnwkoxkkumuqxkowdevy:Memekjeber1@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
 ```
 
-2. **Deploy ke Vercel**
-```bash
-npm i -g vercel
-vercel login
-vercel --prod
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 14, React, CSS3
+- **Backend:** Next.js API Routes (Serverless)
+- **Database:** PostgreSQL (Supabase)
+- **Authentication:** JWT
+- **Deployment:** Vercel
+- **ORM:** Raw SQL with pg driver
+
+---
+
+## 📦 Project Structure
+
+```
+Barbershop/
+├── pages/
+│   ├── api/              # API Routes (23 endpoints)
+│   │   ├── auth/         # Login, logout, me
+│   │   ├── customers/    # Customer CRUD
+│   │   ├── discounts/    # Discount CRUD
+│   │   ├── kapsters/     # Kapster CRUD
+│   │   ├── products/     # Product CRUD
+│   │   ├── services/     # Service CRUD
+│   │   ├── shifts/       # Shift management
+│   │   ├── transactions/ # Transaction processing
+│   │   ├── users/        # User management
+│   │   └── reports/      # Daily & monthly reports
+│   ├── dashboard.js      # Main dashboard
+│   ├── login.js          # Login page
+│   ├── transaction.js    # POS transaction form
+│   ├── transactions.js   # Transaction history
+│   ├── shifts.js         # Shift management
+│   ├── reports.js        # Reports page
+│   ├── users.js          # User management (Owner)
+│   ├── kapsters.js       # Kapster management
+│   ├── services.js       # Service management
+│   └── products.js       # Product management
+├── lib/
+│   ├── db.js            # Database connection pool
+│   └── auth.js          # JWT authentication middleware
+├── public/
+│   └── css/             # Stylesheets
+└── database/
+    ├── schema-pg.sql    # PostgreSQL schema
+    └── migrate-pg.js    # Migration script
 ```
 
-3. **Set Environment Variables**
+---
+
+## 🔧 Utility Scripts
+
+### Debug Shifts
 ```bash
-vercel env add DATABASE_URL production
-vercel env add JWT_SECRET production
+node test-shift-debug.js
 ```
+Shows all shifts and identifies open/orphaned shifts.
 
-Atau via Vercel Dashboard:
-- Buka project di https://vercel.com
-- Settings → Environment Variables
-- Tambahkan `DATABASE_URL` dan `JWT_SECRET`
+### Fix Orphaned Shifts
+```bash
+node fix-orphaned-shift.js
+```
+Automatically closes any orphaned shifts in the database.
 
-### Database Setup (Supabase)
+---
 
-1. Buat project di https://supabase.com
-2. Pilih region: Southeast Asia (Singapore)
-3. Buka SQL Editor
-4. Copy-paste isi `database/schema-pg.sql`
-5. Execute
-6. Copy connection string (Transaction Pooler) dari Settings → Database
-7. Format: `postgresql://postgres.[ref]:[password]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres`
+## 🌐 Deployment
 
-## 📱 Screenshot
+**Production URL:** https://barber-shop-ucok-pos.vercel.app
 
-### Login Page
-![Login](docs/login.png)
+### Deploy to Vercel
 
-### Dashboard
-![Dashboard](docs/dashboard.png)
+1. Connect GitHub repository to Vercel
+2. Add environment variable:
+   - `DATABASE_URL` = Your Supabase connection string
+3. Deploy automatically on push to main
 
-### Transaction Form
-![Transaction](docs/transaction.png)
+---
 
-### Reports
-![Reports](docs/reports.png)
+## 📊 Database Schema
 
-## 🗂️ Struktur Database
+### Key Tables:
+- **users** - Authentication & authorization
+- **shifts** - Cash management per shift
+- **transactions** - Sales records
+- **transaction_details** - Line items
+- **payments** - Payment methods used
+- **kapsters** - Barber information
+- **services** - Service catalog
+- **products** - Inventory management
+- **customers** - Customer database
+- **discounts** - Promotional codes
+- **stock_history** - Inventory tracking
+- **activity_logs** - Audit trail
 
-### Tables (13 total)
-1. **users** - User/kasir management
-2. **kapsters** - Data kapster
-3. **customers** - Data customer
-4. **services** - Layanan barbershop
-5. **products** - Produk dijual
-6. **discounts** - Promo/diskon
-7. **shifts** - Shift kasir
-8. **transactions** - Header transaksi
-9. **transaction_items** - Detail items transaksi
-10. **payments** - Payment details
-11. **inventory_logs** - Log perubahan stok
-12. **customer_visits** - Riwayat kunjungan
-13. **commissions** - Komisi kapster
+---
 
-## 🔒 Security Features
+## � Troubleshooting
 
-- JWT Authentication
-- Password hashing (bcrypt)
-- Role-based access control (RBAC)
-- Protected API routes
-- SQL injection prevention (parameterized queries)
-- XSS protection
+### Cannot Open Shift
+Run: `node fix-orphaned-shift.js`
 
-## 📊 API Endpoints
+### Database Connection Error
+Check:
+1. Connection string in `.env.local`
+2. Using Connection Pooler (port 6543)
+3. Supabase project is active
 
-### Authentication
-- `POST /api/auth/login` - Login
-- `POST /api/auth/logout` - Logout
-- `GET /api/auth/me` - Get current user
+### Login Not Working
+Verify:
+1. Username: `admin`, Password: `admin123`
+2. Database has users seeded
+3. JWT_SECRET is set in environment
 
-### Transactions
-- `GET /api/transactions` - List transaksi
-- `POST /api/transactions` - Buat transaksi baru
-- `GET /api/transactions/[id]` - Detail transaksi
-- `POST /api/transactions/[id]/void` - Void transaksi
+---
 
-### Shifts
-- `GET /api/shifts` - List shifts
-- `POST /api/shifts` - Buka shift
-- `POST /api/shifts/[id]/close` - Tutup shift
+## 📚 Documentation
 
-### Reports
-- `GET /api/reports/daily?date=YYYY-MM-DD` - Laporan harian
-- `GET /api/reports/monthly?month=YYYY-MM` - Laporan bulanan
+- **SHIFT_FIX_SUMMARY.md** - Details on shift management fixes
+- **PROJECT_SUMMARY.md** - Complete project documentation
+- **API.md** - API endpoint documentation
+- **CHANGELOG.md** - Version history
 
-### Management (Owner Only)
-- `GET /api/users` - List user
-- `POST /api/users` - Tambah user
-- `PUT /api/users/[id]` - Update user
-- `DELETE /api/users/[id]` - Hapus user
+---
 
-### Master Data
-- CRUD endpoints untuk: `/api/kapsters`, `/api/services`, `/api/products`, `/api/customers`, `/api/discounts`
+## 🔒 Security
 
-## 🎨 UI/UX Features
+- ✅ JWT authentication with 24h expiration
+- ✅ bcrypt password hashing
+- ✅ Role-based access control
+- ✅ SQL injection protection
+- ✅ Secure environment variables
+- ✅ Owner-only sensitive operations
 
-- Modern gradient design
-- Responsive layout (mobile-friendly)
-- Smooth animations
-- Card-based components
-- Modal dialogs
-- Toast notifications
-- Loading states
-- Empty states
-- Error handling
+---
 
-## 📝 Changelog
+## � Pages Overview
 
-### Version 2.0.0 (Latest)
-- ✅ Rewrite dari Express.js ke Next.js
-- ✅ Serverless architecture
-- ✅ Complete transaction flow
-- ✅ Shift management
-- ✅ Daily & monthly reports
-- ✅ User management (Owner only)
-- ✅ Master data management
-- ✅ Modern UI redesign
-- ✅ Responsive design
+| Page | Route | Access | Description |
+|------|-------|--------|-------------|
+| Login | `/login` | Public | User authentication |
+| Dashboard | `/dashboard` | All | Main landing page |
+| Transaction | `/transaction` | All | POS checkout form |
+| History | `/transactions` | All | Transaction list & void |
+| Shifts | `/shifts` | All | Open/close shift |
+| Reports | `/reports` | All | Daily & monthly reports |
+| Users | `/users` | Owner | User management |
+| Kapsters | `/kapsters` | All | Kapster management |
+| Services | `/services` | All | Service management |
+| Products | `/products` | All | Product & stock management |
 
-### Version 1.0.0
-- Initial release dengan Express.js
-- Basic POS features
+---
 
-## 🤝 Contributing
+## 🎨 UI Features
 
-Contributions are welcome! Please follow these steps:
+- **Animated Gradients** - 5-color gradient backgrounds
+- **Glassmorphism** - Frosted glass effects
+- **Live Clock** - Real-time timestamp display
+- **Responsive Design** - Works on desktop & tablet
+- **Loading States** - Smooth transitions
+- **Modal Dialogs** - User-friendly forms
+- **Data Tables** - Sortable and filterable
+- **Charts** - Visual reports (coming soon)
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+---
+
+## 🔄 Recent Updates
+
+**v2.0 (Latest) - Nov 11, 2026**
+- ✅ Fixed shift opening issues
+- ✅ Added automatic timestamps
+- ✅ Aligned field names with database schema
+- ✅ Removed "Tutup Shift" from dashboard
+- ✅ Fixed orphaned shift detection
+- ✅ Support for both field name variants
+- ✅ Fixed user display name (full_name)
+
+**Previous:**
+- Complete Next.js migration from Express
+- Supabase PostgreSQL integration
+- 9 feature pages with full functionality
+- Modern UI redesign with gradients
+
+---
+
+## 📞 Support
+
+**GitHub:** https://github.com/Zackers227/BarberShop-Ucok-pos  
+**Issues:** Report bugs via GitHub Issues
+
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-**Barbershop Ucok POS**
-- GitHub: [@Zackers227](https://github.com/Zackers227)
-- Repository: [BarberShop-Ucok-pos](https://github.com/Zackers227/BarberShop-Ucok-pos)
-
-## 🆘 Support
-
-Jika mengalami masalah:
-1. Check [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) untuk dokumentasi lengkap
-2. Check [INSTALL.md](INSTALL.md) untuk panduan instalasi
-3. Check [API.md](API.md) untuk dokumentasi API
-4. Open an issue di GitHub
-
-## 🎯 Roadmap
-
-### Coming Soon
-- [ ] Print struk thermal 58mm
-- [ ] Customer loyalty program
-- [ ] Appointment booking
-- [ ] WhatsApp notification
-- [ ] Multi-branch support
-- [ ] Advanced analytics
-- [ ] Expense tracking
-- [ ] Employee attendance
-
-## 📞 Contact
-
-Untuk pertanyaan atau kerjasama:
-- Email: support@barbershopucok.com
-- Website: https://barber-shop-ucok-pos.vercel.app
+MIT License - Free to use and modify
 
 ---
 
 **Made with ❤️ for Barbershop Ucok**
 
-*Last Updated: November 2026*
+*Last Updated: November 11, 2026*

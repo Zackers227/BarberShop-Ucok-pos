@@ -6,6 +6,8 @@ export default function Transaction() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeShift, setActiveShift] = useState(null);
+  const [shiftLoading, setShiftLoading] = useState(true);
   
   // Data
   const [customers, setCustomers] = useState([]);
@@ -36,6 +38,32 @@ export default function Transaction() {
     gender: ''
   });
 
+  // Check if there's an active shift
+  const checkActiveShift = async (token) => {
+    try {
+      const response = await fetch('/api/shifts', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      
+      // Find active shift (where closed_at is null)
+      const active = data.find(shift => !shift.closed_at);
+      setActiveShift(active);
+      
+      if (!active) {
+        // No active shift, show warning and redirect
+        alert('⚠️ Shift belum dibuka!\n\nSilakan buka shift terlebih dahulu sebelum melakukan transaksi.');
+        router.push('/shifts');
+        return;
+      }
+      
+      setShiftLoading(false);
+    } catch (error) {
+      console.error('Error checking shift:', error);
+      setShiftLoading(false);
+    }
+  };
+
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     const userData = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
@@ -48,6 +76,9 @@ export default function Transaction() {
     if (userData) {
       setUser(JSON.parse(userData));
     }
+
+    // Check active shift first
+    checkActiveShift(token);
     
     fetchData(token);
     setLoading(false);
@@ -261,8 +292,12 @@ export default function Transaction() {
     }
   };
 
-  if (loading) {
-    return <div className="loading-screen">Loading...</div>;
+  if (loading || shiftLoading) {
+    return <div className="loading-screen">Memeriksa shift aktif...</div>;
+  }
+
+  if (!activeShift) {
+    return <div className="loading-screen">Redirect ke halaman shift...</div>;
   }
 
   return (
@@ -287,7 +322,25 @@ export default function Transaction() {
         </nav>
 
         <div className="transaction-container">
-          <h1 className="page-title">🛒 Transaksi Baru</h1>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            marginBottom: '1rem'
+          }}>
+            <h1 className="page-title">🛒 Transaksi Baru</h1>
+            <div style={{
+              padding: '0.75rem 1.25rem',
+              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+              color: 'white',
+              borderRadius: '10px',
+              fontWeight: '600',
+              fontSize: '0.95rem',
+              boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.3)'
+            }}>
+              🟢 Shift #{activeShift.id} Aktif
+            </div>
+          </div>
 
           <div className="transaction-layout">
             {/* Left Panel - Form */}

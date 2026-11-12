@@ -54,6 +54,12 @@ export default async function handler(req, res) {
     console.log('[LOGIN] Generating token...');
     const token = generateToken(user.id, user.username, user.role);
 
+    // Get user permissions
+    const permissionsResult = await query(
+      'SELECT permission FROM user_permissions WHERE user_id = $1',
+      [user.id]
+    );
+
     console.log('[LOGIN] Login successful!');
 
     // Return user data tanpa password
@@ -62,9 +68,10 @@ export default async function handler(req, res) {
       user: {
         id: user.id,
         username: user.username,
-        name: user.full_name,
+        full_name: user.full_name,
         role: user.role,
-        email: user.email
+        email: user.email,
+        permissions: permissionsResult.rows.map(row => row.permission)
       }
     });
   } catch (error) {

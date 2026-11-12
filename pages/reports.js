@@ -174,16 +174,6 @@ export default function Reports() {
                     <p className="summary-value">{reportData.total_customers || 0}</p>
                   </div>
                 </div>
-
-                <div className="summary-card">
-                  <div className="summary-icon">📊</div>
-                  <div className="summary-info">
-                    <p className="summary-label">Rata-rata Transaksi</p>
-                    <p className="summary-value">
-                      Rp {reportData.average_transaction?.toLocaleString() || 0}
-                    </p>
-                  </div>
-                </div>
               </div>
 
               {/* Payment Methods Breakdown */}
@@ -199,13 +189,19 @@ export default function Reports() {
                       </tr>
                     </thead>
                     <tbody>
-                      {reportData.payment_methods?.map((pm, idx) => (
-                        <tr key={idx}>
-                          <td>{pm.payment_method}</td>
-                          <td className="text-right">{pm.count}</td>
-                          <td className="text-right">Rp {parseFloat(pm.total).toLocaleString()}</td>
+                      {reportData.by_payment_method && reportData.by_payment_method.length > 0 ? (
+                        reportData.by_payment_method.map((pm, idx) => (
+                          <tr key={idx}>
+                            <td>{pm.payment_method}</td>
+                            <td className="text-right">{pm.transaction_count}</td>
+                            <td className="text-right">Rp {parseFloat(pm.total_amount).toLocaleString()}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="3" style={{ textAlign: 'center' }}>Tidak ada data pembayaran</td>
                         </tr>
-                      ))}
+                      )}
                     </tbody>
                   </table>
                 </div>

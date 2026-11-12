@@ -2,8 +2,8 @@ const { withAuth, hashPassword } = require('../../../lib/auth');
 const { query } = require('../../../lib/db');
 
 async function handler(req, res) {
-  // Only OWNER can access this endpoint
-  if (req.user.role !== 'OWNER') {
+  // Only OWNER can access this endpoint (case-insensitive)
+  if (req.user.role?.toLowerCase() !== 'owner') {
     return res.status(403).json({ error: 'Akses ditolak. Hanya Owner yang dapat mengelola user.' });
   }
 
@@ -24,7 +24,7 @@ async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      const { username, password, full_name, role, is_active } = req.body;
+      const { username, password, full_name, role, is_active, permissions } = req.body;
 
       // Validation
       if (!username || !password || !full_name || !role) {
@@ -52,6 +52,18 @@ async function handler(req, res) {
         [username, hashedPassword, full_name, role, is_active !== false]
       );
 
+      const newUserId = result.rows[0].id;
+
+      // Insert permissions
+      if (permissions && permissions.length > 0) {
+        for (const permission of permissions) {
+          await query(
+            'INSERT INTO user_permissions (user_id, permission) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+            [newUserId, permission]
+          );
+        }
+      }
+
       return res.status(201).json(result.rows[0]);
     } catch (error) {
       console.error('Error creating user:', error);
@@ -62,4 +74,4 @@ async function handler(req, res) {
   return res.status(405).json({ error: 'Method not allowed' });
 }
 
-module.exports = withAuth(handler, { roles: ['OWNER'] });
+export default withAuth(handler);

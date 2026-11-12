@@ -14,8 +14,23 @@ export default function Users() {
     password: '',
     full_name: '',
     role: 'KASIR',
-    is_active: true
+    is_active: true,
+    permissions: []
   });
+
+  const availablePermissions = [
+    { value: 'dashboard', label: '🏠 Dashboard', description: 'Akses halaman utama' },
+    { value: 'transactions', label: '📜 Riwayat Transaksi', description: 'Lihat daftar transaksi' },
+    { value: 'transaction_create', label: '🛒 Buat Transaksi', description: 'Membuat transaksi baru' },
+    { value: 'shifts', label: '📂 Kelola Shift', description: 'Buka dan tutup shift' },
+    { value: 'reports', label: '📊 Laporan', description: 'Lihat laporan harian/bulanan' },
+    { value: 'customers', label: '👥 Kelola Customer', description: 'CRUD customer' },
+    { value: 'kapsters', label: '💈 Kelola Kapster', description: 'CRUD kapster' },
+    { value: 'services', label: '✂️ Kelola Layanan', description: 'CRUD layanan' },
+    { value: 'products', label: '🧴 Kelola Produk', description: 'CRUD produk' },
+    { value: 'discounts', label: '🏷️ Kelola Diskon', description: 'CRUD diskon' },
+    { value: 'users', label: '👤 Kelola User', description: 'CRUD user (Owner only)' }
+  ];
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -30,8 +45,8 @@ export default function Users() {
       const parsedUser = JSON.parse(userData);
       setUser(parsedUser);
       
-      // Check if owner
-      if (parsedUser.role !== 'OWNER') {
+      // Check if owner (case-insensitive)
+      if (parsedUser.role?.toUpperCase() !== 'OWNER') {
         alert('Akses ditolak! Hanya Owner yang dapat mengakses halaman ini.');
         router.push('/dashboard');
         return;
@@ -99,15 +114,37 @@ export default function Users() {
     }
   };
 
-  const handleEdit = (userToEdit) => {
+  const handleEdit = async (userToEdit) => {
     setEditingUser(userToEdit);
-    setFormData({
-      username: userToEdit.username,
-      password: '',
-      full_name: userToEdit.full_name,
-      role: userToEdit.role,
-      is_active: userToEdit.is_active
-    });
+    
+    // Fetch user permissions
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`/api/users/${userToEdit.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const userData = await response.json();
+      
+      setFormData({
+        username: userToEdit.username,
+        password: '',
+        full_name: userToEdit.full_name,
+        role: userToEdit.role,
+        is_active: userToEdit.is_active,
+        permissions: userData.permissions || []
+      });
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+      setFormData({
+        username: userToEdit.username,
+        password: '',
+        full_name: userToEdit.full_name,
+        role: userToEdit.role,
+        is_active: userToEdit.is_active,
+        permissions: []
+      });
+    }
+    
     setShowModal(true);
   };
 
@@ -140,9 +177,25 @@ export default function Users() {
       password: '',
       full_name: '',
       role: 'KASIR',
-      is_active: true
+      is_active: true,
+      permissions: ['dashboard', 'transactions', 'transaction_create', 'shifts'] // Default for kasir
     });
     setEditingUser(null);
+  };
+
+  const togglePermission = (permission) => {
+    const current = formData.permissions || [];
+    if (current.includes(permission)) {
+      setFormData({
+        ...formData,
+        permissions: current.filter(p => p !== permission)
+      });
+    } else {
+      setFormData({
+        ...formData,
+        permissions: [...current, permission]
+      });
+    }
   };
 
   if (loading) {
@@ -306,6 +359,57 @@ export default function Users() {
                     />
                     {' '}Aktif
                   </label>
+                </div>
+
+                <div className="form-group">
+                  <label style={{ fontWeight: '600', fontSize: '1.05rem', marginBottom: '1rem', display: 'block' }}>
+                    🔐 Hak Akses / Permissions
+                  </label>
+                  <div style={{ 
+                    border: '1px solid #E5E7EB', 
+                    borderRadius: '8px', 
+                    padding: '1rem',
+                    maxHeight: '300px',
+                    overflowY: 'auto',
+                    background: '#F9FAFB'
+                  }}>
+                    {availablePermissions.map(perm => (
+                      <div key={perm.value} style={{ marginBottom: '0.75rem' }}>
+                        <label style={{ 
+                          display: 'flex', 
+                          alignItems: 'flex-start',
+                          cursor: 'pointer',
+                          padding: '0.5rem',
+                          borderRadius: '6px',
+                          transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#EEF2FF'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={(formData.permissions || []).includes(perm.value)}
+                            onChange={() => togglePermission(perm.value)}
+                            style={{ marginTop: '0.25rem', marginRight: '0.75rem' }}
+                          />
+                          <div>
+                            <div style={{ fontWeight: '500', color: '#111827' }}>{perm.label}</div>
+                            <div style={{ fontSize: '0.85rem', color: '#6B7280' }}>{perm.description}</div>
+                          </div>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ 
+                    marginTop: '0.75rem', 
+                    padding: '0.75rem', 
+                    background: '#FEF3C7', 
+                    borderRadius: '6px',
+                    fontSize: '0.875rem',
+                    color: '#92400E'
+                  }}>
+                    💡 Tip: User dengan role OWNER sebaiknya diberi semua permission
+                  </div>
                 </div>
 
                 <div className="button-group">
