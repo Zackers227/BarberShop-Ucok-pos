@@ -268,12 +268,26 @@ export default function PrintReceipt() {
         {/* Payment */}
         {transaction.payments && transaction.payments.length > 0 && (
           <>
-            {transaction.payments.map((payment, idx) => (
-              <div key={idx} className="summary-row">
-                <span>{payment.payment_method}</span>
-                <span>Rp {payment.amount?.toLocaleString()}</span>
-              </div>
-            ))}
+            {transaction.payments.map((payment, idx) => {
+              // Hitung kembalian untuk pembayaran tunai
+              const isCash = payment.payment_method === 'TUNAI';
+              const change = isCash ? payment.amount - transaction.total : 0;
+              
+              return (
+                <div key={idx}>
+                  <div className="summary-row">
+                    <span>{payment.payment_method}</span>
+                    <span>Rp {payment.amount?.toLocaleString()}</span>
+                  </div>
+                  {isCash && change > 0 && (
+                    <div className="summary-row" style={{ fontWeight: 'bold' }}>
+                      <span>Kembalian</span>
+                      <span>Rp {change.toLocaleString()}</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
             <div className="divider"></div>
           </>
         )}
