@@ -192,8 +192,6 @@ export default function PrintReceipt() {
         <div className="header">
           <h1>MENSURFACE</h1>
           <p style={{ fontSize: '9pt', letterSpacing: '2px' }}>- BARBER AND SHOP -</p>
-          <p>Jl. Contoh No. 123</p>
-          <p>Telp: 0812-3456-7890</p>
         </div>
 
         {/* Transaction Info */}
@@ -284,7 +282,6 @@ export default function PrintReceipt() {
         <div className="footer">
           <div className="thank-you">TERIMA KASIH</div>
           <p>Selamat Datang Kembali</p>
-          <p style={{ marginTop: '2mm' }}>{new Date().toLocaleDateString('id-ID')}</p>
         </div>
       </div>
     </>
