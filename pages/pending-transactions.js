@@ -94,14 +94,31 @@ export default function PendingTransactions() {
       if (response.ok) {
         const result = await response.json();
         
+        // Hitung kembalian untuk pembayaran tunai
+        let changeAmount = 0;
+        if (paymentMethod === 'TUNAI') {
+          changeAmount = parseFloat(paymentAmount) - parseFloat(selectedTransaction.total);
+        }
+        
+        // Tampilkan alert dengan kembalian
+        let alertMessage = `Pembayaran berhasil!\nNo: ${result.transaction.transaction_no}\n`;
+        alertMessage += `\nTOTAL: Rp ${selectedTransaction.total.toLocaleString()}`;
+        
+        if (paymentMethod === 'TUNAI') {
+          alertMessage += `\nBayar: Rp ${parseFloat(paymentAmount).toLocaleString()}`;
+          alertMessage += `\nKEMBALIAN: Rp ${changeAmount.toLocaleString()}`;
+        }
+        
+        alertMessage += `\n\nStruk sedang dicetak...`;
+        
         // Auto print struk setelah pembayaran berhasil
-        const printWindow = window.open(
+        window.open(
           `/print/${selectedTransaction.id}`,
           '_blank',
           'width=800,height=600'
         );
         
-        alert(`Pembayaran berhasil!\nNo: ${result.transaction.transaction_no}\n\nStruk sedang dicetak...`);
+        alert(alertMessage);
         setShowPaymentModal(false);
         setSelectedTransaction(null);
         setPaymentAmount('');

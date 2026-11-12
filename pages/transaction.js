@@ -265,14 +265,31 @@ export default function Transaction() {
         
         // Auto print untuk transaksi completed (bukan pending)
         if (!isPending) {
+          // Hitung kembalian untuk pembayaran tunai
+          let changeAmount = 0;
+          if (paymentMethod === 'TUNAI') {
+            changeAmount = parseFloat(paymentAmount) - calculateTotal();
+          }
+          
+          // Tampilkan alert dengan kembalian
+          let alertMessage = `Transaksi berhasil!\nNo: ${result.transaction.transaction_no}\n`;
+          alertMessage += `\nTOTAL: Rp ${calculateTotal().toLocaleString()}`;
+          
+          if (paymentMethod === 'TUNAI') {
+            alertMessage += `\nBayar: Rp ${parseFloat(paymentAmount).toLocaleString()}`;
+            alertMessage += `\nKEMBALIAN: Rp ${changeAmount.toLocaleString()}`;
+          }
+          
+          alertMessage += `\n\nStruk sedang dicetak...`;
+          
           // Open print page in new window and auto-print
-          const printWindow = window.open(
+          window.open(
             `/print/${result.transaction.id}`,
             '_blank',
             'width=800,height=600'
           );
           
-          alert(`Transaksi berhasil! No: ${result.transaction.transaction_no}\n\nStruk sedang dicetak...`);
+          alert(alertMessage);
         } else {
           alert(`Transaksi pending berhasil disimpan!\nNo: ${result.transaction.transaction_no}\n\nProses pembayaran nanti di menu Transaksi Pending.`);
         }
