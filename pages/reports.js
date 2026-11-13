@@ -113,10 +113,6 @@ export default function Reports() {
             <span className="user-info">👤 {user?.full_name || user?.username}</span>
           </div>
         </nav>
-            </button>
-            <span className="user-info">👤 {user?.full_name || user?.username}</span>
-          </div>
-        </nav>
 
         <div className="main-content">
           <div className="page-header no-print">
