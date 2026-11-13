@@ -86,7 +86,7 @@ export default function Dashboard() {
       </Head>
 
       <div className="dashboard-container">
-        {/* Navbar - Clean Layout */}
+        {/* Navbar - Simple 3-Section Layout */}
         <nav className="navbar" style={{ 
           padding: '0.75rem 1.5rem',
           display: 'flex',
@@ -99,127 +99,82 @@ export default function Dashboard() {
             <Logo size="small" />
           </div>
           
-          {/* CENTER: Shift Status + Quick Nav */}
-          <div style={{
-            display: 'flex',
+          {/* CENTER: Quick Navigation Buttons Only */}
+          <div style={{ 
+            display: 'flex', 
+            gap: '0.65rem',
             alignItems: 'center',
-            gap: '1rem',
-            flex: 1
+            flex: 1,
+            justifyContent: 'center'
           }}>
-            {/* Shift Status Badge */}
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              gap: '0.35rem',
-              padding: '0.5rem 0.85rem',
-              borderRadius: '8px',
-              fontSize: '0.8rem',
-              fontWeight: '600',
-              background: activeShift ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-              color: activeShift ? '#059669' : '#D97706',
-              border: activeShift ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(245, 158, 11, 0.3)',
-              whiteSpace: 'nowrap'
-            }}>
-              {activeShift ? (
-                <>
-                  <span style={{ fontSize: '1rem' }}>🟢</span>
-                  <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '1.2' }}>
-                    <span style={{ fontWeight: '700' }}>Shift #{activeShift.id}</span>
-                    {activeShift.total_transactions > 0 && (
-                      <span style={{ fontSize: '0.7rem', opacity: 0.85 }}>
-                        {activeShift.total_transactions} transaksi
-                      </span>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <span style={{ fontSize: '1rem' }}>⚠️</span>
-                  <span>Shift Tutup</span>
-                  <button 
-                    onClick={() => router.push('/shifts')}
-                    style={{
-                      padding: '0.25rem 0.6rem',
-                      fontSize: '0.7rem',
-                      background: '#D97706',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      marginLeft: '0.25rem'
-                    }}
-                  >
-                    Buka
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* Quick Navigation Buttons */}
-            <div style={{ 
-              display: 'flex', 
-              gap: '0.5rem',
-              alignItems: 'center'
-            }}>
-              {hasPermission(user, 'reports') && (
-                <button 
-                  className="btn btn-sm btn-success"
-                  onClick={() => router.push('/reports')}
-                  style={{ 
-                    fontSize: '0.75rem', 
-                    padding: '0.45rem 0.75rem',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  📊 Laporan
-                </button>
-              )}
-              {hasPermission(user, 'transactions') && (
-                <button 
-                  className="btn btn-sm btn-success"
-                  onClick={() => router.push('/transactions')}
-                  style={{ 
-                    fontSize: '0.75rem', 
-                    padding: '0.45rem 0.75rem',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  📜 Riwayat
-                </button>
-              )}
-              {hasPermission(user, 'transaction_create') && (
-                <button 
-                  className="btn btn-sm btn-success"
-                  onClick={() => router.push('/transaction')}
-                  style={{ 
-                    fontSize: '0.75rem', 
-                    padding: '0.45rem 0.75rem',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  🛒 Transaksi
-                </button>
-              )}
-            </div>
+            {hasPermission(user, 'reports') && (
+              <button 
+                className="btn btn-sm btn-success"
+                onClick={() => router.push('/reports')}
+                style={{ 
+                  fontSize: '0.8rem', 
+                  padding: '0.5rem 0.85rem',
+                  whiteSpace: 'nowrap',
+                  fontWeight: '600'
+                }}
+              >
+                📊 Laporan
+              </button>
+            )}
+            {hasPermission(user, 'transactions') && (
+              <button 
+                className="btn btn-sm btn-success"
+                onClick={() => router.push('/transactions')}
+                style={{ 
+                  fontSize: '0.8rem', 
+                  padding: '0.5rem 0.85rem',
+                  whiteSpace: 'nowrap',
+                  fontWeight: '600'
+                }}
+              >
+                📜 Riwayat
+              </button>
+            )}
+            {hasPermission(user, 'transaction_create') && (
+              <button 
+                className="btn btn-sm btn-success"
+                onClick={() => router.push('/transaction')}
+                style={{ 
+                  fontSize: '0.8rem', 
+                  padding: '0.5rem 0.85rem',
+                  whiteSpace: 'nowrap',
+                  fontWeight: '600'
+                }}
+              >
+                🛒 Transaksi
+              </button>
+            )}
           </div>
 
-          {/* RIGHT: User Info + Logout */}
+          {/* RIGHT: Green Box with 3 Components - User, Shift, Logout */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '1rem',
-            padding: '0.5rem 1rem',
-            background: 'rgba(99, 102, 241, 0.1)',
-            borderRadius: '8px',
-            border: '1px solid rgba(99, 102, 241, 0.2)'
+            gap: '0.75rem',
+            padding: '0.6rem 1rem',
+            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.12) 100%)',
+            borderRadius: '10px',
+            border: '1.5px solid rgba(16, 185, 129, 0.3)',
+            boxShadow: '0 2px 8px rgba(16, 185, 129, 0.15)'
           }}>
-            <div style={{ textAlign: 'right' }}>
+            {/* 1. User Info */}
+            <div style={{ 
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+              lineHeight: '1.2',
+              borderRight: '1px solid rgba(16, 185, 129, 0.3)',
+              paddingRight: '0.75rem'
+            }}>
               <div style={{ 
                 fontSize: '0.85rem', 
                 fontWeight: '600',
-                color: '#1f2937',
-                lineHeight: '1.2'
+                color: '#1f2937'
               }}>
                 👤 {user?.full_name || user?.username}
               </div>
@@ -228,22 +183,90 @@ export default function Dashboard() {
                 color: 'white',
                 background: '#6366f1',
                 padding: '0.15rem 0.5rem',
-                borderRadius: '12px',
-                display: 'inline-block',
-                marginTop: '0.15rem',
+                borderRadius: '10px',
                 fontWeight: '600',
-                textTransform: 'uppercase'
+                textTransform: 'uppercase',
+                marginTop: '0.2rem'
               }}>
                 {user?.role}
               </div>
             </div>
+
+            {/* 2. Shift Status */}
+            <div style={{ 
+              display: 'flex', 
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.2rem',
+              padding: '0.3rem 0.65rem',
+              borderRadius: '8px',
+              background: activeShift ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+              border: activeShift ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(245, 158, 11, 0.4)',
+              minWidth: '85px',
+              borderRight: '1px solid rgba(16, 185, 129, 0.3)',
+              paddingRight: '0.75rem',
+              marginRight: '0.25rem'
+            }}>
+              {activeShift ? (
+                <>
+                  <span style={{ fontSize: '1.1rem' }}>🟢</span>
+                  <span style={{ 
+                    fontSize: '0.75rem', 
+                    fontWeight: '700',
+                    color: '#059669',
+                    textAlign: 'center'
+                  }}>
+                    Shift #{activeShift.id}
+                  </span>
+                  {activeShift.total_transactions > 0 && (
+                    <span style={{ 
+                      fontSize: '0.65rem', 
+                      color: '#059669',
+                      opacity: 0.85
+                    }}>
+                      {activeShift.total_transactions} trx
+                    </span>
+                  )}
+                </>
+              ) : (
+                <>
+                  <span style={{ fontSize: '1.1rem' }}>⚠️</span>
+                  <span style={{ 
+                    fontSize: '0.7rem', 
+                    fontWeight: '700',
+                    color: '#D97706'
+                  }}>
+                    Tutup
+                  </span>
+                  <button 
+                    onClick={() => router.push('/shifts')}
+                    style={{
+                      padding: '0.2rem 0.5rem',
+                      fontSize: '0.65rem',
+                      background: '#D97706',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      marginTop: '0.15rem'
+                    }}
+                  >
+                    Buka
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* 3. Logout Button */}
             <button 
               className="btn btn-danger btn-sm" 
               onClick={handleLogout}
               style={{
                 padding: '0.5rem 1rem',
                 fontSize: '0.8rem',
-                fontWeight: '600'
+                fontWeight: '600',
+                whiteSpace: 'nowrap'
               }}
             >
               Logout
