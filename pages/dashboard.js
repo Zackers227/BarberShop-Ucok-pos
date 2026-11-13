@@ -102,16 +102,98 @@ export default function Dashboard() {
         <link rel="stylesheet" href="/css/dashboard.css" />
       </Head>
 
+      <style jsx>{`
+        /* Mobile Responsive - Phone (max-width: 480px) */
+        @media (max-width: 480px) {
+          .navbar-row1 {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.5rem !important;
+          }
+          
+          .green-box {
+            width: 100% !important;
+            flex-direction: column !important;
+            gap: 0.4rem !important;
+            padding: 0.5rem !important;
+          }
+          
+          .green-box > div {
+            border-right: none !important;
+            padding-right: 0 !important;
+            margin-right: 0 !important;
+            width: 100%;
+            border-bottom: 1px solid rgba(16, 185, 129, 0.3) !important;
+            padding-bottom: 0.4rem !important;
+          }
+          
+          .green-box > div:last-child {
+            border-bottom: none !important;
+            padding-bottom: 0 !important;
+          }
+          
+          .user-info-mobile {
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+          }
+          
+          .shift-status-mobile {
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            padding: 0.4rem !important;
+            min-width: 100% !important;
+          }
+          
+          .logout-btn-mobile {
+            width: 100% !important;
+          }
+          
+          .quick-nav-row {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 0.4rem !important;
+          }
+          
+          .quick-nav-btn {
+            font-size: 0.7rem !important;
+            padding: 0.4rem 0.5rem !important;
+          }
+        }
+
+        /* Tablet and Desktop - Keep existing layout */
+        @media (min-width: 481px) {
+          .navbar-row1 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+          }
+          
+          .green-box {
+            display: flex;
+            align-items: center;
+          }
+          
+          .quick-nav-row {
+            display: flex;
+            gap: 0.65rem;
+            align-items: center;
+          }
+        }
+      `}</style>
+
       <div className="dashboard-container">
         {/* Navbar - 2 Row Layout */}
         <nav className="navbar" style={{ 
-          padding: '0.75rem 1.5rem',
+          padding: '0.75rem 1rem',
           display: 'flex',
           flexDirection: 'column',
           gap: '0.75rem'
         }}>
           {/* ROW 1: Logo Left + Green Box Right */}
-          <div style={{
+          <div className="navbar-row1" style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -123,7 +205,7 @@ export default function Dashboard() {
             </div>
             
             {/* RIGHT: Green Box with 3 Components - User, Shift, Logout */}
-            <div style={{
+            <div className="green-box" style={{
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
@@ -134,7 +216,7 @@ export default function Dashboard() {
               boxShadow: '0 2px 8px rgba(16, 185, 129, 0.15)'
             }}>
               {/* 1. User Info */}
-              <div style={{ 
+              <div className="user-info-mobile" style={{ 
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'flex-end',
@@ -164,7 +246,7 @@ export default function Dashboard() {
               </div>
 
               {/* 2. Shift Status */}
-              <div style={{ 
+              <div className="shift-status-mobile" style={{ 
                 display: 'flex', 
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -231,7 +313,7 @@ export default function Dashboard() {
 
               {/* 3. Logout Button */}
               <button 
-                className="btn btn-danger btn-sm" 
+                className="btn btn-danger btn-sm logout-btn-mobile" 
                 onClick={handleLogout}
                 style={{
                   padding: '0.5rem 1rem',
@@ -246,14 +328,14 @@ export default function Dashboard() {
           </div>
 
           {/* ROW 2: Quick Navigation Buttons */}
-          <div style={{ 
+          <div className="quick-nav-row" style={{ 
             display: 'flex', 
             gap: '0.65rem',
             alignItems: 'center'
           }}>
             {hasPermission(user, 'reports') && (
               <button 
-                className="btn btn-sm btn-success"
+                className="btn btn-sm btn-success quick-nav-btn"
                 onClick={() => router.push('/reports')}
                 style={{ 
                   fontSize: '0.8rem', 
@@ -267,7 +349,7 @@ export default function Dashboard() {
             )}
             {hasPermission(user, 'transactions') && (
               <button 
-                className="btn btn-sm btn-success"
+                className="btn btn-sm btn-success quick-nav-btn"
                 onClick={() => router.push('/transactions')}
                 style={{ 
                   fontSize: '0.8rem', 
@@ -281,7 +363,7 @@ export default function Dashboard() {
             )}
             {hasPermission(user, 'transaction_create') && (
               <button 
-                className="btn btn-sm btn-success"
+                className="btn btn-sm btn-success quick-nav-btn"
                 onClick={() => router.push('/transaction')}
                 style={{ 
                   fontSize: '0.8rem', 
@@ -295,7 +377,7 @@ export default function Dashboard() {
             )}
             {hasPermission(user, 'transactions') && (
               <button 
-                className="btn btn-sm"
+                className="btn btn-sm quick-nav-btn"
                 onClick={() => router.push('/pending-transactions')}
                 style={{ 
                   fontSize: '0.8rem', 
