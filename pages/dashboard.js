@@ -151,21 +151,23 @@ export default function Dashboard() {
           }
           
           .quick-nav-row {
-            display: grid !important;
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 0.5rem !important;
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 0.4rem !important;
             width: 100% !important;
+            overflow-x: auto !important;
           }
           
           .quick-nav-btn {
-            font-size: 0.75rem !important;
-            padding: 0.6rem 0.5rem !important;
-            width: 100% !important;
+            font-size: 0.7rem !important;
+            padding: 0.5rem 0.4rem !important;
+            flex: 1 !important;
+            min-width: fit-content !important;
             text-align: center !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            min-height: 44px !important;
+            white-space: nowrap !important;
           }
         }
 
