@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Logo from '../components/Logo';
+import Navbar from '../components/Navbar';
 
 export default function Transactions() {
   const router = useRouter();
@@ -98,38 +98,7 @@ export default function Transactions() {
       </Head>
 
       <div className="page-container">
-        <nav className="navbar">
-          <div className="navbar-brand">
-            <Logo size="small" />
-          </div>
-          <div className="navbar-menu">
-            {/* Quick Navigation */}
-            <div style={{ display: 'flex', gap: '0.5rem', marginRight: '0.5rem' }}>
-              <button 
-                className="btn btn-sm btn-secondary"
-                onClick={() => router.push('/dashboard')}
-                style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
-              >
-                🏠 Dashboard
-              </button>
-              <button 
-                className="btn btn-sm btn-secondary"
-                onClick={() => router.push('/reports')}
-                style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
-              >
-                📊 Laporan
-              </button>
-              <button 
-                className="btn btn-sm btn-success"
-                onClick={() => router.push('/transaction')}
-                style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
-              >
-                🛒 Transaksi
-              </button>
-            </div>
-            <span className="user-info">👤 {user?.full_name || user?.username}</span>
-          </div>
-        </nav>
+        <Navbar currentPage="transactions" />
 
         <div className="main-content">
           <div className="page-header">

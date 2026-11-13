@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Logo from '../components/Logo';
+import Navbar from '../components/Navbar';
 
 export default function PendingTransactions() {
   const router = useRouter();
@@ -192,17 +192,7 @@ export default function PendingTransactions() {
       </Head>
 
       <div className="page-container">
-        <nav className="navbar">
-          <div className="navbar-brand">
-            <Logo size="small" />
-          </div>
-          <div className="navbar-menu">
-            <button className="btn btn-secondary btn-sm" onClick={() => router.push('/dashboard')}>
-              ← Kembali
-            </button>
-            <span className="user-info">👤 {user?.full_name || user?.username}</span>
-          </div>
-        </nav>
+        <Navbar currentPage="pending" />
 
         <div className="main-content">
           <h1 className="page-title">⏸️ Transaksi Pending</h1>
