@@ -92,6 +92,41 @@ export default function Dashboard() {
             <Logo size="small" />
           </div>
           <div className="navbar-menu">
+            {/* Quick Navigation Links */}
+            <div style={{ 
+              display: 'flex', 
+              gap: '0.5rem', 
+              marginRight: '1rem',
+              flexWrap: 'wrap'
+            }}>
+              {hasPermission(user, 'reports') && (
+                <button 
+                  className="btn btn-sm btn-secondary"
+                  onClick={() => router.push('/reports')}
+                  style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
+                >
+                  📊 Laporan
+                </button>
+              )}
+              {hasPermission(user, 'transactions') && (
+                <button 
+                  className="btn btn-sm btn-secondary"
+                  onClick={() => router.push('/transactions')}
+                  style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
+                >
+                  📜 Riwayat
+                </button>
+              )}
+              {hasPermission(user, 'transaction_create') && (
+                <button 
+                  className="btn btn-sm btn-success"
+                  onClick={() => router.push('/transaction')}
+                  style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
+                >
+                  🛒 Transaksi
+                </button>
+              )}
+            </div>
             <span className="user-info">
               👤 {user?.full_name || user?.username} 
               <span className="user-role">({user?.role})</span>
@@ -104,176 +139,233 @@ export default function Dashboard() {
 
         {/* Main Content */}
         <div className="main-content">
-          {/* Shift Status Warning/Info */}
+          {/* Compact Shift Status */}
           {activeShift ? (
             <div style={{
               background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
               color: 'white',
-              padding: '1.25rem 1.75rem',
-              borderRadius: '12px',
-              marginBottom: '2rem',
-              boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.4)',
+              padding: '0.75rem 1rem',
+              borderRadius: '8px',
+              marginBottom: '1rem',
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'center'
+              alignItems: 'center',
+              fontSize: '0.85rem'
             }}>
               <div>
-                <div style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.25rem' }}>
-                  🟢 Shift #{activeShift.id} Sedang Aktif
-                </div>
-                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
-                  Dibuka: {new Date(activeShift.opened_at).toLocaleString('id-ID')}
-                  {activeShift.total_transactions > 0 && (
-                    <span style={{ marginLeft: '1rem' }}>
-                      • {activeShift.total_transactions} transaksi • Rp {activeShift.total_sales?.toLocaleString()}
-                    </span>
-                  )}
-                </div>
+                <strong>🟢 Shift #{activeShift.id}</strong>
+                {activeShift.total_transactions > 0 && (
+                  <span style={{ marginLeft: '0.5rem', opacity: 0.9 }}>
+                    • {activeShift.total_transactions} trx
+                  </span>
+                )}
               </div>
               <button 
-                className="btn btn-danger"
+                className="btn btn-sm"
                 onClick={() => router.push('/shifts')}
-                style={{ whiteSpace: 'nowrap' }}
+                style={{ 
+                  background: 'white', 
+                  color: '#059669',
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.8rem'
+                }}
               >
-                Tutup Shift
+                Tutup
               </button>
             </div>
           ) : (
             <div style={{
               background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
               color: 'white',
-              padding: '1.25rem 1.75rem',
-              borderRadius: '12px',
-              marginBottom: '2rem',
-              boxShadow: '0 4px 6px -1px rgba(245, 158, 11, 0.4)',
+              padding: '0.75rem 1rem',
+              borderRadius: '8px',
+              marginBottom: '1rem',
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'center'
+              alignItems: 'center',
+              fontSize: '0.85rem'
             }}>
               <div>
-                <div style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.25rem' }}>
-                  ⚠️ Shift Belum Dibuka
-                </div>
-                <div style={{ fontSize: '0.9rem', opacity: 0.9 }}>
-                  Silakan buka shift terlebih dahulu untuk memulai transaksi
-                </div>
+                <strong>⚠️ Shift Belum Dibuka</strong>
               </div>
               <button 
-                className="btn btn-success"
+                className="btn btn-sm"
                 onClick={() => router.push('/shifts')}
-                style={{ whiteSpace: 'nowrap', background: 'white', color: '#D97706' }}
+                style={{ 
+                  background: 'white', 
+                  color: '#D97706',
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.8rem'
+                }}
               >
                 Buka Shift
               </button>
             </div>
           )}
 
-          <div className="welcome-card">
-            <h1>Selamat Datang, {user?.full_name || user?.username}! 👋</h1>
-            <p>Sistem POS Barbershop siap digunakan</p>
+          {/* Welcome - More Compact */}
+          <div className="welcome-card" style={{ 
+            padding: '1rem', 
+            marginBottom: '1rem',
+            textAlign: 'center'
+          }}>
+            <h1 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>
+              Selamat Datang, {user?.full_name || user?.username}! 👋
+            </h1>
+            <p style={{ fontSize: '0.85rem', margin: 0 }}>Sistem POS Barbershop siap digunakan</p>
           </div>
 
-          {/* Quick Actions */}
-          <div className="quick-actions-grid">
+          {/* Compact Quick Actions Grid - 2 columns on mobile */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+            gap: '0.75rem',
+            marginBottom: '1rem'
+          }}>
             {hasPermission(user, 'shifts') && (
-              <button className="action-card" onClick={handleOpenShift}>
-                <div className="action-icon">📂</div>
-                <div className="action-title">Kelola Shift</div>
-                <div className="action-desc">Buka/tutup shift kerja</div>
+              <button 
+                className="action-card"
+                onClick={handleOpenShift}
+                style={{ padding: '0.75rem', minHeight: 'auto' }}
+              >
+                <div style={{ fontSize: '1.75rem', marginBottom: '0.35rem' }}>📂</div>
+                <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.15rem' }}>Kelola Shift</div>
+                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>Buka/tutup shift</div>
               </button>
             )}
 
             {hasPermission(user, 'transactions') && (
-              <button className="action-card" onClick={() => router.push('/pending-transactions')}>
-                <div className="action-icon">⏸️</div>
-                <div className="action-title">Transaksi Pending</div>
-                <div className="action-desc">Belum dibayar</div>
+              <button 
+                className="action-card" 
+                onClick={() => router.push('/pending-transactions')}
+                style={{ padding: '0.75rem', minHeight: 'auto' }}
+              >
+                <div style={{ fontSize: '1.75rem', marginBottom: '0.35rem' }}>⏸️</div>
+                <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.15rem' }}>Transaksi Pending</div>
+                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>Belum dibayar</div>
               </button>
             )}
 
             {hasPermission(user, 'reports') && (
-              <button className="action-card" onClick={handleDailyReport}>
-                <div className="action-icon">📊</div>
-                <div className="action-title">Laporan Harian</div>
-                <div className="action-desc">Lihat laporan hari ini</div>
+              <button 
+                className="action-card" 
+                onClick={handleDailyReport}
+                style={{ padding: '0.75rem', minHeight: 'auto' }}
+              >
+                <div style={{ fontSize: '1.75rem', marginBottom: '0.35rem' }}>📊</div>
+                <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.15rem' }}>Laporan Harian</div>
+                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>Lihat laporan</div>
               </button>
             )}
 
             {hasPermission(user, 'transactions') && (
-              <button className="action-card" onClick={handleHistory}>
-                <div className="action-icon">📜</div>
-                <div className="action-title">Riwayat Transaksi</div>
-                <div className="action-desc">Cek transaksi sebelumnya</div>
+              <button 
+                className="action-card" 
+                onClick={handleHistory}
+                style={{ padding: '0.75rem', minHeight: 'auto' }}
+              >
+                <div style={{ fontSize: '1.75rem', marginBottom: '0.35rem' }}>📜</div>
+                <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.15rem' }}>Riwayat Transaksi</div>
+                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>Cek transaksi</div>
               </button>
             )}
           </div>
 
-            {/* Transaction Section */}
+          {/* Compact Transaction Section */}
           {hasPermission(user, 'transaction_create') && (
-            <div className="transaction-section">
-              <div className="section-header">
-                <h2>Transaksi Baru</h2>
-              </div>
-
-              <div className="placeholder-content">
-                <div className="placeholder-icon">🛒</div>
-                <h3>Form Transaksi POS</h3>
-                <p>Fitur yang tersedia:</p>
-                <ul>
-                  <li>✅ Pilih customer & kapster</li>
-                  <li>✅ Tambah layanan & produk ke keranjang</li>
-                  <li>✅ Terapkan diskon</li>
-                  <li>✅ Proses pembayaran (Tunai/QRIS/Transfer)</li>
-                  <li>✅ Cetak struk thermal 58mm</li>
-                </ul>
-                <button className="btn btn-success btn-lg" onClick={handleNewTransaction}>
+            <div className="transaction-section" style={{ marginBottom: '1rem' }}>
+              <div style={{ 
+                background: 'white', 
+                borderRadius: '12px', 
+                padding: '1.25rem',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                textAlign: 'center'
+              }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🛒</div>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Transaksi Baru</h3>
+                <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
+                  Proses transaksi, tambah item, cetak struk
+                </p>
+                <button 
+                  className="btn btn-success btn-lg" 
+                  onClick={handleNewTransaction}
+                  style={{ 
+                    width: '100%',
+                    padding: '0.75rem',
+                    fontSize: '0.95rem'
+                  }}
+                >
                   🛒 Mulai Transaksi Baru
                 </button>
               </div>
             </div>
           )}
 
-          {/* Management Section */}
-          <div className="card">
-            <h3>⚙️ Manajemen</h3>
-            <div className="quick-actions-grid">
+          {/* Compact Management Section */}
+          <div className="card" style={{ padding: '1rem' }}>
+            <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem' }}>⚙️ Manajemen</h3>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+              gap: '0.65rem'
+            }}>
               {hasPermission(user, 'users') && (
-                <button className="action-card" onClick={() => router.push('/users')}>
-                  <div className="action-icon">👥</div>
-                  <div className="action-title">Kelola User</div>
-                  <div className="action-desc">Tambah/edit kasir</div>
+                <button 
+                  className="action-card" 
+                  onClick={() => router.push('/users')}
+                  style={{ padding: '0.65rem', minHeight: 'auto' }}
+                >
+                  <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>👥</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.1rem' }}>User</div>
+                  <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>Kasir</div>
                 </button>
               )}
 
               {hasPermission(user, 'customers') && (
-                <button className="action-card" onClick={() => router.push('/customers')}>
-                  <div className="action-icon">🧑‍🤝‍🧑</div>
-                  <div className="action-title">Kelola Customer</div>
-                  <div className="action-desc">Database pelanggan</div>
+                <button 
+                  className="action-card" 
+                  onClick={() => router.push('/customers')}
+                  style={{ padding: '0.65rem', minHeight: 'auto' }}
+                >
+                  <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>🧑‍🤝‍🧑</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.1rem' }}>Customer</div>
+                  <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>Pelanggan</div>
                 </button>
               )}
 
               {hasPermission(user, 'kapsters') && (
-                <button className="action-card" onClick={() => router.push('/kapsters')}>
-                  <div className="action-icon">💈</div>
-                  <div className="action-title">Kelola Kapster</div>
-                  <div className="action-desc">Manajemen kapster</div>
+                <button 
+                  className="action-card" 
+                  onClick={() => router.push('/kapsters')}
+                  style={{ padding: '0.65rem', minHeight: 'auto' }}
+                >
+                  <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>💈</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.1rem' }}>Kapster</div>
+                  <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>Barberman</div>
                 </button>
               )}
 
               {hasPermission(user, 'services') && (
-                <button className="action-card" onClick={() => router.push('/services')}>
-                  <div className="action-icon">✂️</div>
-                  <div className="action-title">Kelola Layanan</div>
-                  <div className="action-desc">Atur layanan</div>
+                <button 
+                  className="action-card" 
+                  onClick={() => router.push('/services')}
+                  style={{ padding: '0.65rem', minHeight: 'auto' }}
+                >
+                  <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>✂️</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.1rem' }}>Layanan</div>
+                  <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>Service</div>
                 </button>
               )}
 
               {hasPermission(user, 'products') && (
-                <button className="action-card" onClick={() => router.push('/products')}>
-                  <div className="action-icon">🧴</div>
-                  <div className="action-title">Kelola Produk</div>
-                  <div className="action-desc">Manajemen produk</div>
+                <button 
+                  className="action-card" 
+                  onClick={() => router.push('/products')}
+                  style={{ padding: '0.65rem', minHeight: 'auto' }}
+                >
+                  <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>🧴</div>
+                  <div style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.1rem' }}>Produk</div>
+                  <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>Barang</div>
                 </button>
               )}
             </div>

@@ -86,8 +86,33 @@ export default function Reports() {
             <Logo size="small" />
           </div>
           <div className="navbar-menu">
-            <button className="btn btn-secondary btn-sm" onClick={() => router.push('/dashboard')}>
-              ← Kembali
+            {/* Quick Navigation */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginRight: '0.5rem' }}>
+              <button 
+                className="btn btn-sm btn-secondary"
+                onClick={() => router.push('/dashboard')}
+                style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
+              >
+                🏠 Dashboard
+              </button>
+              <button 
+                className="btn btn-sm btn-secondary"
+                onClick={() => router.push('/transactions')}
+                style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
+              >
+                📜 Riwayat
+              </button>
+              <button 
+                className="btn btn-sm btn-success"
+                onClick={() => router.push('/transaction')}
+                style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}
+              >
+                🛒 Transaksi
+              </button>
+            </div>
+            <span className="user-info">👤 {user?.full_name || user?.username}</span>
+          </div>
+        </nav>
             </button>
             <span className="user-info">👤 {user?.full_name || user?.username}</span>
           </div>
