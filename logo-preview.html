@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview Logo MENSURFACE</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview-container {
+      background: white;
+      border-radius: 20px;
+      padding: 60px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 800px;
+    }
+
+    .title {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 40px;
+      font-weight: 600;
+    }
+
+    .logo-section {
+      margin: 40px 0;
+      padding: 30px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+    }
+
+    .logo-label {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Logo Styles */
+    .logo {
+      display: inline-block;
+    }
+
+    .logo-main {
+      font-family: 'Helvetica Neue', 'Arial', sans-serif;
+      color: #000;
+      line-height: 1;
+    }
+
+    .logo-subtitle {
+      font-family: 'Helvetica Neue', 'Arial', sans-serif;
+      font-weight: 300;
+      color: #000;
+      line-height: 1;
+      text-align: center;
+    }
+
+    /* Size variations */
+    .logo-small .logo-main {
+      font-size: 20px;
+      letter-spacing: 3px;
+    }
+    .logo-small .logo-subtitle {
+      font-size: 7px;
+      letter-spacing: 3px;
+      margin-top: 5px;
+    }
+
+    .logo-medium .logo-main {
+      font-size: 28px;
+      letter-spacing: 5px;
+    }
+    .logo-medium .logo-subtitle {
+      font-size: 9px;
+      letter-spacing: 5px;
+      margin-top: 8px;
+    }
+
+    .logo-large .logo-main {
+      font-size: 36px;
+      letter-spacing: 6px;
+    }
+    .logo-large .logo-subtitle {
+      font-size: 11px;
+      letter-spacing: 6px;
+      margin-top: 10px;
+    }
+
+    .bold {
+      font-weight: 900;
+    }
+
+    .light {
+      font-weight: 300;
+    }
+
+    .note {
+      margin-top: 40px;
+      padding: 20px;
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      border-radius: 5px;
+      text-align: left;
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #856404;
+    }
+
+    .note ul {
+      margin: 10px 0;
+      padding-left: 20px;
+      color: #856404;
+    }
+
+    .navbar-preview {
+      background: #2c3e50;
+      padding: 15px 30px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .navbar-preview .logo {
+      filter: brightness(0) invert(1);
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-container">
+    <div class="title">🎨 Preview Logo MENSURFACE</div>
+
+    <!-- Large Size -->
+    <div class="logo-section">
+      <div class="logo-label">Large - Dashboard / Landing Page</div>
+      <div class="logo logo-large">
+        <div class="logo-main">
+          <span class="bold">MEN</span><span class="light">SURFACE</span>
+        </div>
+        <div class="logo-subtitle">- BARBER AND SHOP -</div>
+      </div>
+    </div>
+
+    <!-- Medium Size -->
+    <div class="logo-section">
+      <div class="logo-label">Medium - Default / Cards</div>
+      <div class="logo logo-medium">
+        <div class="logo-main">
+          <span class="bold">MEN</span><span class="light">SURFACE</span>
+        </div>
+        <div class="logo-subtitle">- BARBER AND SHOP -</div>
+      </div>
+    </div>
+
+    <!-- Small Size -->
+    <div class="logo-section">
+      <div class="logo-label">Small - Navbar</div>
+      <div class="logo logo-small">
+        <div class="logo-main">
+          <span class="bold">MEN</span><span class="light">SURFACE</span>
+        </div>
+        <div class="logo-subtitle">- BARBER AND SHOP -</div>
+      </div>
+    </div>
+
+    <!-- Navbar Simulation -->
+    <div class="logo-label" style="margin-top: 40px;">Preview di Navbar (Background Gelap)</div>
+    <div class="navbar-preview">
+      <div class="logo logo-small" style="filter: none; color: white;">
+        <div class="logo-main" style="color: white;">
+          <span class="bold">MEN</span><span class="light">SURFACE</span>
+        </div>
+        <div class="logo-subtitle" style="color: white;">- BARBER AND SHOP -</div>
+      </div>
+      <div style="color: white; font-size: 14px;">Menu Navigation →</div>
+    </div>
+
+    <div class="note">
+      <strong>✨ Detail Logo:</strong>
+      <ul>
+        <li><strong>"MEN"</strong> - Font weight 900 (Extra Bold/Black)</li>
+        <li><strong>"SURFACE"</strong> - Font weight 300 (Light)</li>
+        <li><strong>"- BARBER AND SHOP -"</strong> - Font weight 300 (Light)</li>
+        <li>Font family: Helvetica Neue / Arial</li>
+        <li>Warna: Hitam (#000)</li>
+        <li>Letter spacing disesuaikan per ukuran</li>
+      </ul>
+      <strong style="margin-top: 15px;">📝 Catatan:</strong>
+      <ul>
+        <li>Logo ini PERSIS mengikuti gambar yang Anda kirim</li>
+        <li>"MEN" tebal (bold) dan "SURFACE" tipis (light) seperti desain asli</li>
+        <li>Sudah diterapkan di semua halaman (login, dashboard, dll)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top: 30px; text-align: center;">
+    <p style="color: white; font-size: 14px; opacity: 0.8;">
+      File ini untuk preview saja. Logo sudah diterapkan di aplikasi Next.js.
+    </p>
+  </div>
+</body>
+</html>

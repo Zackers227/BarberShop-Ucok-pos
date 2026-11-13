@@ -190,8 +190,11 @@ export default function PrintReceipt() {
       <div className="receipt">
         {/* Header */}
         <div className="header">
-          <h1>MENSURFACE</h1>
-          <p style={{ fontSize: '9pt', letterSpacing: '2px' }}>- BARBER AND SHOP -</p>
+          <h1>
+            <span style={{ fontWeight: '900' }}>MEN</span>
+            <span style={{ fontWeight: '300' }}>SURFACE</span>
+          </h1>
+          <p style={{ fontSize: '9pt', letterSpacing: '2px', fontWeight: '300' }}>- BARBER AND SHOP -</p>
         </div>
 
         {/* Transaction Info */}
