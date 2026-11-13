@@ -86,11 +86,56 @@ export default function Dashboard() {
       </Head>
 
       <div className="dashboard-container">
-        {/* Navbar */}
-        <nav className="navbar">
+        {/* Navbar - All-in-One Header */}
+        <nav className="navbar" style={{ padding: '0.75rem 1.5rem' }}>
           <div className="navbar-brand">
             <Logo size="small" />
           </div>
+          
+          {/* Shift Status in Navbar */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center',
+            gap: '0.5rem',
+            marginLeft: '1rem',
+            padding: '0.4rem 0.75rem',
+            borderRadius: '6px',
+            fontSize: '0.8rem',
+            fontWeight: '600',
+            background: activeShift ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+            color: activeShift ? '#059669' : '#D97706'
+          }}>
+            {activeShift ? (
+              <>
+                <span>🟢 Shift #{activeShift.id}</span>
+                {activeShift.total_transactions > 0 && (
+                  <span style={{ fontSize: '0.75rem', opacity: 0.85 }}>
+                    • {activeShift.total_transactions} trx
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                <span>⚠️ Shift Tutup</span>
+                <button 
+                  onClick={() => router.push('/shifts')}
+                  style={{
+                    padding: '0.2rem 0.5rem',
+                    fontSize: '0.7rem',
+                    background: '#D97706',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: '600'
+                  }}
+                >
+                  Buka
+                </button>
+              </>
+            )}
+          </div>
+
           <div className="navbar-menu">
             {/* Quick Navigation Links */}
             <div style={{ 
@@ -139,70 +184,6 @@ export default function Dashboard() {
 
         {/* Main Content */}
         <div className="main-content">
-          {/* Compact Shift Status */}
-          {activeShift ? (
-            <div style={{
-              background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-              color: 'white',
-              padding: '0.75rem 1rem',
-              borderRadius: '8px',
-              marginBottom: '1rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              fontSize: '0.85rem'
-            }}>
-              <div>
-                <strong>🟢 Shift #{activeShift.id}</strong>
-                {activeShift.total_transactions > 0 && (
-                  <span style={{ marginLeft: '0.5rem', opacity: 0.9 }}>
-                    • {activeShift.total_transactions} trx
-                  </span>
-                )}
-              </div>
-              <button 
-                className="btn btn-sm"
-                onClick={() => router.push('/shifts')}
-                style={{ 
-                  background: 'white', 
-                  color: '#059669',
-                  padding: '0.35rem 0.75rem',
-                  fontSize: '0.8rem'
-                }}
-              >
-                Tutup
-              </button>
-            </div>
-          ) : (
-            <div style={{
-              background: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-              color: 'white',
-              padding: '0.75rem 1rem',
-              borderRadius: '8px',
-              marginBottom: '1rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              fontSize: '0.85rem'
-            }}>
-              <div>
-                <strong>⚠️ Shift Belum Dibuka</strong>
-              </div>
-              <button 
-                className="btn btn-sm"
-                onClick={() => router.push('/shifts')}
-                style={{ 
-                  background: 'white', 
-                  color: '#D97706',
-                  padding: '0.35rem 0.75rem',
-                  fontSize: '0.8rem'
-                }}
-              >
-                Buka Shift
-              </button>
-            </div>
-          )}
-
           {/* Welcome - More Compact */}
           <div className="welcome-card" style={{ 
             padding: '1rem', 
@@ -213,62 +194,6 @@ export default function Dashboard() {
               Selamat Datang, {user?.full_name || user?.username}! 👋
             </h1>
             <p style={{ fontSize: '0.85rem', margin: 0 }}>Sistem POS Barbershop siap digunakan</p>
-          </div>
-
-          {/* Compact Quick Actions Grid - 2 columns on mobile */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-            gap: '0.75rem',
-            marginBottom: '1rem'
-          }}>
-            {hasPermission(user, 'shifts') && (
-              <button 
-                className="action-card"
-                onClick={handleOpenShift}
-                style={{ padding: '0.75rem', minHeight: 'auto' }}
-              >
-                <div style={{ fontSize: '1.75rem', marginBottom: '0.35rem' }}>📂</div>
-                <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.15rem' }}>Kelola Shift</div>
-                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>Buka/tutup shift</div>
-              </button>
-            )}
-
-            {hasPermission(user, 'transactions') && (
-              <button 
-                className="action-card" 
-                onClick={() => router.push('/pending-transactions')}
-                style={{ padding: '0.75rem', minHeight: 'auto' }}
-              >
-                <div style={{ fontSize: '1.75rem', marginBottom: '0.35rem' }}>⏸️</div>
-                <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.15rem' }}>Transaksi Pending</div>
-                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>Belum dibayar</div>
-              </button>
-            )}
-
-            {hasPermission(user, 'reports') && (
-              <button 
-                className="action-card" 
-                onClick={handleDailyReport}
-                style={{ padding: '0.75rem', minHeight: 'auto' }}
-              >
-                <div style={{ fontSize: '1.75rem', marginBottom: '0.35rem' }}>📊</div>
-                <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.15rem' }}>Laporan Harian</div>
-                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>Lihat laporan</div>
-              </button>
-            )}
-
-            {hasPermission(user, 'transactions') && (
-              <button 
-                className="action-card" 
-                onClick={handleHistory}
-                style={{ padding: '0.75rem', minHeight: 'auto' }}
-              >
-                <div style={{ fontSize: '1.75rem', marginBottom: '0.35rem' }}>📜</div>
-                <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: '0.15rem' }}>Riwayat Transaksi</div>
-                <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>Cek transaksi</div>
-              </button>
-            )}
           </div>
 
           {/* Compact Transaction Section */}
