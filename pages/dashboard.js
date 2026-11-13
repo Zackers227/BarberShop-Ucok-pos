@@ -9,6 +9,7 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeShift, setActiveShift] = useState(null);
+  const [pendingCount, setPendingCount] = useState(0);
 
   useEffect(() => {
     // Check authentication
@@ -27,6 +28,9 @@ export default function Dashboard() {
     // Check active shift
     checkActiveShift(token);
     
+    // Check pending transactions
+    checkPendingTransactions(token);
+    
     setLoading(false);
   }, [router]);
 
@@ -40,6 +44,19 @@ export default function Dashboard() {
       setActiveShift(active);
     } catch (error) {
       console.error('Error checking shift:', error);
+    }
+  };
+
+  const checkPendingTransactions = async (token) => {
+    try {
+      const response = await fetch('/api/transactions', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      const pending = data.filter(t => t.status === 'pending');
+      setPendingCount(pending.length);
+    } catch (error) {
+      console.error('Error checking pending transactions:', error);
     }
   };
 
@@ -86,26 +103,153 @@ export default function Dashboard() {
       </Head>
 
       <div className="dashboard-container">
-        {/* Navbar - Simple 3-Section Layout */}
+        {/* Navbar - 2 Row Layout */}
         <nav className="navbar" style={{ 
           padding: '0.75rem 1.5rem',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '1.5rem'
+          flexDirection: 'column',
+          gap: '0.75rem'
         }}>
-          {/* LEFT: Logo */}
-          <div className="navbar-brand">
-            <Logo size="small" />
+          {/* ROW 1: Logo Left + Green Box Right */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%'
+          }}>
+            {/* LEFT: Logo */}
+            <div className="navbar-brand">
+              <Logo size="small" />
+            </div>
+            
+            {/* RIGHT: Green Box with 3 Components - User, Shift, Logout */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              padding: '0.6rem 1rem',
+              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.12) 100%)',
+              borderRadius: '10px',
+              border: '1.5px solid rgba(16, 185, 129, 0.3)',
+              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.15)'
+            }}>
+              {/* 1. User Info */}
+              <div style={{ 
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+                lineHeight: '1.2',
+                borderRight: '1px solid rgba(16, 185, 129, 0.3)',
+                paddingRight: '0.75rem'
+              }}>
+                <div style={{ 
+                  fontSize: '0.85rem', 
+                  fontWeight: '600',
+                  color: '#1f2937'
+                }}>
+                  👤 {user?.full_name || user?.username}
+                </div>
+                <div style={{ 
+                  fontSize: '0.7rem',
+                  color: 'white',
+                  background: '#6366f1',
+                  padding: '0.15rem 0.5rem',
+                  borderRadius: '10px',
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  marginTop: '0.2rem'
+                }}>
+                  {user?.role}
+                </div>
+              </div>
+
+              {/* 2. Shift Status */}
+              <div style={{ 
+                display: 'flex', 
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '0.2rem',
+                padding: '0.3rem 0.65rem',
+                borderRadius: '8px',
+                background: activeShift ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+                border: activeShift ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(245, 158, 11, 0.4)',
+                minWidth: '85px',
+                borderRight: '1px solid rgba(16, 185, 129, 0.3)',
+                paddingRight: '0.75rem',
+                marginRight: '0.25rem'
+              }}>
+                {activeShift ? (
+                  <>
+                    <span style={{ fontSize: '1.1rem' }}>🟢</span>
+                    <span style={{ 
+                      fontSize: '0.75rem', 
+                      fontWeight: '700',
+                      color: '#059669',
+                      textAlign: 'center'
+                    }}>
+                      Shift #{activeShift.id}
+                    </span>
+                    {activeShift.total_transactions > 0 && (
+                      <span style={{ 
+                        fontSize: '0.65rem', 
+                        color: '#059669',
+                        opacity: 0.85
+                      }}>
+                        {activeShift.total_transactions} trx
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <span style={{ fontSize: '1.1rem' }}>⚠️</span>
+                    <span style={{ 
+                      fontSize: '0.7rem', 
+                      fontWeight: '700',
+                      color: '#D97706'
+                    }}>
+                      Tutup
+                    </span>
+                    <button 
+                      onClick={() => router.push('/shifts')}
+                      style={{
+                        padding: '0.2rem 0.5rem',
+                        fontSize: '0.65rem',
+                        background: '#D97706',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                        marginTop: '0.15rem'
+                      }}
+                    >
+                      Buka
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* 3. Logout Button */}
+              <button 
+                className="btn btn-danger btn-sm" 
+                onClick={handleLogout}
+                style={{
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.8rem',
+                  fontWeight: '600',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                Logout
+              </button>
+            </div>
           </div>
-          
-          {/* CENTER: Quick Navigation Buttons Only */}
+
+          {/* ROW 2: Quick Navigation Buttons */}
           <div style={{ 
             display: 'flex', 
             gap: '0.65rem',
-            alignItems: 'center',
-            flex: 1,
-            justifyContent: 'center'
+            alignItems: 'center'
           }}>
             {hasPermission(user, 'reports') && (
               <button 
@@ -149,128 +293,41 @@ export default function Dashboard() {
                 🛒 Transaksi
               </button>
             )}
-          </div>
-
-          {/* RIGHT: Green Box with 3 Components - User, Shift, Logout */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            padding: '0.6rem 1rem',
-            background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.12) 100%)',
-            borderRadius: '10px',
-            border: '1.5px solid rgba(16, 185, 129, 0.3)',
-            boxShadow: '0 2px 8px rgba(16, 185, 129, 0.15)'
-          }}>
-            {/* 1. User Info */}
-            <div style={{ 
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
-              lineHeight: '1.2',
-              borderRight: '1px solid rgba(16, 185, 129, 0.3)',
-              paddingRight: '0.75rem'
-            }}>
-              <div style={{ 
-                fontSize: '0.85rem', 
-                fontWeight: '600',
-                color: '#1f2937'
-              }}>
-                👤 {user?.full_name || user?.username}
-              </div>
-              <div style={{ 
-                fontSize: '0.7rem',
-                color: 'white',
-                background: '#6366f1',
-                padding: '0.15rem 0.5rem',
-                borderRadius: '10px',
-                fontWeight: '600',
-                textTransform: 'uppercase',
-                marginTop: '0.2rem'
-              }}>
-                {user?.role}
-              </div>
-            </div>
-
-            {/* 2. Shift Status */}
-            <div style={{ 
-              display: 'flex', 
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '0.2rem',
-              padding: '0.3rem 0.65rem',
-              borderRadius: '8px',
-              background: activeShift ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)',
-              border: activeShift ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(245, 158, 11, 0.4)',
-              minWidth: '85px',
-              borderRight: '1px solid rgba(16, 185, 129, 0.3)',
-              paddingRight: '0.75rem',
-              marginRight: '0.25rem'
-            }}>
-              {activeShift ? (
-                <>
-                  <span style={{ fontSize: '1.1rem' }}>🟢</span>
-                  <span style={{ 
-                    fontSize: '0.75rem', 
+            {hasPermission(user, 'transactions') && (
+              <button 
+                className="btn btn-sm"
+                onClick={() => router.push('/pending-transactions')}
+                style={{ 
+                  fontSize: '0.8rem', 
+                  padding: '0.5rem 0.85rem',
+                  whiteSpace: 'nowrap',
+                  fontWeight: '600',
+                  background: '#f59e0b',
+                  color: 'white',
+                  border: 'none',
+                  position: 'relative'
+                }}
+              >
+                ⏸️ Pending
+                {pendingCount > 0 && (
+                  <span style={{
+                    position: 'absolute',
+                    top: '-6px',
+                    right: '-6px',
+                    background: '#dc2626',
+                    color: 'white',
+                    fontSize: '0.65rem',
                     fontWeight: '700',
-                    color: '#059669',
+                    padding: '0.15rem 0.4rem',
+                    borderRadius: '10px',
+                    minWidth: '20px',
                     textAlign: 'center'
                   }}>
-                    Shift #{activeShift.id}
+                    {pendingCount}
                   </span>
-                  {activeShift.total_transactions > 0 && (
-                    <span style={{ 
-                      fontSize: '0.65rem', 
-                      color: '#059669',
-                      opacity: 0.85
-                    }}>
-                      {activeShift.total_transactions} trx
-                    </span>
-                  )}
-                </>
-              ) : (
-                <>
-                  <span style={{ fontSize: '1.1rem' }}>⚠️</span>
-                  <span style={{ 
-                    fontSize: '0.7rem', 
-                    fontWeight: '700',
-                    color: '#D97706'
-                  }}>
-                    Tutup
-                  </span>
-                  <button 
-                    onClick={() => router.push('/shifts')}
-                    style={{
-                      padding: '0.2rem 0.5rem',
-                      fontSize: '0.65rem',
-                      background: '#D97706',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      marginTop: '0.15rem'
-                    }}
-                  >
-                    Buka
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* 3. Logout Button */}
-            <button 
-              className="btn btn-danger btn-sm" 
-              onClick={handleLogout}
-              style={{
-                padding: '0.5rem 1rem',
-                fontSize: '0.8rem',
-                fontWeight: '600',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              Logout
-            </button>
+                )}
+              </button>
+            )}
           </div>
         </nav>
 
@@ -287,6 +344,56 @@ export default function Dashboard() {
             </h1>
             <p style={{ fontSize: '0.85rem', margin: 0 }}>Sistem POS Barbershop siap digunakan</p>
           </div>
+
+          {/* Pending Transactions Alert */}
+          {pendingCount > 0 && hasPermission(user, 'transactions') && (
+            <div 
+              onClick={() => router.push('/pending-transactions')}
+              style={{
+                background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)',
+                border: '2px solid #f59e0b',
+                borderRadius: '12px',
+                padding: '1rem',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(245, 158, 11, 0.2)',
+                transition: 'transform 0.2s, box-shadow 0.2s'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 16px rgba(245, 158, 11, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(245, 158, 11, 0.2)';
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <div style={{ fontSize: '2.5rem' }}>⏸️</div>
+                <div>
+                  <h3 style={{ fontSize: '1rem', marginBottom: '0.25rem', color: '#ea580c' }}>
+                    Ada {pendingCount} Transaksi Pending
+                  </h3>
+                  <p style={{ fontSize: '0.8rem', margin: 0, color: '#9a3412' }}>
+                    Klik untuk melihat dan memproses pembayaran
+                  </p>
+                </div>
+              </div>
+              <div style={{
+                background: '#f59e0b',
+                color: 'white',
+                padding: '0.5rem 1rem',
+                borderRadius: '8px',
+                fontWeight: '700',
+                fontSize: '1.25rem'
+              }}>
+                {pendingCount}
+              </div>
+            </div>
+          )}
 
           {/* Compact Transaction Section */}
           {hasPermission(user, 'transaction_create') && (
