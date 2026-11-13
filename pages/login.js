@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
+import Logo from '../components/Logo';
 
 export default function Login() {
   const router = useRouter();
@@ -59,29 +59,7 @@ export default function Login() {
         <div className="login-box">
           {/* Logo */}
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <img 
-              src="/images/logo-mensurface-black.png" 
-              alt="MENSURFACE - Barber and Shop" 
-              style={{ 
-                maxWidth: '400px',
-                width: '100%',
-                height: 'auto',
-                display: 'block',
-                margin: '0 auto'
-              }}
-              onError={(e) => {
-                // Fallback jika image tidak ditemukan
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'block';
-              }}
-            />
-            {/* Fallback text logo jika image belum di-upload */}
-            <div style={{ display: 'none', fontSize: '36px', fontWeight: '900', marginBottom: '10px' }}>
-              MENSURFACE
-            </div>
-            <div style={{ display: 'none', fontSize: '11px', letterSpacing: '0.3em', color: '#666' }}>
-              - BARBER AND SHOP -
-            </div>
+            <Logo size="large" />
           </div>
 
           <form onSubmit={handleSubmit}>
