@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 
+// Fixed: Ensured Layout component closing tag is present
 export default function Products() {
   const router = useRouter();
   const [user, setUser] = useState(null);
