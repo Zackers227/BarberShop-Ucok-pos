@@ -333,9 +333,9 @@ export default function Dashboard() {
                 <span>Dashboard</span>
               </div>
 
-              {/* Identitas */}
+              {/* Laporan */}
               <div
-                onClick={() => router.push('/identity')}
+                onClick={() => router.push('/reports')}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -350,13 +350,13 @@ export default function Dashboard() {
                 onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
               >
-                <span>🆔</span>
-                <span>Identitas</span>
+                <span>📈</span>
+                <span>Laporan</span>
               </div>
 
-              {/* Mobile Kasir */}
+              {/* Riwayat */}
               <div
-                onClick={() => router.push('/transaction')}
+                onClick={() => router.push('/history')}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -371,32 +371,11 @@ export default function Dashboard() {
                 onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
               >
-                <span>📱</span>
-                <span>Mobile Kasir</span>
+                <span>📜</span>
+                <span>Riwayat</span>
               </div>
 
-              {/* Pembelian */}
-              <div
-                onClick={() => router.push('/purchases')}
-                style={{
-                  padding: '12px 15px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontSize: '14px',
-                  color: '#ccc',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <span>💳</span>
-                <span>Pembelian</span>
-              </div>
-
-              {/* Penjualan */}
+              {/* Transaksi */}
               <div
                 onClick={() => router.push('/transactions')}
                 style={{
@@ -413,19 +392,20 @@ export default function Dashboard() {
                 onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
               >
-                <span>🛒</span>
-                <span>Penjualan</span>
+                <span>💳</span>
+                <span>Transaksi</span>
               </div>
 
-              {/* Gudang */}
+              {/* Pending */}
               <div
-                onClick={() => router.push('/warehouse')}
+                onClick={() => router.push('/pending')}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'space-between',
                   gap: '12px',
                   fontSize: '14px',
                   color: '#ccc',
@@ -434,162 +414,25 @@ export default function Dashboard() {
                 onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
               >
-                <span>🏪</span>
-                <span>Gudang</span>
-              </div>
-
-              {/* Barang */}
-              {hasPermission(user, 'products') && (
-                <div
-                  onClick={() => router.push('/products')}
-                  style={{
-                    padding: '12px 15px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    fontSize: '14px',
-                    color: '#ccc',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                >
-                  <span>📦</span>
-                  <span>Barang</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span>⏳</span>
+                  <span>Pending</span>
                 </div>
-              )}
-
-              {/* Supplier */}
-              <div
-                onClick={() => router.push('/suppliers')}
-                style={{
-                  padding: '12px 15px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontSize: '14px',
-                  color: '#ccc',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <span>🚚</span>
-                <span>Supplier</span>
+                {pendingCount > 0 && (
+                  <span style={{
+                    background: '#ef4444',
+                    color: 'white',
+                    fontSize: '11px',
+                    fontWeight: '700',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    minWidth: '20px',
+                    textAlign: 'center'
+                  }}>
+                    {pendingCount}
+                  </span>
+                )}
               </div>
-
-              {/* Customer */}
-              {hasPermission(user, 'customers') && (
-                <div
-                  onClick={() => router.push('/customers')}
-                  style={{
-                    padding: '12px 15px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    fontSize: '14px',
-                    color: '#ccc',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                >
-                  <span>👥</span>
-                  <span>Customer</span>
-                </div>
-              )}
-
-              {/* Cetak Barcode */}
-              <div
-                onClick={() => router.push('/barcode')}
-                style={{
-                  padding: '12px 15px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontSize: '14px',
-                  color: '#ccc',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <span>📋</span>
-                <span>Cetak Barcode</span>
-              </div>
-
-              {/* Setting */}
-              <div
-                onClick={() => router.push('/settings')}
-                style={{
-                  padding: '12px 15px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontSize: '14px',
-                  color: '#ccc',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <span>⚙️</span>
-                <span>Setting</span>
-              </div>
-
-              {/* Referensi */}
-              <div
-                onClick={() => router.push('/reference')}
-                style={{
-                  padding: '12px 15px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontSize: '14px',
-                  color: '#ccc',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <span>📚</span>
-                <span>Referensi</span>
-              </div>
-
-              {/* User */}
-              {hasPermission(user, 'users') && (
-                <div
-                  onClick={() => router.push('/users')}
-                  style={{
-                    padding: '12px 15px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    fontSize: '14px',
-                    color: '#ccc',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                >
-                  <span>👤</span>
-                  <span>User</span>
-                </div>
-              )}
             </div>
           </div>
 
