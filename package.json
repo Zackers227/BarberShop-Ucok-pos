@@ -1,6 +1,6 @@
 {
   "name": "ininotes-pos-barbershop",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Sistem POS Barbershop dengan printer thermal 58mm untuk tablet Android",
   "scripts": {
     "dev": "next dev -p 3001",
