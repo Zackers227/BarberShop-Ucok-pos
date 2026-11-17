@@ -113,7 +113,7 @@ export default function Navbar({ currentPage = '' }) {
                   <span style={{ 
                     fontSize: '0.65rem', 
                     color: '#059669',
-                    opacity: 0.85'
+                    opacity: 0.85
                   }}>
                     {activeShift.total_transactions} trx
                   </span>
