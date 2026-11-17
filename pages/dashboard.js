@@ -63,24 +63,46 @@ export default function Dashboard() {
       });
       const transactions = await transactionsRes.json();
       
-      // Calculate total items sold (sum of all items in all transactions)
-      const totalItems = transactions.reduce((sum, t) => {
-        const items = t.items ? JSON.parse(t.items) : [];
-        return sum + items.reduce((itemSum, item) => itemSum + (item.quantity || 0), 0);
-      }, 0);
+      console.log('📊 Dashboard Stats Debug:');
+      console.log('Total transactions fetched:', transactions.length);
+      console.log('Sample transaction:', transactions[0]);
       
-      // Total completed transactions
-      const completedTransactions = transactions.filter(t => t.status === 'completed');
+      // Filter completed transactions (case insensitive)
+      const completedTransactions = transactions.filter(t => 
+        t.status && t.status.toLowerCase() === 'completed'
+      );
+      
+      console.log('Completed transactions:', completedTransactions.length);
+      
+      // Calculate total items sold (sum of all items in all completed transactions)
+      let totalItems = 0;
+      completedTransactions.forEach(t => {
+        try {
+          // Parse items if it's a string, or use directly if already array
+          const items = typeof t.items === 'string' ? JSON.parse(t.items) : (t.items || []);
+          totalItems += items.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
+        } catch (error) {
+          console.error('Error parsing items for transaction', t.id, error);
+        }
+      });
       
       // Total income from completed transactions
-      const totalIncome = completedTransactions.reduce((sum, t) => sum + (parseFloat(t.total_amount) || 0), 0);
+      const totalIncome = completedTransactions.reduce((sum, t) => {
+        const amount = parseFloat(t.total_amount || t.total || 0);
+        return sum + amount;
+      }, 0);
+      
+      console.log('Total items:', totalItems);
+      console.log('Total income:', totalIncome);
       
       // Fetch customers and count active ones (with at least 1 visit)
       const customersRes = await fetch('/api/customers', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const customers = await customersRes.json();
-      const activeCustomers = customers.filter(c => (c.total_visits || 0) > 0).length;
+      const activeCustomers = customers.filter(c => (parseInt(c.total_visits) || 0) > 0).length;
+      
+      console.log('Active customers:', activeCustomers);
       
       setDashboardStats({
         totalItems,
