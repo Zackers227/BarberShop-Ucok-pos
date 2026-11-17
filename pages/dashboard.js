@@ -206,11 +206,398 @@ export default function Dashboard() {
         <link rel="stylesheet" href="/css/styles.css" />
         <link rel="stylesheet" href="/css/dashboard.css" />
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <style>{`
+          /* Hide sidebar on mobile */
+          @media (max-width: 768px) {
+            aside {
+              display: none !important;
+            }
+            .main-wrapper {
+              margin-left: 0 !important;
+              width: 100% !important;
+            }
+          }
+        `}</style>
       </Head>
 
       <div className="dashboard-container">
-        {/* Use Navbar Component */}
-        <Navbar currentPage="dashboard" />
+        {/* Sidebar Menu */}
+        <aside style={{
+          width: '280px',
+          background: '#3a3f51',
+          color: 'white',
+          height: '100vh',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          overflowY: 'auto',
+          zIndex: 100,
+          boxShadow: '2px 0 8px rgba(0,0,0,0.1)'
+        }}>
+          {/* Sidebar Header */}
+          <div style={{
+            background: '#2c3142',
+            padding: '20px',
+            textAlign: 'center',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            borderBottom: '1px solid #4a5264'
+          }}>
+            💼 MENSURFACE
+          </div>
+
+          {/* Master Aplikasi Section */}
+          <div style={{
+            padding: '20px',
+            borderBottom: '1px solid #4a5264'
+          }}>
+            <div style={{
+              fontSize: '11px',
+              color: '#999',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontWeight: '600',
+              marginBottom: '15px'
+            }}>
+              MASTER APLIKASI
+            </div>
+            <div style={{
+              fontSize: '12px',
+              color: '#bbb',
+              marginBottom: '15px'
+            }}>
+              Pengaturan aplikasi
+            </div>
+            <div
+              onClick={() => router.push('/settings')}
+              style={{
+                padding: '12px 15px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                fontSize: '14px',
+                color: '#ccc',
+                transition: 'all 0.3s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+            >
+              <span>⚙️</span>
+              <span>Aplikasi</span>
+            </div>
+          </div>
+
+          {/* Aplikasi Inventory & POS Section */}
+          <div style={{
+            padding: '20px',
+            borderBottom: '1px solid #4a5264'
+          }}>
+            <div style={{
+              fontSize: '11px',
+              color: '#999',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontWeight: '600',
+              marginBottom: '15px'
+            }}>
+              APLIKASI INVENTORY & POS
+            </div>
+            <div style={{
+              fontSize: '12px',
+              color: '#bbb',
+              marginBottom: '15px'
+            }}>
+              Menu Utama Aplikasi
+            </div>
+
+            {/* Menu Items */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              {/* Dashboard - Active */}
+              <div
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  background: '#2563eb',
+                  color: 'white',
+                  fontWeight: '600'
+                }}
+              >
+                <span>📊</span>
+                <span>Dashboard</span>
+              </div>
+
+              {/* Identitas */}
+              <div
+                onClick={() => router.push('/identity')}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  color: '#ccc',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <span>🆔</span>
+                <span>Identitas</span>
+              </div>
+
+              {/* Mobile Kasir */}
+              <div
+                onClick={() => router.push('/transaction')}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  color: '#ccc',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <span>📱</span>
+                <span>Mobile Kasir</span>
+              </div>
+
+              {/* Pembelian */}
+              <div
+                onClick={() => router.push('/purchases')}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  color: '#ccc',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <span>💳</span>
+                <span>Pembelian</span>
+              </div>
+
+              {/* Penjualan */}
+              <div
+                onClick={() => router.push('/transactions')}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  color: '#ccc',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <span>🛒</span>
+                <span>Penjualan</span>
+              </div>
+
+              {/* Gudang */}
+              <div
+                onClick={() => router.push('/warehouse')}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  color: '#ccc',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <span>🏪</span>
+                <span>Gudang</span>
+              </div>
+
+              {/* Barang */}
+              {hasPermission(user, 'products') && (
+                <div
+                  onClick={() => router.push('/products')}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    color: '#ccc',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span>📦</span>
+                  <span>Barang</span>
+                </div>
+              )}
+
+              {/* Supplier */}
+              <div
+                onClick={() => router.push('/suppliers')}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  color: '#ccc',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <span>🚚</span>
+                <span>Supplier</span>
+              </div>
+
+              {/* Customer */}
+              {hasPermission(user, 'customers') && (
+                <div
+                  onClick={() => router.push('/customers')}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    color: '#ccc',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span>👥</span>
+                  <span>Customer</span>
+                </div>
+              )}
+
+              {/* Cetak Barcode */}
+              <div
+                onClick={() => router.push('/barcode')}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  color: '#ccc',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <span>📋</span>
+                <span>Cetak Barcode</span>
+              </div>
+
+              {/* Setting */}
+              <div
+                onClick={() => router.push('/settings')}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  color: '#ccc',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <span>⚙️</span>
+                <span>Setting</span>
+              </div>
+
+              {/* Referensi */}
+              <div
+                onClick={() => router.push('/reference')}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  color: '#ccc',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <span>📚</span>
+                <span>Referensi</span>
+              </div>
+
+              {/* User */}
+              {hasPermission(user, 'users') && (
+                <div
+                  onClick={() => router.push('/users')}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    color: '#ccc',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span>👤</span>
+                  <span>User</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Content Wrapper - Shifted Right */}
+        <div className="main-wrapper" style={{ marginLeft: '280px', width: 'calc(100% - 280px)' }}>
+          {/* Use Navbar Component */}
+          <Navbar currentPage="dashboard" />
 
         {/* Main Content */}
         <div className="main-content">
@@ -544,6 +931,7 @@ export default function Dashboard() {
         <footer className="dashboard-footer">
           <p>© 2026 MENSURFACE Barber and Shop | Versi 2.1 | Powered by Next.js</p>
         </footer>
+        </div> {/* End Main Content Wrapper */}
       </div>
 
       <script>{`
