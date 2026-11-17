@@ -4,9 +4,6 @@ const nextConfig = {
   swcMinify: true,
   poweredByHeader: false,
   
-  // Output standalone untuk Vercel
-  output: 'standalone',
-  
   // Disable image optimization untuk static export
   images: {
     unoptimized: true
@@ -28,7 +25,7 @@ const nextConfig = {
   
   // Environment variables
   env: {
-    BUSINESS_NAME: process.env.BUSINESS_NAME || 'Barbershop Ucok',
+    BUSINESS_NAME: process.env.BUSINESS_NAME || 'MENSURFACE',
     BUSINESS_ADDRESS: process.env.BUSINESS_ADDRESS || 'Jl. Example No. 123',
     BUSINESS_PHONE: process.env.BUSINESS_PHONE || '081234567890',
   },
@@ -42,10 +39,6 @@ const nextConfig = {
           {
             key: 'X-DNS-Prefetch-Control',
             value: 'on'
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload'
           },
           {
             key: 'X-Frame-Options',
