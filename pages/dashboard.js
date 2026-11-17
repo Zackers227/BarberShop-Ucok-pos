@@ -60,7 +60,7 @@ export default function Dashboard() {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [
       {
-        label: 'Tahun Ini (2024)',
+        label: 'Tahun Ini (2026)',
         data: [2500000, 2800000, 3100000, 2900000, 3400000, 3800000, 4200000, 3900000, 4500000, 4100000, 4800000, 5200000],
         borderColor: '#2563eb',
         backgroundColor: 'rgba(37, 99, 235, 0.05)',
@@ -73,7 +73,7 @@ export default function Dashboard() {
         pointRadius: 4
       },
       {
-        label: 'Tahun Lalu (2023)',
+        label: 'Tahun Lalu (2025)',
         data: [2200000, 2400000, 2700000, 2500000, 2900000, 3100000, 3400000, 3200000, 3600000, 3300000, 3800000, 4000000],
         borderColor: '#10b981',
         backgroundColor: 'rgba(16, 185, 129, 0.05)',
@@ -135,7 +135,7 @@ export default function Dashboard() {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [
       {
-        label: 'Tahun Ini (2024)',
+        label: 'Tahun Ini (2026)',
         data: [2500000, 2800000, 3100000, 2900000, 3400000, 3800000, 4200000, 3900000, 4500000, 4100000, 4800000, 5200000],
         backgroundColor: '#2563eb',
         borderColor: '#1e40af',
@@ -143,7 +143,7 @@ export default function Dashboard() {
         borderRadius: 6
       },
       {
-        label: 'Tahun Lalu (2023)',
+        label: 'Tahun Lalu (2025)',
         data: [2200000, 2400000, 2700000, 2500000, 2900000, 3100000, 3400000, 3200000, 3600000, 3300000, 3800000, 4000000],
         backgroundColor: '#10b981',
         borderColor: '#059669',
@@ -220,12 +220,13 @@ export default function Dashboard() {
             <p style={{ fontSize: '0.9rem', color: '#999', margin: 0 }}>Ringkasan performa bisnis Anda</p>
           </div>
 
-          {/* METRIC CARDS - 4 Columns */}
+          {/* METRIC CARDS - 4 Columns in 1 Row */}
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            display: 'flex',
+            flexDirection: 'row',
             gap: '20px',
-            marginBottom: '2rem'
+            marginBottom: '2rem',
+            overflowX: 'auto'
           }}>
             {/* Total Item Terjual */}
             <div style={{
@@ -235,6 +236,8 @@ export default function Dashboard() {
               color: 'white',
               boxShadow: '0 4px 12px rgba(37, 99, 235, 0.2)',
               minHeight: '140px',
+              minWidth: '220px',
+              flex: '1',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between'
@@ -253,7 +256,7 @@ export default function Dashboard() {
                 borderTop: '1px solid rgba(255,255,255,0.3)'
               }}>
                 <span style={{ fontWeight: '600' }}>30%</span>
-                <span>2024</span>
+                <span>2026</span>
               </div>
             </div>
 
@@ -265,6 +268,8 @@ export default function Dashboard() {
               color: 'white',
               boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)',
               minHeight: '140px',
+              minWidth: '220px',
+              flex: '1',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between'
@@ -283,7 +288,7 @@ export default function Dashboard() {
                 borderTop: '1px solid rgba(255,255,255,0.3)'
               }}>
                 <span style={{ fontWeight: '600' }}>30%</span>
-                <span>2024</span>
+                <span>2026</span>
               </div>
             </div>
 
@@ -295,6 +300,8 @@ export default function Dashboard() {
               color: 'white',
               boxShadow: '0 4px 12px rgba(245, 158, 11, 0.2)',
               minHeight: '140px',
+              minWidth: '220px',
+              flex: '1',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between'
@@ -313,7 +320,7 @@ export default function Dashboard() {
                 borderTop: '1px solid rgba(255,255,255,0.3)'
               }}>
                 <span style={{ fontWeight: '600' }}>30%</span>
-                <span>2024</span>
+                <span>2026</span>
               </div>
             </div>
 
@@ -325,6 +332,8 @@ export default function Dashboard() {
               color: 'white',
               boxShadow: '0 4px 12px rgba(239, 68, 68, 0.2)',
               minHeight: '140px',
+              minWidth: '220px',
+              flex: '1',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between'
@@ -343,7 +352,7 @@ export default function Dashboard() {
                 borderTop: '1px solid rgba(255,255,255,0.3)'
               }}>
                 <span style={{ fontWeight: '600' }}>8%</span>
-                <span>2024</span>
+                <span>2026</span>
               </div>
             </div>
           </div>
@@ -549,7 +558,7 @@ export default function Dashboard() {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [
                   {
-                    label: 'Tahun Ini (2024)',
+                    label: 'Tahun Ini (2026)',
                     data: [2500000, 2800000, 3100000, 2900000, 3400000, 3800000, 4200000, 3900000, 4500000, 4100000, 4800000, 5200000],
                     borderColor: '#2563eb',
                     backgroundColor: 'rgba(37, 99, 235, 0.05)',
@@ -562,7 +571,7 @@ export default function Dashboard() {
                     pointRadius: 4
                   },
                   {
-                    label: 'Tahun Lalu (2023)',
+                    label: 'Tahun Lalu (2025)',
                     data: [2200000, 2400000, 2700000, 2500000, 2900000, 3100000, 3400000, 3200000, 3600000, 3300000, 3800000, 4000000],
                     borderColor: '#10b981',
                     backgroundColor: 'rgba(16, 185, 129, 0.05)',
@@ -628,7 +637,7 @@ export default function Dashboard() {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
                 datasets: [
                   {
-                    label: 'Tahun Ini (2024)',
+                    label: 'Tahun Ini (2026)',
                     data: [2500000, 2800000, 3100000, 2900000, 3400000, 3800000, 4200000, 3900000, 4500000, 4100000, 4800000, 5200000],
                     backgroundColor: '#2563eb',
                     borderColor: '#1e40af',
@@ -636,7 +645,7 @@ export default function Dashboard() {
                     borderRadius: 6
                   },
                   {
-                    label: 'Tahun Lalu (2023)',
+                    label: 'Tahun Lalu (2025)',
                     data: [2200000, 2400000, 2700000, 2500000, 2900000, 3100000, 3400000, 3200000, 3600000, 3300000, 3800000, 4000000],
                     backgroundColor: '#10b981',
                     borderColor: '#059669',
