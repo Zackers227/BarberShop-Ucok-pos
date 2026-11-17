@@ -272,7 +272,7 @@ export default function Transaction() {
           }
           
           // Tampilkan alert dengan kembalian
-          let alertMessage = `Transaksi berhasil!\nNo: ${result.transaction.transaction_no}\n`;
+          let alertMessage = `✅ Transaksi berhasil!\n\nNo: ${result.transaction.transaction_no}`;
           alertMessage += `\nTOTAL: Rp ${calculateTotal().toLocaleString()}`;
           
           if (paymentMethod === 'TUNAI') {
@@ -280,19 +280,22 @@ export default function Transaction() {
             alertMessage += `\nKEMBALIAN: Rp ${changeAmount.toLocaleString()}`;
           }
           
-          alertMessage += `\n\nStruk sedang dicetak...`;
-          
-          // Alert dulu, baru open print window setelah user klik OK
           alert(alertMessage);
           
-          // Open print page SETELAH alert (agar tidak diblock browser)
-          window.open(
-            `/print/${result.transaction.id}`,
-            '_blank',
-            'width=800,height=600'
-          );
+          // Open print page dengan delay agar tidak di-block browser
+          setTimeout(() => {
+            const printWindow = window.open(
+              `/print/${result.transaction.id}`,
+              '_blank',
+              'width=800,height=600,menubar=no,toolbar=no'
+            );
+            
+            if (!printWindow) {
+              alert('⚠️ Browser memblokir popup struk!\n\nSilakan:\n1. Izinkan popup untuk situs ini\n2. Atau buka struk dari menu Riwayat Transaksi');
+            }
+          }, 100);
         } else {
-          alert(`Transaksi pending berhasil disimpan!\nNo: ${result.transaction.transaction_no}\n\nProses pembayaran nanti di menu Transaksi Pending.`);
+          alert(`✅ Transaksi pending berhasil disimpan!\n\nNo: ${result.transaction.transaction_no}\n\nProses pembayaran nanti di menu Transaksi Pending.`);
         }
         
         // Reset form
