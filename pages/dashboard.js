@@ -592,6 +592,174 @@ export default function Dashboard() {
               )}
             </div>
           </div>
+
+          {/* Manajemen Section */}
+          <div style={{
+            padding: '20px',
+            borderBottom: '1px solid #4a5264'
+          }}>
+            <div style={{
+              fontSize: '11px',
+              color: '#999',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontWeight: '600',
+              marginBottom: '15px'
+            }}>
+              MANAJEMEN
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              {/* User / Kasir */}
+              {hasPermission(user, 'users') && (
+                <div
+                  onClick={() => router.push('/users')}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    color: '#ccc',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span>👥</span>
+                  <span>User / Kasir</span>
+                </div>
+              )}
+
+              {/* Customer / Pelanggan */}
+              {hasPermission(user, 'customers') && (
+                <div
+                  onClick={() => router.push('/customers')}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    color: '#ccc',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span>🧑‍🤝‍🧑</span>
+                  <span>Customer / Pelanggan</span>
+                </div>
+              )}
+
+              {/* Kapster / Barberman */}
+              {hasPermission(user, 'kapsters') && (
+                <div
+                  onClick={() => router.push('/kapsters')}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    color: '#ccc',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span>💈</span>
+                  <span>Kapster / Barberman</span>
+                </div>
+              )}
+
+              {/* Layanan / Service */}
+              {hasPermission(user, 'services') && (
+                <div
+                  onClick={() => router.push('/services')}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    color: '#ccc',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span>✂️</span>
+                  <span>Layanan / Service</span>
+                </div>
+              )}
+
+              {/* Produk / Barang */}
+              {hasPermission(user, 'products') && (
+                <div
+                  onClick={() => router.push('/products')}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    color: '#ccc',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span>🧴</span>
+                  <span>Produk / Barang</span>
+                </div>
+              )}
+
+              {/* Logout */}
+              <div
+                onClick={() => {
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('user');
+                  router.push('/login');
+                }}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  color: '#ef4444',
+                  transition: 'all 0.3s',
+                  marginTop: '10px',
+                  borderTop: '1px solid #4a5264',
+                  paddingTop: '20px'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                  e.currentTarget.style.color = '#ff6b6b';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = '#ef4444';
+                }}
+              >
+                <span>🚪</span>
+                <span>Logout</span>
+              </div>
+            </div>
+          </div>
         </aside>
 
         {/* Main Content Wrapper - Shifted Right */}
@@ -773,156 +941,6 @@ export default function Dashboard() {
             }}>
               <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#333', marginBottom: '15px' }}>📊 Income Pertahun</h3>
               <canvas id="yearlyIncomeChart"></canvas>
-            </div>
-          </div>
-
-          {/* Pending Transactions Alert */}
-          {pendingCount > 0 && hasPermission(user, 'transactions') && (
-            <div 
-              onClick={() => router.push('/pending-transactions')}
-              style={{
-                background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)',
-                border: '2px solid #f59e0b',
-                borderRadius: '12px',
-                padding: '1rem',
-                marginBottom: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(245, 158, 11, 0.2)',
-                transition: 'transform 0.2s, box-shadow 0.2s'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 16px rgba(245, 158, 11, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(245, 158, 11, 0.2)';
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ fontSize: '2.5rem' }}>⏸️</div>
-                <div>
-                  <h3 style={{ fontSize: '1rem', marginBottom: '0.25rem', color: '#ea580c' }}>
-                    Ada {pendingCount} Transaksi Pending
-                  </h3>
-                  <p style={{ fontSize: '0.8rem', margin: 0, color: '#9a3412' }}>
-                    Klik untuk melihat dan memproses pembayaran
-                  </p>
-                </div>
-              </div>
-              <div style={{
-                background: '#f59e0b',
-                color: 'white',
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                fontWeight: '700',
-                fontSize: '1.25rem'
-              }}>
-                {pendingCount}
-              </div>
-            </div>
-          )}
-
-          {/* Compact Transaction Section */}
-          {hasPermission(user, 'transaction_create') && (
-            <div className="transaction-section" style={{ marginBottom: '1rem' }}>
-              <div style={{ 
-                background: 'white', 
-                borderRadius: '12px', 
-                padding: '1.25rem',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                textAlign: 'center'
-              }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🛒</div>
-                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Transaksi Baru</h3>
-                <p style={{ fontSize: '0.8rem', color: '#666', marginBottom: '1rem' }}>
-                  Proses transaksi, tambah item, cetak struk
-                </p>
-                <button 
-                  className="btn btn-success btn-lg" 
-                  onClick={handleNewTransaction}
-                  style={{ 
-                    width: '100%',
-                    padding: '0.75rem',
-                    fontSize: '0.95rem'
-                  }}
-                >
-                  🛒 Mulai Transaksi Baru
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Compact Management Section */}
-          <div className="card" style={{ padding: '1rem' }}>
-            <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem' }}>⚙️ Manajemen</h3>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-              gap: '0.65rem'
-            }}>
-              {hasPermission(user, 'users') && (
-                <button 
-                  className="action-card" 
-                  onClick={() => router.push('/users')}
-                  style={{ padding: '0.65rem', minHeight: 'auto' }}
-                >
-                  <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>👥</div>
-                  <div style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.1rem' }}>User</div>
-                  <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>Kasir</div>
-                </button>
-              )}
-
-              {hasPermission(user, 'customers') && (
-                <button 
-                  className="action-card" 
-                  onClick={() => router.push('/customers')}
-                  style={{ padding: '0.65rem', minHeight: 'auto' }}
-                >
-                  <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>🧑‍🤝‍🧑</div>
-                  <div style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.1rem' }}>Customer</div>
-                  <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>Pelanggan</div>
-                </button>
-              )}
-
-              {hasPermission(user, 'kapsters') && (
-                <button 
-                  className="action-card" 
-                  onClick={() => router.push('/kapsters')}
-                  style={{ padding: '0.65rem', minHeight: 'auto' }}
-                >
-                  <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>💈</div>
-                  <div style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.1rem' }}>Kapster</div>
-                  <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>Barberman</div>
-                </button>
-              )}
-
-              {hasPermission(user, 'services') && (
-                <button 
-                  className="action-card" 
-                  onClick={() => router.push('/services')}
-                  style={{ padding: '0.65rem', minHeight: 'auto' }}
-                >
-                  <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>✂️</div>
-                  <div style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.1rem' }}>Layanan</div>
-                  <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>Service</div>
-                </button>
-              )}
-
-              {hasPermission(user, 'products') && (
-                <button 
-                  className="action-card" 
-                  onClick={() => router.push('/products')}
-                  style={{ padding: '0.65rem', minHeight: 'auto' }}
-                >
-                  <div style={{ fontSize: '1.5rem', marginBottom: '0.3rem' }}>🧴</div>
-                  <div style={{ fontSize: '0.8rem', fontWeight: '600', marginBottom: '0.1rem' }}>Produk</div>
-                  <div style={{ fontSize: '0.65rem', opacity: 0.7 }}>Barang</div>
-                </button>
-              )}
             </div>
           </div>
         </div>
