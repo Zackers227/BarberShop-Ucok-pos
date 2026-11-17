@@ -11,12 +11,13 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
   
-  // Dashboard metrics state
   const [dashboardStats, setDashboardStats] = useState({
     totalItems: 0,
     totalTransactions: 0,
     totalIncome: 0,
-    activeCustomers: 0
+    activeCustomers: 0,
+    loading: true,
+    error: null
   });
 
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function Dashboard() {
     checkPendingTransactions(token);
     
     // Fetch dashboard statistics
+    console.log('🎯 About to fetch dashboard stats...');
     fetchDashboardStats(token);
     
     setLoading(false);
@@ -57,15 +59,24 @@ export default function Dashboard() {
 
   const fetchDashboardStats = async (token) => {
     try {
+      console.log('🚀 Starting dashboard stats fetch...');
+      
       // Fetch all transactions
       const transactionsRes = await fetch('/api/transactions', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      if (!transactionsRes.ok) {
+        throw new Error(`API error: ${transactionsRes.status}`);
+      }
+      
       const transactions = await transactionsRes.json();
       
       console.log('📊 Dashboard Stats Debug:');
       console.log('Total transactions fetched:', transactions.length);
-      console.log('Sample transaction:', transactions[0]);
+      if (transactions.length > 0) {
+        console.log('Sample transaction:', transactions[0]);
+      }
       
       // Filter completed transactions (case insensitive)
       const completedTransactions = transactions.filter(t => 
@@ -73,6 +84,9 @@ export default function Dashboard() {
       );
       
       console.log('Completed transactions:', completedTransactions.length);
+      if (completedTransactions.length > 0) {
+        console.log('Sample completed transaction:', completedTransactions[0]);
+      }
       
       // Calculate total items sold (sum of all items in all completed transactions)
       let totalItems = 0;
@@ -80,7 +94,8 @@ export default function Dashboard() {
         try {
           // Parse items if it's a string, or use directly if already array
           const items = typeof t.items === 'string' ? JSON.parse(t.items) : (t.items || []);
-          totalItems += items.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
+          const itemCount = items.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
+          totalItems += itemCount;
         } catch (error) {
           console.error('Error parsing items for transaction', t.id, error);
         }
@@ -92,26 +107,40 @@ export default function Dashboard() {
         return sum + amount;
       }, 0);
       
-      console.log('Total items:', totalItems);
-      console.log('Total income:', totalIncome);
+      console.log('✅ Calculated stats:');
+      console.log('- Total items:', totalItems);
+      console.log('- Total income:', totalIncome);
       
       // Fetch customers and count active ones (with at least 1 visit)
       const customersRes = await fetch('/api/customers', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      if (!customersRes.ok) {
+        throw new Error(`Customers API error: ${customersRes.status}`);
+      }
+      
       const customers = await customersRes.json();
       const activeCustomers = customers.filter(c => (parseInt(c.total_visits) || 0) > 0).length;
       
-      console.log('Active customers:', activeCustomers);
+      console.log('- Active customers:', activeCustomers);
+      console.log('- Total customers in DB:', customers.length);
       
       setDashboardStats({
         totalItems,
         totalTransactions: completedTransactions.length,
         totalIncome,
-        activeCustomers
+        activeCustomers,
+        loading: false,
+        error: null
       });
     } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
+      console.error('❌ Error fetching dashboard stats:', error);
+      setDashboardStats(prev => ({
+        ...prev,
+        loading: false,
+        error: error.message
+      }));
     }
   };
 
