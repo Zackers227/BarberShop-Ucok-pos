@@ -8,7 +8,6 @@ export default function History() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check authentication
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (!token) {
       router.push('/login');
@@ -18,24 +17,18 @@ export default function History() {
   }, [router]);
 
   if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <h2>Loading...</h2>
-      </div>
-    );
+    return null;
   }
 
   return (
     <>
       <Head>
         <title>Riwayat - Barbershop Ucok POS</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/css/styles.css" />
         <link rel="stylesheet" href="/css/dashboard.css" />
       </Head>
 
       <Layout activePage="history">
-        {/* Page Content */}
         <div style={{ marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.8rem', fontWeight: '600', color: '#333', marginBottom: '0.5rem' }}>
             Riwayat
@@ -45,7 +38,6 @@ export default function History() {
           </p>
         </div>
 
-        {/* Sample Content - Replace with actual history */}
         <div style={{
           background: 'white',
           borderRadius: '12px',
@@ -62,7 +54,7 @@ export default function History() {
             color: '#999'
           }}>
             <div style={{ fontSize: '3rem', marginBottom: '20px' }}>📋</div>
-            <p style={{ fontSize: '1.1rem' }}>Halaman Riwayat</p>
+            <p style={{ fontSize: '1.1rem', marginBottom: '10px', fontWeight: '600', color: '#333' }}>Halaman Riwayat</p>
             <p style={{ fontSize: '0.9rem' }}>
               Daftar riwayat transaksi akan ditampilkan di sini.<br/>
               Sidebar (kotak biru) dan navbar tetap konsisten.

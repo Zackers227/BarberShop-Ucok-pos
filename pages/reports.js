@@ -8,7 +8,6 @@ export default function Reports() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check authentication
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
     if (!token) {
       router.push('/login');
@@ -18,24 +17,18 @@ export default function Reports() {
   }, [router]);
 
   if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <h2>Loading...</h2>
-      </div>
-    );
+    return null;
   }
 
   return (
     <>
       <Head>
         <title>Laporan - Barbershop Ucok POS</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/css/styles.css" />
         <link rel="stylesheet" href="/css/dashboard.css" />
       </Head>
 
       <Layout activePage="reports">
-        {/* Page Content */}
         <div style={{ marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.8rem', fontWeight: '600', color: '#333', marginBottom: '0.5rem' }}>
             Laporan
@@ -45,7 +38,6 @@ export default function Reports() {
           </p>
         </div>
 
-        {/* Sample Content - Replace with actual reports */}
         <div style={{
           background: 'white',
           borderRadius: '12px',
@@ -62,7 +54,7 @@ export default function Reports() {
             color: '#999'
           }}>
             <div style={{ fontSize: '3rem', marginBottom: '20px' }}>📈</div>
-            <p style={{ fontSize: '1.1rem' }}>Halaman Laporan</p>
+            <p style={{ fontSize: '1.1rem', marginBottom: '10px', fontWeight: '600', color: '#333' }}>Halaman Laporan</p>
             <p style={{ fontSize: '0.9rem' }}>
               Konten laporan akan ditampilkan di sini.<br/>
               Sidebar dan navbar tetap konsisten di setiap halaman.
