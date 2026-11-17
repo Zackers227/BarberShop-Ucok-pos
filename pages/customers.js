@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Logo from '../components/Logo';
+import Layout from '../components/Layout';
 
 export default function Customers() {
   const router = useRouter();
@@ -148,41 +148,28 @@ export default function Customers() {
         <link rel="stylesheet" href="/css/table.css" />
       </Head>
 
-      <div className="page-container">
-        <nav className="navbar">
-          <div className="navbar-brand">
-            <Logo size="small" />
-          </div>
-          <div className="navbar-menu">
-            <button className="btn btn-secondary btn-sm" onClick={() => router.push('/dashboard')}>
-              ← Kembali
-            </button>
-            <span className="user-info">👤 {user?.full_name || user?.username}</span>
-          </div>
-        </nav>
+      <Layout activePage="customers">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h1 className="page-title">👥 Kelola Customer</h1>
+          <button 
+            className="btn btn-primary" 
+            onClick={() => { resetForm(); setShowModal(true); }}
+          >
+            ➕ Tambah Customer
+          </button>
+        </div>
 
-        <div className="main-content">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h1 className="page-title">👥 Kelola Customer</h1>
-            <button 
-              className="btn btn-primary" 
-              onClick={() => { resetForm(); setShowModal(true); }}
-            >
-              ➕ Tambah Customer
-            </button>
-          </div>
-
-          <div className="card">
-            <h3>📋 Daftar Customer</h3>
-            <div className="table-responsive">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Nama</th>
-                    <th>No HP</th>
-                    <th>Email</th>
-                    <th>Gender</th>
+        <div className="card">
+          <h3>📋 Daftar Customer</h3>
+          <div className="table-responsive">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nama</th>
+                  <th>No HP</th>
+                  <th>Email</th>
+                  <th>Gender</th>
                     <th>Total Kunjungan</th>
                     <th>Total Belanja</th>
                     <th>Member</th>
@@ -313,7 +300,7 @@ export default function Customers() {
             </div>
           </div>
         )}
-      </div>
+      </Layout>
     </>
   );
 }

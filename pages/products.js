@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Logo from '../components/Logo';
+import Layout from '../components/Layout';
 
 export default function Products() {
   const router = useRouter();
@@ -150,44 +150,31 @@ export default function Products() {
         <link rel="stylesheet" href="/css/table.css" />
       </Head>
 
-      <div className="page-container">
-        <nav className="navbar">
-          <div className="navbar-brand">
-            <Logo size="small" />
-          </div>
-          <div className="navbar-menu">
-            <button className="btn btn-secondary btn-sm" onClick={() => router.push('/dashboard')}>
-              ← Kembali
-            </button>
-            <span className="user-info">👤 {user?.full_name || user?.username}</span>
-          </div>
-        </nav>
+      <Layout activePage="products">
+        <div className="page-header">
+          <h1 className="page-title">🧴 Kelola Produk</h1>
+          <button className="btn btn-primary" onClick={() => {
+            resetForm();
+            setShowModal(true);
+          }}>
+            + Tambah Produk
+          </button>
+        </div>
 
-        <div className="main-content">
-          <div className="page-header">
-            <h1 className="page-title">🧴 Kelola Produk</h1>
-            <button className="btn btn-primary" onClick={() => {
-              resetForm();
-              setShowModal(true);
-            }}>
-              + Tambah Produk
-            </button>
-          </div>
-
-          <div className="card">
-            <div className="table-responsive">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Nama</th>
-                    <th>Deskripsi</th>
-                    <th>Harga</th>
-                    <th>Stok</th>
-                    <th>Min. Stok</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                  </tr>
+        <div className="card">
+          <div className="table-responsive">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nama</th>
+                  <th>Deskripsi</th>
+                  <th>Harga</th>
+                  <th>Stok</th>
+                  <th>Min. Stok</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
                 </thead>
                 <tbody>
                   {products.length === 0 ? (
@@ -341,7 +328,7 @@ export default function Products() {
             </div>
           </div>
         )}
-      </div>
+      </Layout>
 
       <style jsx>{`
         .low-stock {

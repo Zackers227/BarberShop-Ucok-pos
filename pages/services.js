@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Logo from '../components/Logo';
+import Layout from '../components/Layout';
 
 export default function Services() {
   const router = useRouter();
@@ -141,43 +141,30 @@ export default function Services() {
         <link rel="stylesheet" href="/css/table.css" />
       </Head>
 
-      <div className="page-container">
-        <nav className="navbar">
-          <div className="navbar-brand">
-            <Logo size="small" />
-          </div>
-          <div className="navbar-menu">
-            <button className="btn btn-secondary btn-sm" onClick={() => router.push('/dashboard')}>
-              ← Kembali
-            </button>
-            <span className="user-info">👤 {user?.full_name || user?.username}</span>
-          </div>
-        </nav>
+      <Layout activePage="services">
+        <div className="page-header">
+          <h1 className="page-title">✂️ Kelola Layanan</h1>
+          <button className="btn btn-primary" onClick={() => {
+            resetForm();
+            setShowModal(true);
+          }}>
+            + Tambah Layanan
+          </button>
+        </div>
 
-        <div className="main-content">
-          <div className="page-header">
-            <h1 className="page-title">✂️ Kelola Layanan</h1>
-            <button className="btn btn-primary" onClick={() => {
-              resetForm();
-              setShowModal(true);
-            }}>
-              + Tambah Layanan
-            </button>
-          </div>
-
-          <div className="card">
-            <div className="table-responsive">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Nama</th>
-                    <th>Deskripsi</th>
-                    <th>Harga</th>
-                    <th>Durasi</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                  </tr>
+        <div className="card">
+          <div className="table-responsive">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nama</th>
+                  <th>Deskripsi</th>
+                  <th>Harga</th>
+                  <th>Durasi</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
                 </thead>
                 <tbody>
                   {services.length === 0 ? (
@@ -297,7 +284,7 @@ export default function Services() {
             </div>
           </div>
         )}
-      </div>
+      </Layout>
     </>
   );
 }
