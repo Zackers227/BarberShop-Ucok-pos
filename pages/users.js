@@ -286,7 +286,6 @@ export default function Users() {
               </table>
             </div>
           </div>
-        </div>
 
         {/* Modal Form */}
         {showModal && (

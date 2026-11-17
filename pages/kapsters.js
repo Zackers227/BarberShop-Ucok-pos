@@ -205,7 +205,6 @@ export default function Kapsters() {
               </table>
             </div>
           </div>
-        </div>
 
         {/* Modal Form */}
         {showModal && (

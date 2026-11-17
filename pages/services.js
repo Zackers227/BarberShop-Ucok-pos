@@ -210,7 +210,6 @@ export default function Services() {
               </table>
             </div>
           </div>
-        </div>
 
         {/* Modal Form */}
         {showModal && (

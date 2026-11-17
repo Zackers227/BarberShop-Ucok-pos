@@ -224,7 +224,6 @@ export default function Customers() {
               </table>
             </div>
           </div>
-        </div>
 
         {/* Modal Form */}
         {showModal && (

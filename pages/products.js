@@ -232,7 +232,6 @@ export default function Products() {
               </div>
             )}
           </div>
-        </div>
 
         {/* Modal Form */}
         {showModal && (
