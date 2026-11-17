@@ -10,6 +10,14 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
+  
+  // Dashboard metrics state
+  const [dashboardStats, setDashboardStats] = useState({
+    totalItems: 0,
+    totalTransactions: 0,
+    totalIncome: 0,
+    activeCustomers: 0
+  });
 
   useEffect(() => {
     // Check authentication
@@ -28,6 +36,9 @@ export default function Dashboard() {
     // Check pending transactions
     checkPendingTransactions(token);
     
+    // Fetch dashboard statistics
+    fetchDashboardStats(token);
+    
     setLoading(false);
   }, [router]);
 
@@ -41,6 +52,44 @@ export default function Dashboard() {
       setPendingCount(pending.length);
     } catch (error) {
       console.error('Error checking pending transactions:', error);
+    }
+  };
+
+  const fetchDashboardStats = async (token) => {
+    try {
+      // Fetch all transactions
+      const transactionsRes = await fetch('/api/transactions', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const transactions = await transactionsRes.json();
+      
+      // Calculate total items sold (sum of all items in all transactions)
+      const totalItems = transactions.reduce((sum, t) => {
+        const items = t.items ? JSON.parse(t.items) : [];
+        return sum + items.reduce((itemSum, item) => itemSum + (item.quantity || 0), 0);
+      }, 0);
+      
+      // Total completed transactions
+      const completedTransactions = transactions.filter(t => t.status === 'completed');
+      
+      // Total income from completed transactions
+      const totalIncome = completedTransactions.reduce((sum, t) => sum + (parseFloat(t.total_amount) || 0), 0);
+      
+      // Fetch customers and count active ones (with at least 1 visit)
+      const customersRes = await fetch('/api/customers', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const customers = await customersRes.json();
+      const activeCustomers = customers.filter(c => (c.total_visits || 0) > 0).length;
+      
+      setDashboardStats({
+        totalItems,
+        totalTransactions: completedTransactions.length,
+        totalIncome,
+        activeCustomers
+      });
+    } catch (error) {
+      console.error('Error fetching dashboard stats:', error);
     }
   };
 
@@ -645,7 +694,9 @@ export default function Dashboard() {
                 <span style={{ fontSize: '16px', fontWeight: '600' }}>Total Item Terjual</span>
                 <span style={{ fontSize: '24px' }}>📊</span>
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '12px' }}>9.787</div>
+              <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '12px' }}>
+                {dashboardStats.totalItems.toLocaleString()}
+              </div>
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -677,7 +728,9 @@ export default function Dashboard() {
                 <span style={{ fontSize: '16px', fontWeight: '600' }}>Total Transaksi</span>
                 <span style={{ fontSize: '24px' }}>💰</span>
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '12px' }}>2.182</div>
+              <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '12px' }}>
+                {dashboardStats.totalTransactions.toLocaleString()}
+              </div>
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -709,7 +762,9 @@ export default function Dashboard() {
                 <span style={{ fontSize: '16px', fontWeight: '600' }}>Total Income</span>
                 <span style={{ fontSize: '24px' }}>📈</span>
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '12px' }}>3.7 Miliar</div>
+              <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '12px' }}>
+                Rp {(dashboardStats.totalIncome / 1000000).toFixed(1)}M
+              </div>
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -741,7 +796,9 @@ export default function Dashboard() {
                 <span style={{ fontSize: '16px', fontWeight: '600' }}>Total Pelanggan Aktif</span>
                 <span style={{ fontSize: '24px' }}>👥</span>
               </div>
-              <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '12px' }}>14</div>
+              <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '12px' }}>
+                {dashboardStats.activeCustomers}
+              </div>
               <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
