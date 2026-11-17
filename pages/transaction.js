@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Navbar from '../components/Navbar';
+import Layout from '../components/Layout';
 
 export default function Transaction() {
   const router = useRouter();
@@ -336,9 +336,7 @@ export default function Transaction() {
         <link rel="stylesheet" href="/css/transaction.css" />
       </Head>
 
-      <div className="page-container">
-        <Navbar currentPage="transaction" />
-
+      <Layout activePage="transaction">
         <div className="transaction-container">
           <div style={{ 
             display: 'flex', 
@@ -647,7 +645,7 @@ export default function Transaction() {
             </div>
           </div>
         )}
-      </div>
+      </Layout>
     </>
   );
 }
