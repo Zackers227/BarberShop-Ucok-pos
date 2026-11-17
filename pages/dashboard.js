@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { hasPermission } from '../lib/permissions';
 import Navbar from '../components/Navbar';
 
+// Dashboard with clean sidebar navigation
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState(null);
