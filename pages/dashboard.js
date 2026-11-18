@@ -54,6 +54,182 @@ export default function Dashboard() {
     setLoading(false);
   }, [router]);
 
+  // Initialize charts after dashboardStats is loaded
+  useEffect(() => {
+    if (dashboardStats.loading || !dashboardStats.monthlyIncome || typeof window === 'undefined') {
+      return;
+    }
+
+    console.log('🎨 Initializing charts with data:', dashboardStats.monthlyIncome);
+
+    // Wait for Chart.js to be available
+    const initCharts = () => {
+      if (typeof window.Chart === 'undefined') {
+        console.warn('⚠️ Chart.js not loaded yet, retrying...');
+        setTimeout(initCharts, 100);
+        return;
+      }
+
+      const monthlyData = dashboardStats.monthlyIncome || [0,0,0,0,0,0,0,0,0,0,0,0];
+      const maxValue = Math.max(...monthlyData);
+      const suggestedMax = maxValue > 0 ? maxValue * 1.2 : 5000000;
+
+      console.log('📊 Max value:', maxValue);
+      console.log('📊 Suggested max:', suggestedMax);
+
+      // Destroy existing charts if they exist
+      const existingMonthly = window.Chart.getChart('monthlyIncomeChart');
+      if (existingMonthly) {
+        existingMonthly.destroy();
+      }
+      const existingYearly = window.Chart.getChart('yearlyIncomeChart');
+      if (existingYearly) {
+        existingYearly.destroy();
+      }
+
+      // Monthly Income Chart (Line)
+      const monthlyCtx = document.getElementById('monthlyIncomeChart');
+      if (monthlyCtx) {
+        console.log('✅ Creating monthly chart');
+        new window.Chart(monthlyCtx, {
+          type: 'line',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+              label: 'Tahun Ini (' + new Date().getFullYear() + ')',
+              data: monthlyData,
+              borderColor: '#2563eb',
+              backgroundColor: 'rgba(37, 99, 235, 0.05)',
+              borderWidth: 2,
+              fill: true,
+              tension: 0.4,
+              pointBackgroundColor: '#2563eb',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                  font: { size: 12, weight: 'bold' },
+                  padding: 15,
+                  usePointStyle: true,
+                  pointStyle: 'circle'
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                suggestedMax: suggestedMax,
+                ticks: {
+                  callback: function(value) {
+                    if (value >= 1000000) {
+                      return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                    } else if (value >= 1000) {
+                      return 'Rp ' + (value / 1000).toFixed(0) + 'K';
+                    } else {
+                      return 'Rp ' + value;
+                    }
+                  },
+                  font: { size: 10 }
+                },
+                grid: {
+                  drawBorder: false,
+                  color: 'rgba(0, 0, 0, 0.05)'
+                }
+              },
+              x: {
+                grid: {
+                  display: false,
+                  drawBorder: false
+                },
+                ticks: {
+                  font: { size: 10 }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // Yearly Income Chart (Bar)
+      const yearlyCtx = document.getElementById('yearlyIncomeChart');
+      if (yearlyCtx) {
+        console.log('✅ Creating yearly chart');
+        new window.Chart(yearlyCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+              label: 'Tahun Ini (' + new Date().getFullYear() + ')',
+              data: monthlyData,
+              backgroundColor: '#2563eb',
+              borderColor: '#1e40af',
+              borderWidth: 1,
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                  font: { size: 12, weight: 'bold' },
+                  padding: 15,
+                  usePointStyle: true,
+                  pointStyle: 'rect'
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                suggestedMax: suggestedMax,
+                ticks: {
+                  callback: function(value) {
+                    if (value >= 1000000) {
+                      return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                    } else if (value >= 1000) {
+                      return 'Rp ' + (value / 1000).toFixed(0) + 'K';
+                    } else {
+                      return 'Rp ' + value;
+                    }
+                  },
+                  font: { size: 10 }
+                },
+                grid: {
+                  drawBorder: false,
+                  color: 'rgba(0, 0, 0, 0.05)'
+                }
+              },
+              x: {
+                grid: {
+                  display: false,
+                  drawBorder: false
+                },
+                ticks: {
+                  font: { size: 10 }
+                }
+              }
+            }
+          }
+        });
+      }
+    };
+
+    initCharts();
+  }, [dashboardStats]);
+
   const checkPendingTransactions = async (token) => {
     try {
       const response = await fetch('/api/transactions', {
@@ -955,7 +1131,7 @@ export default function Dashboard() {
               minHeight: '350px'
             }}>
               <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#333', marginBottom: '15px' }}>📈 Income Perbulan</h3>
-              <canvas id="monthlyIncomeChart" data-monthly-income={JSON.stringify(dashboardStats.monthlyIncome || [])}></canvas>
+              <canvas id="monthlyIncomeChart"></canvas>
             </div>
 
             {/* Income Pertahun - Bar Chart */}
@@ -978,178 +1154,6 @@ export default function Dashboard() {
         </footer>
         </div> {/* End Main Content Wrapper */}
       </div>
-
-      <script dangerouslySetInnerHTML={{__html: `
-        // Initialize Chart.js charts with REAL data from database
-        window.addEventListener('DOMContentLoaded', function() {
-          // Wait for Chart.js to load
-          var checkChart = setInterval(function() {
-            if (typeof Chart !== 'undefined') {
-              clearInterval(checkChart);
-              
-              // Get real data from React state (passed via data attribute)
-              var monthlyDataStr = document.getElementById('monthlyIncomeChart')?.getAttribute('data-monthly-income');
-              var monthlyData = monthlyDataStr ? JSON.parse(monthlyDataStr) : [0,0,0,0,0,0,0,0,0,0,0,0];
-              
-              console.log('📊 Chart Initialization - Monthly Data:', monthlyData);
-              console.log('📊 Chart Data String:', monthlyDataStr);
-              console.log('📊 Canvas element found:', document.getElementById('monthlyIncomeChart'));
-              
-              // Calculate max value for better scale
-              var maxValue = Math.max(...monthlyData);
-              var suggestedMax = maxValue > 0 ? maxValue * 1.2 : 5000000; // 20% padding or 5M default
-              
-              console.log('📊 Max value in data:', maxValue);
-              console.log('📊 Suggested max for Y-axis:', suggestedMax);
-              
-              if (!monthlyData || monthlyData.length === 0 || monthlyData.every(v => v === 0)) {
-                console.warn('⚠️ Chart data is empty or all zeros. Charts may appear empty.');
-              }
-              
-              // Monthly Income Chart (Line)
-              var monthlyCtx = document.getElementById('monthlyIncomeChart');
-              if (monthlyCtx) {
-                new Chart(monthlyCtx, {
-                  type: 'line',
-                  data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    datasets: [
-                      {
-                        label: 'Tahun Ini (${new Date().getFullYear()})',
-                        data: monthlyData,
-                        borderColor: '#2563eb',
-                        backgroundColor: 'rgba(37, 99, 235, 0.05)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#2563eb',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 4
-                      }
-                    ]
-                  },
-                  options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                      legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                          font: { size: 12, weight: 'bold' },
-                          padding: 15,
-                          usePointStyle: true,
-                          pointStyle: 'circle'
-                        }
-                      }
-                    },
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                        suggestedMax: suggestedMax,
-                        ticks: {
-                          callback: function(value) {
-                            if (value >= 1000000) {
-                              return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
-                            } else if (value >= 1000) {
-                              return 'Rp ' + (value / 1000).toFixed(0) + 'K';
-                            } else {
-                              return 'Rp ' + value;
-                            }
-                          },
-                          font: { size: 10 }
-                        },
-                        grid: {
-                          drawBorder: false,
-                          color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                      },
-                      x: {
-                        grid: {
-                          display: false,
-                          drawBorder: false
-                        },
-                        ticks: {
-                          font: { size: 10 }
-                        }
-                      }
-                    }
-                  }
-                });
-              }
-
-              // Yearly Income Chart (Bar)
-              var yearlyCtx = document.getElementById('yearlyIncomeChart');
-              if (yearlyCtx) {
-                new Chart(yearlyCtx, {
-                  type: 'bar',
-                  data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    datasets: [
-                      {
-                        label: 'Tahun Ini (${new Date().getFullYear()})',
-                        data: monthlyData,
-                        backgroundColor: '#2563eb',
-                        borderColor: '#1e40af',
-                        borderWidth: 1,
-                        borderRadius: 6
-                      }
-                    ]
-                  },
-                  options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                      legend: {
-                        display: true,
-                        position: 'top',
-                        labels: {
-                          font: { size: 12, weight: 'bold' },
-                          padding: 15,
-                          usePointStyle: true,
-                          pointStyle: 'rect'
-                        }
-                      }
-                    },
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                        suggestedMax: suggestedMax,
-                        ticks: {
-                          callback: function(value) {
-                            if (value >= 1000000) {
-                              return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
-                            } else if (value >= 1000) {
-                              return 'Rp ' + (value / 1000).toFixed(0) + 'K';
-                            } else {
-                              return 'Rp ' + value;
-                            }
-                          },
-                          font: { size: 10 }
-                        },
-                        grid: {
-                          drawBorder: false,
-                          color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                      },
-                      x: {
-                        grid: {
-                          display: false,
-                          drawBorder: false
-                        },
-                        ticks: {
-                          font: { size: 10 }
-                        }
-                      }
-                    }
-                  }
-                });
-              }
-            }
-          }, 100);
-        });
-      `}} />
     </>
   );
 }
