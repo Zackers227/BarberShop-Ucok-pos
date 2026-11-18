@@ -154,6 +154,10 @@ export default function History() {
         </div>
 
         <div className="card">
+          <h3>Daftar Transaksi</h3>
+          <p style={{ marginBottom: '15px', color: '#666' }}>
+            Menampilkan {filteredTransactions.length} dari {transactions.length} transaksi
+          </p>
           <div className="table-responsive">
             <table className="data-table">
               <thead>
@@ -173,31 +177,39 @@ export default function History() {
                 {filteredTransactions.length === 0 ? (
                   <tr>
                     <td colSpan="9" style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
-                      Belum ada transaksi
+                      Belum ada transaksi dengan filter "{filter}"
                     </td>
                   </tr>
                 ) : (
-                  filteredTransactions.map(t => (
-                    <tr key={t.id}>
-                      <td>#{t.id}</td>
-                      <td>{new Date(t.created_at).toLocaleString('id-ID')}</td>
-                      <td>{t.customer_name || 'Walk-in'}</td>
-                      <td>{t.kapster_name || '-'}</td>
-                      <td className="text-right">{formatRupiah(t.total || 0)}</td>
-                      <td className="text-right">{formatRupiah(t.paid_amount || 0)}</td>
-                      <td className="text-right">{formatRupiah(t.change_amount || 0)}</td>
-                      <td>{getStatusBadge(t.status)}</td>
-                      <td>
-                        <button
-                          onClick={() => window.open(`/print/${t.id}`, '_blank')}
-                          className="btn btn-sm btn-secondary"
-                          title="Cetak Struk"
-                        >
-                          🖨️
-                        </button>
-                      </td>
-                    </tr>
-                  ))
+                  filteredTransactions.map((t, index) => {
+                    try {
+                      console.log(`Rendering row ${index}:`, t.id, t.customer_name);
+                      return (
+                        <tr key={t.id}>
+                          <td>#{t.id}</td>
+                          <td>{new Date(t.created_at).toLocaleString('id-ID')}</td>
+                          <td>{t.customer_name || 'Walk-in'}</td>
+                          <td>{t.kapster_name || '-'}</td>
+                          <td className="text-right">{formatRupiah(t.total || 0)}</td>
+                          <td className="text-right">{formatRupiah(t.paid_amount || 0)}</td>
+                          <td className="text-right">{formatRupiah(t.change_amount || 0)}</td>
+                          <td>{getStatusBadge(t.status)}</td>
+                          <td>
+                            <button
+                              onClick={() => window.open(`/print/${t.id}`, '_blank')}
+                              className="btn btn-sm btn-secondary"
+                              title="Cetak Struk"
+                            >
+                              🖨️
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    } catch (error) {
+                      console.error(`Error rendering row ${index}:`, error, t);
+                      return null;
+                    }
+                  })
                 )}
               </tbody>
             </table>
