@@ -116,20 +116,42 @@ export default function Dashboard() {
         console.log('Sample completed transaction:', completedTransactions[0]);
       }
       
-      // Calculate total items sold (sum of all items in all completed transactions)
+      // Calculate total items sold (sum of all PRODUCT items in completed transactions)
       let totalItems = 0;
+      let totalProducts = 0; // Debug counter
+      let totalServices = 0; // Debug counter
+      
       completedTransactions.forEach(t => {
         try {
           // Parse items if it's a string, or use directly if already array
           const items = typeof t.items === 'string' ? JSON.parse(t.items) : (t.items || []);
           if (Array.isArray(items)) {
-            const itemCount = items.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
-            totalItems += itemCount;
+            console.log(`Transaction #${t.id} items:`, items);
+            
+            // Count products and services separately
+            items.forEach(item => {
+              const qty = parseInt(item.quantity) || 0;
+              const type = (item.item_type || '').toLowerCase();
+              
+              if (type === 'product') {
+                totalProducts += qty;
+                totalItems += qty;
+                console.log(`  ✅ Product: ${item.item_name} x${qty}`);
+              } else if (type === 'service') {
+                totalServices += qty;
+                console.log(`  ⚙️ Service: ${item.item_name} x${qty}`);
+              } else {
+                console.warn(`  ⚠️ Unknown type: ${item.item_type} - ${item.item_name}`);
+              }
+            });
           }
         } catch (error) {
           console.error('Error parsing items for transaction', t.id, error);
         }
       });
+      
+      console.log(`📦 Product items: ${totalProducts}`);
+      console.log(`⚙️ Service items: ${totalServices}`);
       
       // Total income from completed transactions
       const totalIncome = completedTransactions.reduce((sum, t) => {
