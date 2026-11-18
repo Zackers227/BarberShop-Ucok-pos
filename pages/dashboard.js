@@ -161,13 +161,7 @@ export default function Dashboard() {
                 suggestedMax: suggestedMaxMonthly,
                 ticks: {
                   callback: function(value) {
-                    if (value >= 1000000) {
-                      return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
-                    } else if (value >= 1000) {
-                      return 'Rp ' + (value / 1000).toFixed(0) + 'K';
-                    } else {
-                      return 'Rp ' + value;
-                    }
+                    return 'Rp ' + value.toLocaleString('id-ID');
                   },
                   font: { size: 10 }
                 },
@@ -221,15 +215,7 @@ export default function Dashboard() {
                 suggestedMax: suggestedMaxYearly,
                 ticks: {
                   callback: function(value) {
-                    if (value >= 1000000000) {
-                      return 'Rp ' + (value / 1000000000).toFixed(1) + 'B';
-                    } else if (value >= 1000000) {
-                      return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
-                    } else if (value >= 1000) {
-                      return 'Rp ' + (value / 1000).toFixed(0) + 'K';
-                    } else {
-                      return 'Rp ' + value;
-                    }
+                    return 'Rp ' + value.toLocaleString('id-ID');
                   },
                   font: { size: 10 }
                 },
