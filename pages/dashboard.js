@@ -386,6 +386,7 @@ export default function Dashboard() {
       console.log('- Total customers in DB:', customersArray.length);
       
       // Calculate monthly income for charts (current year and previous year)
+      const currentDate = new Date();
       const currentYear = currentDate.getFullYear();
       const previousYear = currentYear - 1;
       
