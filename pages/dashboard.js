@@ -309,11 +309,6 @@ export default function Dashboard() {
       }
     ]
   };
-        borderWidth: 1,
-        borderRadius: 6
-      }
-    ]
-  };
 
   // Chart options for Income Pertahun
   const yearlyChartOptions = {
