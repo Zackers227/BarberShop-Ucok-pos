@@ -939,7 +939,7 @@ export default function Dashboard() {
               minHeight: '350px'
             }}>
               <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#333', marginBottom: '15px' }}>📈 Income Perbulan</h3>
-              <canvas id="monthlyIncomeChart"></canvas>
+              <canvas id="monthlyIncomeChart" data-monthly-income={JSON.stringify(dashboardStats.monthlyIncome || [])}></canvas>
             </div>
 
             {/* Income Pertahun - Bar Chart */}
@@ -963,158 +963,150 @@ export default function Dashboard() {
         </div> {/* End Main Content Wrapper */}
       </div>
 
-      <script>{`
-        // Initialize Chart.js charts with sample data
-        if (typeof Chart !== 'undefined') {
-          // Monthly Income Chart (Line)
-          const monthlyCtx = document.getElementById('monthlyIncomeChart');
-          if (monthlyCtx) {
-            new Chart(monthlyCtx, {
-              type: 'line',
-              data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [
-                  {
-                    label: 'Tahun Ini (2026)',
-                    data: [2500000, 2800000, 3100000, 2900000, 3400000, 3800000, 4200000, 3900000, 4500000, 4100000, 4800000, 5200000],
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.05)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#2563eb',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4
+      <script dangerouslySetInnerHTML={{__html: `
+        // Initialize Chart.js charts with REAL data from database
+        window.addEventListener('DOMContentLoaded', function() {
+          // Wait for Chart.js to load
+          var checkChart = setInterval(function() {
+            if (typeof Chart !== 'undefined') {
+              clearInterval(checkChart);
+              
+              // Get real data from React state (passed via data attribute)
+              var monthlyDataStr = document.getElementById('monthlyIncomeChart')?.getAttribute('data-monthly-income');
+              var monthlyData = monthlyDataStr ? JSON.parse(monthlyDataStr) : [0,0,0,0,0,0,0,0,0,0,0,0];
+              
+              console.log('📊 Chart Initialization - Monthly Data:', monthlyData);
+              
+              // Monthly Income Chart (Line)
+              var monthlyCtx = document.getElementById('monthlyIncomeChart');
+              if (monthlyCtx) {
+                new Chart(monthlyCtx, {
+                  type: 'line',
+                  data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [
+                      {
+                        label: 'Tahun Ini (${new Date().getFullYear()})',
+                        data: monthlyData,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37, 99, 235, 0.05)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#2563eb',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                      }
+                    ]
                   },
-                  {
-                    label: 'Tahun Lalu (2025)',
-                    data: [2200000, 2400000, 2700000, 2500000, 2900000, 3100000, 3400000, 3200000, 3600000, 3300000, 3800000, 4000000],
-                    borderColor: '#10b981',
-                    backgroundColor: 'rgba(16, 185, 129, 0.05)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#10b981',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4
-                  }
-                ]
-              },
-              options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                  legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                      font: { size: 12, weight: 'bold' },
-                      padding: 15,
-                      usePointStyle: true,
-                      pointStyle: 'circle'
-                    }
-                  }
-                },
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                    ticks: {
-                      callback: function(value) {
-                        return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                      legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                          font: { size: 12, weight: 'bold' },
+                          padding: 15,
+                          usePointStyle: true,
+                          pointStyle: 'circle'
+                        }
+                      }
+                    },
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        ticks: {
+                          callback: function(value) {
+                            return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                          },
+                          font: { size: 10 }
+                        },
+                        grid: {
+                          drawBorder: false,
+                          color: 'rgba(0, 0, 0, 0.05)'
+                        }
                       },
-                      font: { size: 10 }
-                    },
-                    grid: {
-                      drawBorder: false,
-                      color: 'rgba(0, 0, 0, 0.05)'
-                    }
-                  },
-                  x: {
-                    grid: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      font: { size: 10 }
+                      x: {
+                        grid: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          font: { size: 10 }
+                        }
+                      }
                     }
                   }
-                }
+                });
               }
-            });
-          }
 
-          // Yearly Income Chart (Bar)
-          const yearlyCtx = document.getElementById('yearlyIncomeChart');
-          if (yearlyCtx) {
-            new Chart(yearlyCtx, {
-              type: 'bar',
-              data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [
-                  {
-                    label: 'Tahun Ini (2026)',
-                    data: [2500000, 2800000, 3100000, 2900000, 3400000, 3800000, 4200000, 3900000, 4500000, 4100000, 4800000, 5200000],
-                    backgroundColor: '#2563eb',
-                    borderColor: '#1e40af',
-                    borderWidth: 1,
-                    borderRadius: 6
+              // Yearly Income Chart (Bar)
+              var yearlyCtx = document.getElementById('yearlyIncomeChart');
+              if (yearlyCtx) {
+                new Chart(yearlyCtx, {
+                  type: 'bar',
+                  data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [
+                      {
+                        label: 'Tahun Ini (${new Date().getFullYear()})',
+                        data: monthlyData,
+                        backgroundColor: '#2563eb',
+                        borderColor: '#1e40af',
+                        borderWidth: 1,
+                        borderRadius: 6
+                      }
+                    ]
                   },
-                  {
-                    label: 'Tahun Lalu (2025)',
-                    data: [2200000, 2400000, 2700000, 2500000, 2900000, 3100000, 3400000, 3200000, 3600000, 3300000, 3800000, 4000000],
-                    backgroundColor: '#10b981',
-                    borderColor: '#059669',
-                    borderWidth: 1,
-                    borderRadius: 6
-                  }
-                ]
-              },
-              options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                  legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                      font: { size: 12, weight: 'bold' },
-                      padding: 15,
-                      usePointStyle: true,
-                      pointStyle: 'rect'
-                    }
-                  }
-                },
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                    ticks: {
-                      callback: function(value) {
-                        return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                  options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                      legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                          font: { size: 12, weight: 'bold' },
+                          padding: 15,
+                          usePointStyle: true,
+                          pointStyle: 'rect'
+                        }
+                      }
+                    },
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        ticks: {
+                          callback: function(value) {
+                            return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                          },
+                          font: { size: 10 }
+                        },
+                        grid: {
+                          drawBorder: false,
+                          color: 'rgba(0, 0, 0, 0.05)'
+                        }
                       },
-                      font: { size: 10 }
-                    },
-                    grid: {
-                      drawBorder: false,
-                      color: 'rgba(0, 0, 0, 0.05)'
-                    }
-                  },
-                  x: {
-                    grid: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      font: { size: 10 }
+                      x: {
+                        grid: {
+                          display: false,
+                          drawBorder: false
+                        },
+                        ticks: {
+                          font: { size: 10 }
+                        }
+                      }
                     }
                   }
-                }
+                });
               }
-            });
-          }
-        }
-      `}</script>
+            }
+          }, 100);
+        });
+      `}} />
     </>
   );
 }
