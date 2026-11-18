@@ -24,13 +24,20 @@ export default function Reports() {
 
   const fetchReportData = async (token) => {
     try {
+      console.log('🔄 Fetching report data...');
       const response = await fetch('/api/transactions', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
+      console.log('📡 Response status:', response.status, response.ok);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('✅ Transactions received:', data.length, 'items');
+        console.log('📊 Sample transaction:', data[0]);
+        
         const txs = Array.isArray(data) ? data.filter(t => t.status?.toLowerCase() === 'completed') : [];
+        console.log('✅ Completed transactions:', txs.length);
         setTransactions(txs);
         
         const now = new Date();
@@ -38,24 +45,38 @@ export default function Reports() {
         const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
         const thisYear = new Date(now.getFullYear(), 0, 1);
         
-        const calculateStats = (txs) => ({
-          transactions: txs.length,
-          income: txs.reduce((sum, t) => sum + (parseFloat(t.total) || 0), 0),
-          items: txs.reduce((sum, t) => {
-            const items = typeof t.items === 'string' ? JSON.parse(t.items || '[]') : (t.items || []);
-            return sum + items.filter(i => i.item_type?.toLowerCase() === 'product').reduce((s, i) => s + (parseInt(i.quantity) || 0), 0);
-          }, 0)
-        });
+        const calculateStats = (txs) => {
+          const stats = {
+            transactions: txs.length,
+            income: txs.reduce((sum, t) => sum + (parseFloat(t.total) || 0), 0),
+            items: txs.reduce((sum, t) => {
+              try {
+                const items = typeof t.items === 'string' ? JSON.parse(t.items || '[]') : (t.items || []);
+                return sum + items.filter(i => i.item_type?.toLowerCase() === 'product').reduce((s, i) => s + (parseInt(i.quantity) || 0), 0);
+              } catch (e) {
+                return sum;
+              }
+            }, 0)
+          };
+          console.log('📈 Calculated stats:', stats);
+          return stats;
+        };
         
-        setReportData({
+        const reportStats = {
           today: calculateStats(txs.filter(t => new Date(t.created_at) >= today)),
           thisMonth: calculateStats(txs.filter(t => new Date(t.created_at) >= thisMonth)),
           thisYear: calculateStats(txs.filter(t => new Date(t.created_at) >= thisYear))
-        });
+        };
+        
+        console.log('📊 Final report data:', reportStats);
+        setReportData(reportStats);
+      } else {
+        console.error('❌ Response not OK:', response.status);
       }
     } catch (error) {
-      console.error('Error fetching report data:', error);
+      console.error('❌ Error fetching report data:', error);
     } finally {
+      console.log('✅ Setting loading to false');
       setLoading(false);
     }
   };
@@ -71,6 +92,10 @@ export default function Reports() {
   if (loading) {
     return <div>Loading...</div>;
   }
+
+  console.log('🎨 Rendering reports page');
+  console.log('📊 Report data:', reportData);
+  console.log('📋 Transactions:', transactions.length);
 
   return (
     <>

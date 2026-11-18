@@ -20,17 +20,30 @@ export default function History() {
 
   const fetchTransactions = async (token) => {
     try {
+      console.log('🔄 Fetching transactions for history...');
       const response = await fetch('/api/transactions', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
+      console.log('📡 Response status:', response.status, response.ok);
+      
       if (response.ok) {
         const data = await response.json();
-        setTransactions(Array.isArray(data) ? data : []);
+        console.log('✅ Transactions received:', data.length, 'items');
+        console.log('📊 Sample transaction:', data[0]);
+        
+        const txArray = Array.isArray(data) ? data : [];
+        console.log('🔢 Setting transactions state with', txArray.length, 'items');
+        setTransactions(txArray);
+      } else {
+        console.error('❌ Response not OK:', response.status);
+        const errorText = await response.text();
+        console.error('Error details:', errorText);
       }
     } catch (error) {
-      console.error('Error fetching transactions:', error);
+      console.error('❌ Error fetching transactions:', error);
     } finally {
+      console.log('✅ Setting loading to false');
       setLoading(false);
     }
   };
@@ -72,6 +85,9 @@ export default function History() {
   if (loading) {
     return <div>Loading...</div>;
   }
+
+  console.log('🎨 Rendering history page with', transactions.length, 'transactions');
+  console.log('🔍 Filtered transactions:', filteredTransactions.length);
 
   return (
     <>
