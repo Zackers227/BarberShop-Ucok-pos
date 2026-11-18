@@ -934,7 +934,7 @@ export default function Dashboard() {
                 paddingTop: '8px',
                 borderTop: '1px solid rgba(255,255,255,0.3)'
               }}>
-                Pelanggan dengan kunjungan > 0
+                Pelanggan dengan kunjungan {'>'}  0
               </div>
             </div>
           </div>
