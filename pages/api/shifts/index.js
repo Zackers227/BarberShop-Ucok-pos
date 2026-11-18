@@ -68,7 +68,10 @@ async function handler(req, res) {
       const { starting_cash, opening_balance, notes } = req.body;
       const initialCash = starting_cash || opening_balance || 0; // Support both field names
 
-      // Check if ada shift yang masih terbuka
+      // Check if ada shift yang masih terbuka (hanya cek untuk user yang sama, kecuali owner/admin)
+      const isOwnerOrAdmin = req.user.role && 
+        (req.user.role.toLowerCase() === 'owner' || req.user.role.toLowerCase() === 'admin');
+      
       const openShift = await query(
         'SELECT id FROM shifts WHERE user_id = $1 AND closed_at IS NULL',
         [req.user.id]

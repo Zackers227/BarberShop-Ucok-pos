@@ -27,7 +27,12 @@ async function handler(req, res) {
         return res.status(400).json({ error: 'Shift sudah ditutup' });
       }
 
-      if (shift.user_id !== req.user.id && req.user.role !== 'OWNER') {
+      // Allow: shift owner, OWNER role, admin role, or anyone with shifts permission
+      const isShiftOwner = shift.user_id === req.user.id;
+      const isOwnerRole = req.user.role && (req.user.role.toLowerCase() === 'owner' || req.user.role.toLowerCase() === 'admin');
+      const hasShiftPermission = req.user.permissions && req.user.permissions.includes('shifts');
+
+      if (!isShiftOwner && !isOwnerRole && !hasShiftPermission) {
         return res.status(403).json({ error: 'Anda tidak berhak menutup shift ini' });
       }
 
