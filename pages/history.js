@@ -108,8 +108,9 @@ export default function History() {
         </div>
 
         {/* Filter Tabs */}
-        <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+        <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }} role="group" aria-label="Filter transaksi">
           <button
+            type="button"
             onClick={() => setFilter('all')}
             style={{
               padding: '10px 20px',
@@ -120,10 +121,12 @@ export default function History() {
               fontWeight: '600',
               cursor: 'pointer'
             }}
+            aria-pressed={filter === 'all'}
           >
             Semua ({transactions.length})
           </button>
           <button
+            type="button"
             onClick={() => setFilter('completed')}
             style={{
               padding: '10px 20px',
@@ -134,10 +137,12 @@ export default function History() {
               fontWeight: '600',
               cursor: 'pointer'
             }}
+            aria-pressed={filter === 'completed'}
           >
             Selesai ({transactions.filter(t => t.status?.toLowerCase() === 'completed').length})
           </button>
           <button
+            type="button"
             onClick={() => setFilter('pending')}
             style={{
               padding: '10px 20px',
@@ -148,6 +153,7 @@ export default function History() {
               fontWeight: '600',
               cursor: 'pointer'
             }}
+            aria-pressed={filter === 'pending'}
           >
             Pending ({transactions.filter(t => t.status?.toLowerCase() === 'pending').length})
           </button>
@@ -196,9 +202,11 @@ export default function History() {
                           <td>{getStatusBadge(t.status)}</td>
                           <td>
                             <button
+                              type="button"
                               onClick={() => window.open(`/print/${t.id}`, '_blank')}
                               className="btn btn-sm btn-secondary"
                               title="Cetak Struk"
+                              aria-label={`Cetak struk transaksi #${t.id}`}
                             >
                               🖨️
                             </button>
