@@ -152,7 +152,7 @@ export default function Reports() {
             <div style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '15px' }}>
               {formatRupiah(reportData.thisMonth.income)}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', opacity: 0.9' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', opacity: 0.9 }}>
               <span>{reportData.thisMonth.transactions} Transaksi</span>
               <span>{reportData.thisMonth.items} Item</span>
             </div>
@@ -170,7 +170,7 @@ export default function Reports() {
             <div style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '15px' }}>
               {formatRupiah(reportData.thisYear.income)}
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', opacity: 0.9' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', opacity: 0.9 }}>
               <span>{reportData.thisYear.transactions} Transaksi</span>
               <span>{reportData.thisYear.items} Item</span>
             </div>
