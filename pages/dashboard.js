@@ -365,6 +365,7 @@ export default function Dashboard() {
       console.log('✅ Calculated stats:');
       console.log('- Total items:', totalItems);
       console.log('- Total income:', totalIncome);
+      console.log('- Total transactions:', completedTransactions.length);
       
       // Fetch customers and count active ones (with at least 1 visit)
       const customersRes = await fetch('/api/customers', {
@@ -410,6 +411,8 @@ export default function Dashboard() {
       // Calculate total yearly income for comparison chart
       const currentYearTotal = currentYearIncome.reduce((sum, val) => sum + val, 0);
       const previousYearTotal = previousYearIncome.reduce((sum, val) => sum + val, 0);
+      
+      console.log('📅 Yearly totals - Current:', currentYearTotal, 'Previous:', previousYearTotal);
       
       setDashboardStats({
         totalItems,
@@ -1100,16 +1103,7 @@ export default function Dashboard() {
                 <span style={{ fontSize: '24px' }}>📈</span>
               </div>
               <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '12px' }}>
-                {(() => {
-                  const income = dashboardStats.totalIncome;
-                  if (income >= 1000000) {
-                    return `Rp ${(income / 1000000).toFixed(1)}M`;
-                  } else if (income >= 1000) {
-                    return `Rp ${Math.floor(income / 1000)},${String(income % 1000).padStart(3, '0')}`;
-                  } else {
-                    return `Rp ${income}`;
-                  }
-                })()}
+                Rp {dashboardStats.totalIncome.toLocaleString('id-ID')}
               </div>
               <div style={{
                 fontSize: '10px',
