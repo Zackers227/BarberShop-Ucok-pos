@@ -827,15 +827,12 @@ export default function Dashboard() {
                 {dashboardStats.totalItems.toLocaleString()}
               </div>
               <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '11px',
-                opacity: 0.85,
-                paddingTop: '12px',
+                fontSize: '10px',
+                opacity: 0.9,
+                paddingTop: '8px',
                 borderTop: '1px solid rgba(255,255,255,0.3)'
               }}>
-                <span style={{ fontWeight: '600' }}>30%</span>
-                <span>2026</span>
+                {dashboardStats.totalItems === 0 ? 'Hanya produk, bukan layanan' : 'Produk terjual'}
               </div>
             </div>
 
@@ -861,15 +858,12 @@ export default function Dashboard() {
                 {dashboardStats.totalTransactions.toLocaleString()}
               </div>
               <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '11px',
-                opacity: 0.85,
-                paddingTop: '12px',
+                fontSize: '10px',
+                opacity: 0.9,
+                paddingTop: '8px',
                 borderTop: '1px solid rgba(255,255,255,0.3)'
               }}>
-                <span style={{ fontWeight: '600' }}>30%</span>
-                <span>2026</span>
+                Status: Completed
               </div>
             </div>
 
@@ -892,21 +886,24 @@ export default function Dashboard() {
                 <span style={{ fontSize: '24px' }}>📈</span>
               </div>
               <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '12px' }}>
-                Rp {dashboardStats.totalIncome >= 1000000 
-                  ? (dashboardStats.totalIncome / 1000000).toFixed(1) + 'M'
-                  : dashboardStats.totalIncome.toLocaleString('id-ID')
-                }
+                {(() => {
+                  const income = dashboardStats.totalIncome;
+                  if (income >= 1000000) {
+                    return `Rp ${(income / 1000000).toFixed(1)}M`;
+                  } else if (income >= 1000) {
+                    return `Rp ${Math.floor(income / 1000)},${String(income % 1000).padStart(3, '0')}`;
+                  } else {
+                    return `Rp ${income}`;
+                  }
+                })()}
               </div>
               <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '11px',
-                opacity: 0.85,
-                paddingTop: '12px',
+                fontSize: '10px',
+                opacity: 0.9,
+                paddingTop: '8px',
                 borderTop: '1px solid rgba(255,255,255,0.3)'
               }}>
-                <span style={{ fontWeight: '600' }}>30%</span>
-                <span>2026</span>
+                Pendapatan tahun ini
               </div>
             </div>
 
@@ -932,15 +929,12 @@ export default function Dashboard() {
                 {dashboardStats.activeCustomers}
               </div>
               <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '11px',
-                opacity: 0.85,
-                paddingTop: '12px',
+                fontSize: '10px',
+                opacity: 0.9,
+                paddingTop: '8px',
                 borderTop: '1px solid rgba(255,255,255,0.3)'
               }}>
-                <span style={{ fontWeight: '600' }}>8%</span>
-                <span>2026</span>
+                Pelanggan dengan kunjungan > 0
               </div>
             </div>
           </div>
@@ -998,6 +992,12 @@ export default function Dashboard() {
               var monthlyData = monthlyDataStr ? JSON.parse(monthlyDataStr) : [0,0,0,0,0,0,0,0,0,0,0,0];
               
               console.log('📊 Chart Initialization - Monthly Data:', monthlyData);
+              console.log('📊 Chart Data String:', monthlyDataStr);
+              console.log('📊 Canvas element found:', document.getElementById('monthlyIncomeChart'));
+              
+              if (!monthlyData || monthlyData.length === 0 || monthlyData.every(v => v === 0)) {
+                console.warn('⚠️ Chart data is empty or all zeros. Charts may appear empty.');
+              }
               
               // Monthly Income Chart (Line)
               var monthlyCtx = document.getElementById('monthlyIncomeChart');
