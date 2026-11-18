@@ -26,12 +26,21 @@ export default function Dashboard() {
     const userData = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
 
     if (!token) {
+      console.warn('⚠️ No token found, redirecting to login...');
       router.push('/login');
       return;
     }
 
     if (userData) {
-      setUser(JSON.parse(userData));
+      try {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+        console.log('✅ User loaded:', parsedUser.username || parsedUser.full_name);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        router.push('/login');
+        return;
+      }
     }
     
     // Check pending transactions
@@ -49,7 +58,20 @@ export default function Dashboard() {
       const response = await fetch('/api/transactions', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
+      
+      if (!response.ok) {
+        console.warn('Failed to fetch transactions:', response.status);
+        return;
+      }
+      
       const data = await response.json();
+      
+      // Ensure data is an array
+      if (!Array.isArray(data)) {
+        console.warn('Transactions response is not an array:', data);
+        return;
+      }
+      
       const pending = data.filter(t => t.status === 'pending');
       setPendingCount(pending.length);
     } catch (error) {
@@ -71,6 +93,12 @@ export default function Dashboard() {
       }
       
       const transactions = await transactionsRes.json();
+      
+      // Ensure transactions is an array
+      if (!Array.isArray(transactions)) {
+        console.warn('❌ Transactions response is not an array:', transactions);
+        throw new Error('Invalid transactions data format');
+      }
       
       console.log('📊 Dashboard Stats Debug:');
       console.log('Total transactions fetched:', transactions.length);
@@ -94,8 +122,10 @@ export default function Dashboard() {
         try {
           // Parse items if it's a string, or use directly if already array
           const items = typeof t.items === 'string' ? JSON.parse(t.items) : (t.items || []);
-          const itemCount = items.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
-          totalItems += itemCount;
+          if (Array.isArray(items)) {
+            const itemCount = items.reduce((sum, item) => sum + (parseInt(item.quantity) || 0), 0);
+            totalItems += itemCount;
+          }
         } catch (error) {
           console.error('Error parsing items for transaction', t.id, error);
         }
@@ -121,10 +151,13 @@ export default function Dashboard() {
       }
       
       const customers = await customersRes.json();
-      const activeCustomers = customers.filter(c => (parseInt(c.total_visits) || 0) > 0).length;
+      
+      // Ensure customers is an array
+      const customersArray = Array.isArray(customers) ? customers : [];
+      const activeCustomers = customersArray.filter(c => (parseInt(c.total_visits) || 0) > 0).length;
       
       console.log('- Active customers:', activeCustomers);
-      console.log('- Total customers in DB:', customers.length);
+      console.log('- Total customers in DB:', customersArray.length);
       
       setDashboardStats({
         totalItems,
