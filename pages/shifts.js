@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Logo from '../components/Logo';
+import Layout from '../components/Layout';
 
 export default function Shifts() {
   const router = useRouter();
@@ -150,28 +150,38 @@ export default function Shifts() {
   return (
     <>
       <Head>
-        <title>Manajemen Shift - Barbershop Ucok POS</title>
+        <title>Manajemen Shift - MENSURFACE POS</title>
         <link rel="stylesheet" href="/css/styles.css" />
         <link rel="stylesheet" href="/css/table.css" />
       </Head>
 
-      <div className="page-container">
-        <nav className="navbar">
-          <div className="navbar-brand">
-            <Logo size="small" />
+      <Layout activePage="shifts">
+        <div className="page-header">
+          <h1 className="page-title">🔄 Manajemen Shift</h1>
+          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+            <div style={{
+              padding: '10px 20px',
+              background: currentShift ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' : 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+              color: 'white',
+              borderRadius: '8px',
+              fontWeight: '600',
+              fontSize: '14px'
+            }}>
+              {currentShift ? `🟢 Shift #${currentShift.id} Aktif` : '🔴 Tidak Ada Shift Aktif'}
+            </div>
+            {currentShift ? (
+              <button className="btn btn-danger" onClick={() => setShowCloseModal(true)}>
+                🔒 Tutup Shift
+              </button>
+            ) : (
+              <button className="btn btn-success" onClick={() => setShowOpenModal(true)}>
+                🔓 Buka Shift Baru
+              </button>
+            )}
           </div>
-          <div className="navbar-menu">
-            <button className="btn btn-secondary btn-sm" onClick={() => router.push('/dashboard')}>
-              ← Kembali
-            </button>
-            <span className="user-info">👤 {user?.full_name || user?.username}</span>
-          </div>
-        </nav>
+        </div>
 
-        <div className="main-content">
-          <h1 className="page-title">⏰ Manajemen Shift</h1>
-
-          {/* Current Shift Status */}
+        {/* Current Shift Status */}
           <div className="card">
             <h3>📊 Status Shift Saat Ini</h3>
             {currentShift ? (
@@ -254,7 +264,6 @@ export default function Shifts() {
               </table>
             </div>
           </div>
-        </div>
 
         {/* Modal Buka Shift */}
         {showOpenModal && (
@@ -346,14 +355,6 @@ export default function Shifts() {
                   required
                   min="0"
                   step="1000"
-                  style={{ 
-                    cursor: 'text',
-                    pointerEvents: 'auto',
-                    userSelect: 'text',
-                    WebkitUserSelect: 'text',
-                    MozUserSelect: 'text',
-                    msUserSelect: 'text'
-                  }}
                   autoComplete="off"
                   inputMode="numeric"
                 />
@@ -389,7 +390,7 @@ export default function Shifts() {
             </div>
           </div>
         )}
-      </div>
+      </Layout>
     </>
   );
 }

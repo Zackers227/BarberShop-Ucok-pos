@@ -293,6 +293,33 @@ export default function Layout({ children, activePage = '' }) {
                   </span>
                 )}
               </div>
+
+              {/* Shifts */}
+              <div
+                onClick={() => router.push('/shifts')}
+                style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  background: activePage === 'shifts' ? '#2563eb' : 'transparent',
+                  color: activePage === 'shifts' ? 'white' : '#ccc',
+                  fontWeight: activePage === 'shifts' ? '600' : 'normal',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => {
+                  if (activePage !== 'shifts') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  if (activePage !== 'shifts') e.currentTarget.style.background = 'transparent';
+                }}
+              >
+                <span>🔄</span>
+                <span>Kelola Shift</span>
+              </div>
             </div>
           </div>
 
