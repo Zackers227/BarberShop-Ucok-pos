@@ -18,7 +18,12 @@ export default function Dashboard() {
     activeCustomers: 0,
     loading: true,
     error: null,
-    monthlyIncome: [] // For charts
+    monthlyIncome: [], // Current year monthly
+    previousYearMonthlyIncome: [], // Previous year monthly
+    currentYearTotal: 0, // Total current year
+    previousYearTotal: 0, // Total previous year
+    currentYear: new Date().getFullYear(),
+    previousYear: new Date().getFullYear() - 1
   });
 
   useEffect(() => {
@@ -61,6 +66,7 @@ export default function Dashboard() {
     }
 
     console.log('🎨 Initializing charts with data:', dashboardStats.monthlyIncome);
+    console.log('🎨 Previous year data:', dashboardStats.previousYearMonthlyIncome);
 
     // Wait for Chart.js to be available
     const initCharts = () => {
@@ -70,12 +76,22 @@ export default function Dashboard() {
         return;
       }
 
-      const monthlyData = dashboardStats.monthlyIncome || [0,0,0,0,0,0,0,0,0,0,0,0];
-      const maxValue = Math.max(...monthlyData);
-      const suggestedMax = maxValue > 0 ? maxValue * 1.2 : 5000000;
+      const currentYearData = dashboardStats.monthlyIncome || [0,0,0,0,0,0,0,0,0,0,0,0];
+      const previousYearData = dashboardStats.previousYearMonthlyIncome || [0,0,0,0,0,0,0,0,0,0,0,0];
+      
+      // Calculate max for monthly chart
+      const allMonthlyValues = [...currentYearData, ...previousYearData];
+      const maxMonthlyValue = Math.max(...allMonthlyValues);
+      const suggestedMaxMonthly = maxMonthlyValue > 0 ? maxMonthlyValue * 1.2 : 5000000;
 
-      console.log('📊 Max value:', maxValue);
-      console.log('📊 Suggested max:', suggestedMax);
+      // For yearly comparison chart
+      const currentYearTotal = dashboardStats.currentYearTotal || 0;
+      const previousYearTotal = dashboardStats.previousYearTotal || 0;
+      const maxYearlyValue = Math.max(currentYearTotal, previousYearTotal);
+      const suggestedMaxYearly = maxYearlyValue > 0 ? maxYearlyValue * 1.2 : 10000000;
+
+      console.log('📊 Monthly max value:', maxMonthlyValue);
+      console.log('📊 Yearly totals:', currentYearTotal, previousYearTotal);
 
       // Destroy existing charts if they exist
       const existingMonthly = window.Chart.getChart('monthlyIncomeChart');
@@ -87,27 +103,42 @@ export default function Dashboard() {
         existingYearly.destroy();
       }
 
-      // Monthly Income Chart (Line)
+      // Monthly Income Chart (Line) - Compare 2 years
       const monthlyCtx = document.getElementById('monthlyIncomeChart');
       if (monthlyCtx) {
-        console.log('✅ Creating monthly chart');
+        console.log('✅ Creating monthly chart with 2 years comparison');
         new window.Chart(monthlyCtx, {
           type: 'line',
           data: {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [{
-              label: 'Tahun Ini (' + new Date().getFullYear() + ')',
-              data: monthlyData,
-              borderColor: '#2563eb',
-              backgroundColor: 'rgba(37, 99, 235, 0.05)',
-              borderWidth: 2,
-              fill: true,
-              tension: 0.4,
-              pointBackgroundColor: '#2563eb',
-              pointBorderColor: '#fff',
-              pointBorderWidth: 2,
-              pointRadius: 4
-            }]
+            datasets: [
+              {
+                label: dashboardStats.currentYear.toString(),
+                data: currentYearData,
+                borderColor: '#f59e0b',
+                backgroundColor: 'rgba(245, 158, 11, 0.05)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#f59e0b',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4
+              },
+              {
+                label: dashboardStats.previousYear.toString(),
+                data: previousYearData,
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.05)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#2563eb',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 4
+              }
+            ]
           },
           options: {
             responsive: true,
@@ -127,7 +158,7 @@ export default function Dashboard() {
             scales: {
               y: {
                 beginAtZero: true,
-                suggestedMax: suggestedMax,
+                suggestedMax: suggestedMaxMonthly,
                 ticks: {
                   callback: function(value) {
                     if (value >= 1000000) {
@@ -159,19 +190,19 @@ export default function Dashboard() {
         });
       }
 
-      // Yearly Income Chart (Bar)
+      // Yearly Income Chart (Bar) - Compare total per year
       const yearlyCtx = document.getElementById('yearlyIncomeChart');
       if (yearlyCtx) {
-        console.log('✅ Creating yearly chart');
+        console.log('✅ Creating yearly comparison chart');
         new window.Chart(yearlyCtx, {
           type: 'bar',
           data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: [dashboardStats.previousYear.toString(), dashboardStats.currentYear.toString()],
             datasets: [{
-              label: 'Tahun Ini (' + new Date().getFullYear() + ')',
-              data: monthlyData,
-              backgroundColor: '#2563eb',
-              borderColor: '#1e40af',
+              label: 'Total Income',
+              data: [previousYearTotal, currentYearTotal],
+              backgroundColor: ['#d97706', '#a855f7'],
+              borderColor: ['#b45309', '#9333ea'],
               borderWidth: 1,
               borderRadius: 6
             }]
@@ -181,23 +212,18 @@ export default function Dashboard() {
             maintainAspectRatio: true,
             plugins: {
               legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                  font: { size: 12, weight: 'bold' },
-                  padding: 15,
-                  usePointStyle: true,
-                  pointStyle: 'rect'
-                }
+                display: false
               }
             },
             scales: {
               y: {
                 beginAtZero: true,
-                suggestedMax: suggestedMax,
+                suggestedMax: suggestedMaxYearly,
                 ticks: {
                   callback: function(value) {
-                    if (value >= 1000000) {
+                    if (value >= 1000000000) {
+                      return 'Rp ' + (value / 1000000000).toFixed(1) + 'B';
+                    } else if (value >= 1000000) {
                       return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
                     } else if (value >= 1000) {
                       return 'Rp ' + (value / 1000).toFixed(0) + 'K';
@@ -218,7 +244,7 @@ export default function Dashboard() {
                   drawBorder: false
                 },
                 ticks: {
-                  font: { size: 10 }
+                  font: { size: 12, weight: 'bold' }
                 }
               }
             }
@@ -358,32 +384,44 @@ export default function Dashboard() {
       console.log('- Active customers:', activeCustomers);
       console.log('- Total customers in DB:', customersArray.length);
       
-      // Calculate monthly income for charts (last 12 months)
-      const monthlyIncome = new Array(12).fill(0);
-      const currentDate = new Date();
+      // Calculate monthly income for charts (current year and previous year)
       const currentYear = currentDate.getFullYear();
-      const currentMonth = currentDate.getMonth(); // 0-11
+      const previousYear = currentYear - 1;
+      
+      const currentYearIncome = new Array(12).fill(0);
+      const previousYearIncome = new Array(12).fill(0);
       
       completedTransactions.forEach(t => {
         const transDate = new Date(t.created_at);
         const transYear = transDate.getFullYear();
         const transMonth = transDate.getMonth(); // 0-11
+        const amount = parseFloat(t.total_amount || t.total || 0);
         
-        // Only count transactions from current year
         if (transYear === currentYear) {
-          const amount = parseFloat(t.total_amount || t.total || 0);
-          monthlyIncome[transMonth] += amount;
+          currentYearIncome[transMonth] += amount;
+        } else if (transYear === previousYear) {
+          previousYearIncome[transMonth] += amount;
         }
       });
       
-      console.log('📅 Monthly income:', monthlyIncome);
+      console.log('📅 Current year income:', currentYearIncome);
+      console.log('📅 Previous year income:', previousYearIncome);
+      
+      // Calculate total yearly income for comparison chart
+      const currentYearTotal = currentYearIncome.reduce((sum, val) => sum + val, 0);
+      const previousYearTotal = previousYearIncome.reduce((sum, val) => sum + val, 0);
       
       setDashboardStats({
         totalItems,
         totalTransactions: completedTransactions.length,
         totalIncome,
         activeCustomers,
-        monthlyIncome,
+        monthlyIncome: currentYearIncome,
+        previousYearMonthlyIncome: previousYearIncome,
+        currentYearTotal,
+        previousYearTotal,
+        currentYear,
+        previousYear,
         loading: false,
         error: null
       });
