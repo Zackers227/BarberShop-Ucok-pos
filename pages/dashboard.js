@@ -995,6 +995,13 @@ export default function Dashboard() {
               console.log('📊 Chart Data String:', monthlyDataStr);
               console.log('📊 Canvas element found:', document.getElementById('monthlyIncomeChart'));
               
+              // Calculate max value for better scale
+              var maxValue = Math.max(...monthlyData);
+              var suggestedMax = maxValue > 0 ? maxValue * 1.2 : 5000000; // 20% padding or 5M default
+              
+              console.log('📊 Max value in data:', maxValue);
+              console.log('📊 Suggested max for Y-axis:', suggestedMax);
+              
               if (!monthlyData || monthlyData.length === 0 || monthlyData.every(v => v === 0)) {
                 console.warn('⚠️ Chart data is empty or all zeros. Charts may appear empty.');
               }
@@ -1040,9 +1047,16 @@ export default function Dashboard() {
                     scales: {
                       y: {
                         beginAtZero: true,
+                        suggestedMax: suggestedMax,
                         ticks: {
                           callback: function(value) {
-                            return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                            if (value >= 1000000) {
+                              return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                            } else if (value >= 1000) {
+                              return 'Rp ' + (value / 1000).toFixed(0) + 'K';
+                            } else {
+                              return 'Rp ' + value;
+                            }
                           },
                           font: { size: 10 }
                         },
@@ -1101,9 +1115,16 @@ export default function Dashboard() {
                     scales: {
                       y: {
                         beginAtZero: true,
+                        suggestedMax: suggestedMax,
                         ticks: {
                           callback: function(value) {
-                            return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                            if (value >= 1000000) {
+                              return 'Rp ' + (value / 1000000).toFixed(1) + 'M';
+                            } else if (value >= 1000) {
+                              return 'Rp ' + (value / 1000).toFixed(0) + 'K';
+                            } else {
+                              return 'Rp ' + value;
+                            }
                           },
                           font: { size: 10 }
                         },

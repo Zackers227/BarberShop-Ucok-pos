@@ -101,22 +101,6 @@ export default function History() {
       </Head>
 
       <Layout activePage="history">
-        {/* Debug info */}
-        <div style={{ 
-          background: '#fef3c7', 
-          border: '2px solid #f59e0b', 
-          padding: '15px', 
-          borderRadius: '8px',
-          marginBottom: '20px',
-          fontSize: '14px'
-        }}>
-          <strong>🔍 Debug Info:</strong><br/>
-          Loading: {loading ? 'true' : 'false'}<br/>
-          Transactions loaded: {transactions.length}<br/>
-          Filtered: {filteredTransactions.length}<br/>
-          Current filter: {filter}
-        </div>
-
         <div style={{ marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '1.8rem', fontWeight: '600', color: '#333', marginBottom: '0.5rem' }}>
             📜 Riwayat Transaksi
