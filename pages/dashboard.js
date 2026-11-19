@@ -568,8 +568,13 @@ export default function Dashboard() {
         <link rel="stylesheet" href="/css/dashboard.css" />
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <style>{`
-          /* Hide sidebar on mobile */
-          @media (max-width: 768px) {
+          /* Base responsive adjustments */
+          * {
+            box-sizing: border-box;
+          }
+
+          /* Hide sidebar on mobile and tablet */
+          @media (max-width: 1024px) {
             aside {
               display: none !important;
             }
@@ -577,6 +582,56 @@ export default function Dashboard() {
               margin-left: 0 !important;
               width: 100% !important;
             }
+          }
+
+          /* Responsive card grid */
+          @media (max-width: 768px) {
+            .metric-cards {
+              grid-template-columns: 1fr !important;
+              gap: 15px !important;
+            }
+            
+            .metric-card {
+              min-width: 100% !important;
+            }
+
+            .main-content {
+              padding: 15px !important;
+            }
+
+            /* Stack charts vertically on mobile */
+            .charts-container {
+              grid-template-columns: 1fr !important;
+            }
+          }
+
+          /* Tablet adjustments */
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .metric-cards {
+              grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            .charts-container {
+              grid-template-columns: 1fr !important;
+            }
+          }
+
+          /* Desktop */
+          @media (min-width: 1025px) {
+            .metric-cards {
+              display: flex !important;
+              flex-direction: row !important;
+            }
+
+            .charts-container {
+              grid-template-columns: repeat(2, 1fr) !important;
+            }
+          }
+
+          /* Chart responsiveness */
+          canvas {
+            max-width: 100% !important;
+            height: auto !important;
           }
         `}</style>
       </Head>
@@ -994,7 +1049,7 @@ export default function Dashboard() {
           <Navbar currentPage="dashboard" />
 
         {/* Main Content */}
-        <div className="main-content">
+        <div className="main-content" style={{ padding: '2rem' }}>
           {/* Title Section */}
           <div style={{ marginBottom: '2rem' }}>
             <h1 style={{ fontSize: '1.8rem', fontWeight: '600', color: '#333', marginBottom: '0.5rem' }}>Dashboard</h1>
@@ -1002,15 +1057,15 @@ export default function Dashboard() {
           </div>
 
           {/* METRIC CARDS - 4 Columns in 1 Row */}
-          <div style={{
+          <div className="metric-cards" style={{
             display: 'flex',
             flexDirection: 'row',
             gap: '20px',
             marginBottom: '2rem',
-            overflowX: 'auto'
+            flexWrap: 'wrap'
           }}>
             {/* Total Item Terjual */}
-            <div style={{
+            <div className="metric-card" style={{
               background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)',
               borderRadius: '12px',
               padding: '20px',
@@ -1041,7 +1096,7 @@ export default function Dashboard() {
             </div>
 
             {/* Total Transaksi */}
-            <div style={{
+            <div className="metric-card" style={{
               background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
               borderRadius: '12px',
               padding: '20px',
@@ -1072,7 +1127,7 @@ export default function Dashboard() {
             </div>
 
             {/* Total Income */}
-            <div style={{
+            <div className="metric-card" style={{
               background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
               borderRadius: '12px',
               padding: '20px',
@@ -1103,7 +1158,7 @@ export default function Dashboard() {
             </div>
 
             {/* Total Pelanggan Aktif */}
-            <div style={{
+            <div className="metric-card" style={{
               background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
               borderRadius: '12px',
               padding: '20px',
@@ -1135,7 +1190,7 @@ export default function Dashboard() {
           </div>
 
           {/* INCOME CHARTS */}
-          <div style={{
+          <div className="charts-container" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: '30px',
