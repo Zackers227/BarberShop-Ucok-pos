@@ -600,24 +600,23 @@ export default function Dashboard() {
 
           /* Toggle Menu Visibility Button */
           .toggle-menu-btn {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1002;
-            background: #10b981;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 56px;
-            height: 56px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
+            position: fixed !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            z-index: 1002 !important;
+            background: #10b981 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 50% !important;
+            width: 56px !important;
+            height: 56px !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
+            font-size: 24px !important;
+            display: none !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.3s ease !important;
           }
 
           .toggle-menu-btn:hover {
@@ -738,9 +737,14 @@ export default function Dashboard() {
       <div className="dashboard-container">
         {/* Hamburger Menu Button */}
         <button 
-          className={`hamburger-btn ${!menuVisible ? 'hidden' : ''}`}
+          className="hamburger-btn"
           onClick={() => setSidebarOpen(!sidebarOpen)}
           aria-label="Toggle menu"
+          style={{
+            opacity: menuVisible ? 1 : 0,
+            pointerEvents: menuVisible ? 'auto' : 'none',
+            transition: 'opacity 0.3s ease'
+          }}
         >
           {sidebarOpen ? '✕' : '☰'}
         </button>
@@ -748,7 +752,10 @@ export default function Dashboard() {
         {/* Toggle Menu Visibility Button */}
         <button
           className="toggle-menu-btn"
-          onClick={() => setMenuVisible(!menuVisible)}
+          onClick={() => {
+            console.log('Toggle clicked, current state:', menuVisible);
+            setMenuVisible(!menuVisible);
+          }}
           aria-label={menuVisible ? 'Hide menu button' : 'Show menu button'}
           title={menuVisible ? 'Sembunyikan Tombol Menu' : 'Tampilkan Tombol Menu'}
         >
