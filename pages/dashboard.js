@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(true); // Toggle visibility of hamburger
   
   const [dashboardStats, setDashboardStats] = useState({
     totalItems: 0,
@@ -589,12 +590,53 @@ export default function Dashboard() {
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             font-size: 20px;
+            transition: all 0.3s ease;
+          }
+
+          .hamburger-btn.hidden {
+            opacity: 0;
+            pointer-events: none;
+          }
+
+          /* Toggle Menu Visibility Button */
+          .toggle-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1002;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+          }
+
+          .toggle-menu-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.6);
+          }
+
+          .toggle-menu-btn:active {
+            transform: scale(0.95);
           }
 
           /* Show hamburger on mobile and tablet */
           @media (max-width: 1024px) {
             .hamburger-btn {
               display: block !important;
+            }
+
+            .toggle-menu-btn {
+              display: flex !important;
             }
 
             /* Show close button in sidebar on mobile */
@@ -696,11 +738,21 @@ export default function Dashboard() {
       <div className="dashboard-container">
         {/* Hamburger Menu Button */}
         <button 
-          className="hamburger-btn"
+          className={`hamburger-btn ${!menuVisible ? 'hidden' : ''}`}
           onClick={() => setSidebarOpen(!sidebarOpen)}
           aria-label="Toggle menu"
         >
           {sidebarOpen ? '✕' : '☰'}
+        </button>
+
+        {/* Toggle Menu Visibility Button */}
+        <button
+          className="toggle-menu-btn"
+          onClick={() => setMenuVisible(!menuVisible)}
+          aria-label={menuVisible ? 'Hide menu button' : 'Show menu button'}
+          title={menuVisible ? 'Sembunyikan Tombol Menu' : 'Tampilkan Tombol Menu'}
+        >
+          {menuVisible ? '👁️' : '🔘'}
         </button>
 
         {/* Sidebar Overlay */}
