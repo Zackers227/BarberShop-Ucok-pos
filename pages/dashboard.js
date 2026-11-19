@@ -272,14 +272,18 @@ export default function Dashboard() {
 
   const fetchDashboardStats = async (token) => {
     try {
-      console.log('🚀 Starting dashboard stats fetch...');
+      console.log('🚀 Starting dashboard stats fetch... v2.2');
       
       // Fetch all transactions
       const transactionsRes = await fetch('/api/transactions', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
+      console.log('📡 Transactions API response status:', transactionsRes.status);
+      
       if (!transactionsRes.ok) {
+        const errorText = await transactionsRes.text();
+        console.error('❌ API Error Response:', errorText.substring(0, 200));
         throw new Error(`API error: ${transactionsRes.status}`);
       }
       
