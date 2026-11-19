@@ -736,19 +736,16 @@ export default function Dashboard() {
       </Head>
 
       <div className="dashboard-container">
-        {/* Hamburger Menu Button */}
-        <button 
-          className="hamburger-btn"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          aria-label="Toggle menu"
-          style={{
-            opacity: menuVisible ? 1 : 0,
-            pointerEvents: menuVisible ? 'auto' : 'none',
-            transition: 'opacity 0.3s ease'
-          }}
-        >
-          {sidebarOpen ? '✕' : '☰'}
-        </button>
+        {/* Hamburger Menu Button - Only show when menuVisible is true */}
+        {menuVisible && (
+          <button 
+            className="hamburger-btn"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-label="Toggle menu"
+          >
+            {sidebarOpen ? '✕' : '☰'}
+          </button>
+        )}
 
         {/* Toggle Menu Visibility Button */}
         <button
@@ -759,6 +756,10 @@ export default function Dashboard() {
             console.log('Toggle clicked, current state:', menuVisible);
             const newState = !menuVisible;
             setMenuVisible(newState);
+            // Close sidebar when hiding hamburger button
+            if (!newState) {
+              setSidebarOpen(false);
+            }
             console.log('New state:', newState);
           }}
           onTouchEnd={(e) => {
