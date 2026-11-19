@@ -575,6 +575,14 @@ export default function Dashboard() {
             box-sizing: border-box;
           }
 
+          /* Sidebar default styles - Desktop */
+          aside {
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+          }
+
           /* Hamburger Menu Button */
           .hamburger-btn {
             display: none;
@@ -639,6 +647,11 @@ export default function Dashboard() {
               display: flex;
             }
 
+            /* Hamburger hidden state on mobile */
+            .hamburger-btn.hidden {
+              display: none;
+            }
+
             /* Show close button in sidebar on mobile */
             .sidebar-close-btn {
               display: block !important;
@@ -647,9 +660,9 @@ export default function Dashboard() {
             /* Sidebar mobile styles */
             aside {
               position: fixed !important;
-              left: -280px;
-              transition: left 0.3s ease;
-              z-index: 1000;
+              left: -280px !important;
+              transition: left 0.3s ease !important;
+              z-index: 1001 !important;
             }
 
             aside.sidebar-open {
@@ -665,7 +678,7 @@ export default function Dashboard() {
               right: 0;
               bottom: 0;
               background: rgba(0, 0, 0, 0.5);
-              z-index: 999;
+              z-index: 1000;
             }
 
             .sidebar-overlay.active {
@@ -737,15 +750,13 @@ export default function Dashboard() {
 
       <div className="dashboard-container">
         {/* Hamburger Menu Button - Only show when menuVisible is true */}
-        {menuVisible && (
-          <button 
-            className="hamburger-btn"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            aria-label="Toggle menu"
-          >
-            {sidebarOpen ? '✕' : '☰'}
-          </button>
-        )}
+        <button 
+          className={`hamburger-btn ${!menuVisible ? 'hidden' : ''}`}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label="Toggle menu"
+        >
+          {sidebarOpen ? '✕' : '☰'}
+        </button>
 
         {/* Toggle Menu Visibility Button */}
         <button
@@ -783,18 +794,17 @@ export default function Dashboard() {
         />
 
         {/* Sidebar Menu */}
-        <aside className={sidebarOpen ? 'sidebar-open' : ''} style={{
-          width: '280px',
-          background: '#3a3f51',
-          color: 'white',
-          height: '100vh',
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          overflowY: 'auto',
-          zIndex: 100,
-          boxShadow: '2px 0 8px rgba(0,0,0,0.1)'
-        }}>
+        <aside 
+          className={sidebarOpen ? 'sidebar-open' : ''} 
+          style={{
+            width: '280px',
+            background: '#3a3f51',
+            color: 'white',
+            height: '100vh',
+            overflowY: 'auto',
+            boxShadow: '2px 0 8px rgba(0,0,0,0.1)'
+          }}
+        >
           {/* Close button for mobile */}
           <button
             onClick={() => setSidebarOpen(false)}
