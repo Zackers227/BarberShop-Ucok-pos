@@ -600,23 +600,24 @@ export default function Dashboard() {
 
           /* Toggle Menu Visibility Button */
           .toggle-menu-btn {
-            position: fixed !important;
-            bottom: 20px !important;
-            right: 20px !important;
-            z-index: 1002 !important;
-            background: #10b981 !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 50% !important;
-            width: 56px !important;
-            height: 56px !important;
-            cursor: pointer !important;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4) !important;
-            font-size: 24px !important;
-            display: none !important;
-            align-items: center !important;
-            justify-content: center !important;
-            transition: all 0.3s ease !important;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1002;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            font-size: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
           }
 
           .toggle-menu-btn:hover {
@@ -631,11 +632,11 @@ export default function Dashboard() {
           /* Show hamburger on mobile and tablet */
           @media (max-width: 1024px) {
             .hamburger-btn {
-              display: block !important;
+              display: block;
             }
 
             .toggle-menu-btn {
-              display: flex !important;
+              display: flex;
             }
 
             /* Show close button in sidebar on mobile */
@@ -752,12 +753,24 @@ export default function Dashboard() {
         {/* Toggle Menu Visibility Button */}
         <button
           className="toggle-menu-btn"
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
             console.log('Toggle clicked, current state:', menuVisible);
-            setMenuVisible(!menuVisible);
+            const newState = !menuVisible;
+            setMenuVisible(newState);
+            console.log('New state:', newState);
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
           }}
           aria-label={menuVisible ? 'Hide menu button' : 'Show menu button'}
           title={menuVisible ? 'Sembunyikan Tombol Menu' : 'Tampilkan Tombol Menu'}
+          style={{
+            display: 'flex',
+            touchAction: 'manipulation'
+          }}
         >
           {menuVisible ? '👁️' : '🔘'}
         </button>
