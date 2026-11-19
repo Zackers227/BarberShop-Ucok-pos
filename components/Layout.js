@@ -216,7 +216,6 @@ export default function Layout({ children, activePage = '' }) {
 
         {/* Sidebar Menu */}
         <aside className={sidebarOpen ? 'sidebar-open' : ''} style={{
-        <aside className={sidebarOpen ? 'sidebar-open' : ''} style={{
           width: '280px',
           background: '#3a3f51',
           color: 'white',
