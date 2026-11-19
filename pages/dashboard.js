@@ -10,6 +10,7 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [pendingCount, setPendingCount] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const [dashboardStats, setDashboardStats] = useState({
     totalItems: 0,
@@ -573,11 +574,62 @@ export default function Dashboard() {
             box-sizing: border-box;
           }
 
-          /* Hide sidebar on mobile and tablet */
+          /* Hamburger Menu Button */
+          .hamburger-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-size: 20px;
+          }
+
+          /* Show hamburger on mobile and tablet */
           @media (max-width: 1024px) {
-            aside {
-              display: none !important;
+            .hamburger-btn {
+              display: block !important;
             }
+
+            /* Show close button in sidebar on mobile */
+            .sidebar-close-btn {
+              display: block !important;
+            }
+
+            /* Sidebar mobile styles */
+            aside {
+              position: fixed !important;
+              left: -280px;
+              transition: left 0.3s ease;
+              z-index: 1000;
+            }
+
+            aside.sidebar-open {
+              left: 0 !important;
+            }
+
+            /* Overlay when sidebar open */
+            .sidebar-overlay {
+              display: none;
+              position: fixed;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: rgba(0, 0, 0, 0.5);
+              z-index: 999;
+            }
+
+            .sidebar-overlay.active {
+              display: block;
+            }
+
             .main-wrapper {
               margin-left: 0 !important;
               width: 100% !important;
@@ -597,6 +649,7 @@ export default function Dashboard() {
 
             .main-content {
               padding: 15px !important;
+              margin-top: 50px !important;
             }
 
             /* Stack charts vertically on mobile */
@@ -613,6 +666,10 @@ export default function Dashboard() {
 
             .charts-container {
               grid-template-columns: 1fr !important;
+            }
+
+            .main-content {
+              margin-top: 50px !important;
             }
           }
 
@@ -637,8 +694,23 @@ export default function Dashboard() {
       </Head>
 
       <div className="dashboard-container">
+        {/* Hamburger Menu Button */}
+        <button 
+          className="hamburger-btn"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label="Toggle menu"
+        >
+          {sidebarOpen ? '✕' : '☰'}
+        </button>
+
+        {/* Sidebar Overlay */}
+        <div 
+          className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`}
+          onClick={() => setSidebarOpen(false)}
+        />
+
         {/* Sidebar Menu */}
-        <aside style={{
+        <aside className={sidebarOpen ? 'sidebar-open' : ''} style={{
           width: '280px',
           background: '#3a3f51',
           color: 'white',
@@ -650,6 +722,26 @@ export default function Dashboard() {
           zIndex: 100,
           boxShadow: '2px 0 8px rgba(0,0,0,0.1)'
         }}>
+          {/* Close button for mobile */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            style={{
+              display: 'none',
+              position: 'absolute',
+              top: '15px',
+              right: '15px',
+              background: 'transparent',
+              border: 'none',
+              color: 'white',
+              fontSize: '24px',
+              cursor: 'pointer',
+              zIndex: 1001
+            }}
+            className="sidebar-close-btn"
+          >
+            ✕
+          </button>
+
           {/* Sidebar Header */}
           <div style={{
             background: '#2c3142',
@@ -751,7 +843,10 @@ export default function Dashboard() {
 
               {/* Laporan */}
               <div
-                onClick={() => router.push('/reports')}
+                onClick={() => {
+                  setSidebarOpen(false);
+                  router.push('/reports');
+                }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -772,7 +867,10 @@ export default function Dashboard() {
 
               {/* Riwayat */}
               <div
-                onClick={() => router.push('/history')}
+                onClick={() => {
+                  setSidebarOpen(false);
+                  router.push('/history');
+                }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
