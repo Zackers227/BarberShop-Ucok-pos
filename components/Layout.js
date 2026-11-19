@@ -7,6 +7,8 @@ export default function Layout({ children, activePage = '' }) {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [pendingCount, setPendingCount] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(true);
 
   useEffect(() => {
     const userData = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
@@ -36,32 +38,212 @@ export default function Layout({ children, activePage = '' }) {
   return (
     <>
       <style jsx global>{`
-        /* Hide sidebar on mobile */
-        @media (max-width: 768px) {
-          aside {
-            display: none !important;
+        /* Base responsive adjustments */
+        * {
+          box-sizing: border-box;
+        }
+
+        /* Sidebar default styles - Desktop */
+        aside {
+          position: fixed;
+          left: 0;
+          top: 0;
+          z-index: 100;
+        }
+
+        /* Hamburger Menu Button */
+        .hamburger-btn {
+          display: none;
+          position: fixed;
+          top: 15px;
+          left: 15px;
+          z-index: 1001;
+          background: #2563eb;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          padding: 10px 15px;
+          cursor: pointer;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+          font-size: 20px;
+          transition: all 0.3s ease;
+        }
+
+        .hamburger-btn.hidden {
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        /* Toggle Menu Visibility Button */
+        .toggle-menu-btn {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          z-index: 1002;
+          background: #10b981;
+          color: white;
+          border: none;
+          border-radius: 50%;
+          width: 56px;
+          height: 56px;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+          font-size: 24px;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        .toggle-menu-btn:hover {
+          transform: scale(1.1);
+          box-shadow: 0 6px 16px rgba(16, 185, 129, 0.6);
+        }
+
+        .toggle-menu-btn:active {
+          transform: scale(0.95);
+        }
+
+        /* Show hamburger on mobile and tablet */
+        @media (max-width: 1024px) {
+          .hamburger-btn {
+            display: block;
           }
+
+          .toggle-menu-btn {
+            display: flex;
+          }
+
+          /* Hamburger hidden state on mobile */
+          .hamburger-btn.hidden {
+            display: none;
+          }
+
+          /* Show close button in sidebar on mobile */
+          .sidebar-close-btn {
+            display: block !important;
+          }
+
+          /* Sidebar mobile styles */
+          aside {
+            position: fixed !important;
+            left: -280px !important;
+            transition: left 0.3s ease !important;
+            z-index: 1001 !important;
+          }
+
+          aside.sidebar-open {
+            left: 0 !important;
+          }
+
+          /* Overlay when sidebar open */
+          .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+          }
+
+          .sidebar-overlay.active {
+            display: block;
+          }
+
           .main-wrapper {
             margin-left: 0 !important;
             width: 100% !important;
           }
         }
+
+        /* Desktop */
+        @media (min-width: 1025px) {
+          .hamburger-btn {
+            display: none !important;
+          }
+
+          .toggle-menu-btn {
+            display: none !important;
+          }
+        }
       `}</style>
 
       <div className="dashboard-container">
+        {/* Hamburger Menu Button */}
+        <button 
+          className={`hamburger-btn ${!menuVisible ? 'hidden' : ''}`}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label="Toggle menu"
+        >
+          {sidebarOpen ? '✕' : '☰'}
+        </button>
+
+        {/* Toggle Menu Visibility Button */}
+        <button
+          className="toggle-menu-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const newState = !menuVisible;
+            setMenuVisible(newState);
+            // Close sidebar when hiding hamburger button
+            if (!newState) {
+              setSidebarOpen(false);
+            }
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          aria-label={menuVisible ? 'Hide menu button' : 'Show menu button'}
+          title={menuVisible ? 'Sembunyikan Tombol Menu' : 'Tampilkan Tombol Menu'}
+          style={{
+            display: 'flex',
+            touchAction: 'manipulation'
+          }}
+        >
+          {menuVisible ? '👁️' : '🔘'}
+        </button>
+
+        {/* Sidebar Overlay */}
+        <div 
+          className={`sidebar-overlay ${sidebarOpen ? 'active' : ''}`}
+          onClick={() => setSidebarOpen(false)}
+        />
+
         {/* Sidebar Menu */}
-        <aside style={{
+        <aside className={sidebarOpen ? 'sidebar-open' : ''} style={{
+        <aside className={sidebarOpen ? 'sidebar-open' : ''} style={{
           width: '280px',
           background: '#3a3f51',
           color: 'white',
           height: '100vh',
-          position: 'fixed',
-          left: 0,
-          top: 0,
           overflowY: 'auto',
-          zIndex: 100,
           boxShadow: '2px 0 8px rgba(0,0,0,0.1)'
         }}>
+          {/* Close button for mobile */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            style={{
+              display: 'none',
+              position: 'absolute',
+              top: '15px',
+              right: '15px',
+              background: 'transparent',
+              border: 'none',
+              color: 'white',
+              fontSize: '24px',
+              cursor: 'pointer',
+              zIndex: 1001
+            }}
+            className="sidebar-close-btn"
+          >
+            ✕
+          </button>
+
           {/* Sidebar Header */}
           <div style={{
             background: '#2c3142',
@@ -97,7 +279,7 @@ export default function Layout({ children, activePage = '' }) {
               Pengaturan aplikasi
             </div>
             <div
-              onClick={() => router.push('/settings')}
+              onClick={() => { setSidebarOpen(false); router.push('/'); }}
               style={{
                 padding: '12px 15px',
                 borderRadius: '6px',
@@ -144,7 +326,10 @@ export default function Layout({ children, activePage = '' }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
               {/* Dashboard */}
               <div
-                onClick={() => router.push('/dashboard')}
+                onClick={() => {
+                  setSidebarOpen(false);
+                  router.push('/dashboard');
+                }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -171,7 +356,10 @@ export default function Layout({ children, activePage = '' }) {
 
               {/* Laporan */}
               <div
-                onClick={() => router.push('/reports')}
+                onClick={() => {
+                  setSidebarOpen(false);
+                  router.push('/reports');
+                }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -198,7 +386,7 @@ export default function Layout({ children, activePage = '' }) {
 
               {/* Riwayat */}
               <div
-                onClick={() => router.push('/history')}
+                onClick={() => { setSidebarOpen(false); router.push('/'); }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -225,7 +413,7 @@ export default function Layout({ children, activePage = '' }) {
 
               {/* Transaksi */}
               <div
-                onClick={() => router.push('/transactions')}
+                onClick={() => { setSidebarOpen(false); router.push('/'); }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -252,7 +440,7 @@ export default function Layout({ children, activePage = '' }) {
 
               {/* Pending */}
               <div
-                onClick={() => router.push('/pending')}
+                onClick={() => { setSidebarOpen(false); router.push('/'); }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -296,7 +484,7 @@ export default function Layout({ children, activePage = '' }) {
 
               {/* Shifts */}
               <div
-                onClick={() => router.push('/shifts')}
+                onClick={() => { setSidebarOpen(false); router.push('/'); }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -343,7 +531,7 @@ export default function Layout({ children, activePage = '' }) {
               {/* User / Kasir */}
               {hasPermission(user, 'users') && (
                 <div
-                  onClick={() => router.push('/users')}
+                  onClick={() => { setSidebarOpen(false); router.push('/'); }}
                   style={{
                     padding: '12px 15px',
                     borderRadius: '6px',
@@ -372,7 +560,7 @@ export default function Layout({ children, activePage = '' }) {
               {/* Customer / Pelanggan */}
               {hasPermission(user, 'customers') && (
                 <div
-                  onClick={() => router.push('/customers')}
+                  onClick={() => { setSidebarOpen(false); router.push('/'); }}
                   style={{
                     padding: '12px 15px',
                     borderRadius: '6px',
@@ -401,7 +589,7 @@ export default function Layout({ children, activePage = '' }) {
               {/* Kapster / Barberman */}
               {hasPermission(user, 'kapsters') && (
                 <div
-                  onClick={() => router.push('/kapsters')}
+                  onClick={() => { setSidebarOpen(false); router.push('/'); }}
                   style={{
                     padding: '12px 15px',
                     borderRadius: '6px',
@@ -430,7 +618,7 @@ export default function Layout({ children, activePage = '' }) {
               {/* Layanan / Service */}
               {hasPermission(user, 'services') && (
                 <div
-                  onClick={() => router.push('/services')}
+                  onClick={() => { setSidebarOpen(false); router.push('/'); }}
                   style={{
                     padding: '12px 15px',
                     borderRadius: '6px',
@@ -459,7 +647,7 @@ export default function Layout({ children, activePage = '' }) {
               {/* Produk / Barang */}
               {hasPermission(user, 'products') && (
                 <div
-                  onClick={() => router.push('/products')}
+                  onClick={() => { setSidebarOpen(false); router.push('/'); }}
                   style={{
                     padding: '12px 15px',
                     borderRadius: '6px',
@@ -536,3 +724,4 @@ export default function Layout({ children, activePage = '' }) {
     </>
   );
 }
+
