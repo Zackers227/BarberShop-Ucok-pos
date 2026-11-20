@@ -140,7 +140,7 @@ export default function Products() {
   };
 
   if (loading) {
-    return <div className="loading-screen">Loading...</div>;
+    return null; // Remove loading screen, render directly
   }
 
   return (

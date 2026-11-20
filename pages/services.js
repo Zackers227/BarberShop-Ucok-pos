@@ -131,7 +131,7 @@ export default function Services() {
   };
 
   if (loading) {
-    return <div className="loading-screen">Loading...</div>;
+    return null;
   }
 
   return (

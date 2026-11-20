@@ -144,7 +144,7 @@ export default function Shifts() {
   };
 
   if (loading) {
-    return <div className="loading-screen">Loading...</div>;
+    return null;
   }
 
   return (

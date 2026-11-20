@@ -86,7 +86,7 @@ export default function History() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   console.log('🎨 Rendering history page with', transactions.length, 'transactions');

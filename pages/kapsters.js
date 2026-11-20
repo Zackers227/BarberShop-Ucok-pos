@@ -126,7 +126,7 @@ export default function Kapsters() {
   };
 
   if (loading) {
-    return <div className="loading-screen">Loading...</div>;
+    return null;
   }
 
   return (

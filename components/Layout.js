@@ -278,7 +278,7 @@ export default function Layout({ children, activePage = '' }) {
               Pengaturan aplikasi
             </div>
             <div
-              onClick={() => { setSidebarOpen(false); router.push('/'); }}
+              onClick={() => { setSidebarOpen(false); router.push('/settings'); }}
               style={{
                 padding: '12px 15px',
                 borderRadius: '6px',
@@ -414,7 +414,7 @@ export default function Layout({ children, activePage = '' }) {
 
               {/* Transaksi */}
               <div
-                onClick={() => { setSidebarOpen(false); router.push('/'); }}
+                onClick={() => { setSidebarOpen(false); router.push('/transactions'); }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -441,7 +441,7 @@ export default function Layout({ children, activePage = '' }) {
 
               {/* Pending */}
               <div
-                onClick={() => { setSidebarOpen(false); router.push('/'); }}
+                onClick={() => { setSidebarOpen(false); router.push('/pending'); }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -485,7 +485,7 @@ export default function Layout({ children, activePage = '' }) {
 
               {/* Shifts */}
               <div
-                onClick={() => { setSidebarOpen(false); router.push('/'); }}
+                onClick={() => { setSidebarOpen(false); router.push('/shifts'); }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',
@@ -532,7 +532,7 @@ export default function Layout({ children, activePage = '' }) {
               {/* User / Kasir */}
               {hasPermission(user, 'users') && (
                 <div
-                  onClick={() => { setSidebarOpen(false); router.push('/'); }}
+                  onClick={() => { setSidebarOpen(false); router.push('/users'); }}
                   style={{
                     padding: '12px 15px',
                     borderRadius: '6px',
@@ -561,7 +561,7 @@ export default function Layout({ children, activePage = '' }) {
               {/* Customer / Pelanggan */}
               {hasPermission(user, 'customers') && (
                 <div
-                  onClick={() => { setSidebarOpen(false); router.push('/'); }}
+                  onClick={() => { setSidebarOpen(false); router.push('/customers'); }}
                   style={{
                     padding: '12px 15px',
                     borderRadius: '6px',
@@ -590,7 +590,7 @@ export default function Layout({ children, activePage = '' }) {
               {/* Kapster / Barberman */}
               {hasPermission(user, 'kapsters') && (
                 <div
-                  onClick={() => { setSidebarOpen(false); router.push('/'); }}
+                  onClick={() => { setSidebarOpen(false); router.push('/kapsters'); }}
                   style={{
                     padding: '12px 15px',
                     borderRadius: '6px',
@@ -619,7 +619,7 @@ export default function Layout({ children, activePage = '' }) {
               {/* Layanan / Service */}
               {hasPermission(user, 'services') && (
                 <div
-                  onClick={() => { setSidebarOpen(false); router.push('/'); }}
+                  onClick={() => { setSidebarOpen(false); router.push('/services'); }}
                   style={{
                     padding: '12px 15px',
                     borderRadius: '6px',
@@ -648,7 +648,7 @@ export default function Layout({ children, activePage = '' }) {
               {/* Produk / Barang */}
               {hasPermission(user, 'products') && (
                 <div
-                  onClick={() => { setSidebarOpen(false); router.push('/'); }}
+                  onClick={() => { setSidebarOpen(false); router.push('/products'); }}
                   style={{
                     padding: '12px 15px',
                     borderRadius: '6px',

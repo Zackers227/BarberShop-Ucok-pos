@@ -201,7 +201,7 @@ export default function Users() {
   };
 
   if (loading) {
-    return <div className="loading-screen">Loading...</div>;
+    return null; // Remove loading screen
   }
 
   return (

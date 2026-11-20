@@ -436,11 +436,7 @@ export default function Dashboard() {
   };
 
   if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <h2>Loading...</h2>
-      </div>
-    );
+    return null;
   }
 
   // Chart data for Income Perbulan (Line Chart) - Using real data

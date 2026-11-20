@@ -90,7 +90,7 @@ export default function Reports() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   console.log('🎨 Rendering reports page');
