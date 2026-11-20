@@ -180,7 +180,7 @@ export default function PendingTransactions() {
   };
 
   if (loading) {
-    return <div className="loading-screen">Loading...</div>;
+    return null;
   }
 
   return (

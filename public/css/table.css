@@ -182,14 +182,9 @@
     text-align: center;
 }
 
-/* Loading Screen */
+/* Loading Screen - HIDDEN */
 .loading-screen {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    font-size: 1.5rem;
-    color: var(--primary);
+    display: none !important;
 }
 
 /* Responsive */

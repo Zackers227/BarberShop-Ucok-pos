@@ -18,22 +18,7 @@ export default function Home() {
   }, [router]);
 
   if (checking) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        backgroundColor: '#2c3e50'
-      }}>
-        <Head>
-          <title>Barbershop Ucok - POS System</title>
-        </Head>
-        <div style={{ textAlign: 'center', color: 'white' }}>
-          <h1>🚀 Loading...</h1>
-        </div>
-      </div>
-    );
+    return null; // Remove loading screen
   }
 
   return null;
