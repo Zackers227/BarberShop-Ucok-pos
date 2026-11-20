@@ -128,9 +128,21 @@ export default function Reports() {
               monthlyData[month] += parseFloat(tx.total) || 0;
             });
             
+            // Create shift name from cashier and date
+            const openedDate = new Date(shift.opened_at);
+            const shiftName = `Shift #${shift.id} - ${shift.cashier_name || 'Kasir'} (${openedDate.toLocaleDateString('id-ID', { 
+              day: '2-digit', 
+              month: 'short', 
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })})`;
+            
             return {
               id: shift.id,
-              name: shift.name,
+              name: shiftName,
+              cashier_name: shift.cashier_name,
+              opened_at: shift.opened_at,
               monthlyData: monthlyData,
               total: Object.values(monthlyData).reduce((sum, val) => sum + val, 0)
             };
