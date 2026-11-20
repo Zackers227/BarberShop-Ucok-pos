@@ -341,8 +341,8 @@ export default function Transactions() {
               Total Pendapatan: <strong style={{ color: '#10b981' }}>
                 Rp {filteredTransactions
                   .filter(t => t.status === 'completed')
-                  .reduce((sum, t) => sum + ((t.total_amount || t.total) || 0), 0)
-                  .toLocaleString('id-ID')}
+                  .reduce((sum, t) => sum + (parseFloat(t.total_amount || t.total) || 0), 0)
+                  .toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
               </strong>
             </p>
           </div>
