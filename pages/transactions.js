@@ -7,12 +7,7 @@ export default function Transactions() {
   const router = useRouter();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState({
-    startDate: '',
-    endDate: '',
-    paymentMethod: '',
-    status: ''
-  });
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -23,6 +18,13 @@ export default function Transactions() {
     }
 
     fetchTransactions(token);
+
+    // Update current time every minute
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
   }, [router]);
 
   const fetchTransactions = async (token) => {
@@ -62,12 +64,11 @@ export default function Transactions() {
     }
   };
 
+  // Filter only today's transactions
   const filteredTransactions = transactions.filter(t => {
-    if (filter.startDate && new Date(t.created_at) < new Date(filter.startDate)) return false;
-    if (filter.endDate && new Date(t.created_at) > new Date(filter.endDate)) return false;
-    if (filter.paymentMethod && t.payment_method !== filter.paymentMethod) return false;
-    if (filter.status && t.status !== filter.status) return false;
-    return true;
+    const today = new Date().toISOString().split('T')[0];
+    const txDate = new Date(t.created_at).toISOString().split('T')[0];
+    return txDate === today;
   });
 
   const getStatusBadge = (status) => {
@@ -142,96 +143,32 @@ export default function Transactions() {
           </button>
         </div>
 
-        {/* Filter Card */}
+        {/* Current Date/Time Display */}
         <div style={{
           background: 'white',
           borderRadius: '12px',
-          padding: '24px',
+          padding: '20px 24px',
           marginBottom: '24px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
         }}>
-          <h3 style={{ fontSize: '1.1rem', marginBottom: '20px', color: '#333' }}>🔍 Filter</h3>
+          <div>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '4px', color: '#333' }}>
+              📅 Transaksi Hari Ini
+            </h3>
+            <p style={{ fontSize: '0.9rem', color: '#666', margin: 0 }}>
+              {currentTime.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            </p>
+          </div>
           <div style={{ 
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '16px'
+            fontSize: '1.5rem', 
+            fontWeight: '600', 
+            color: '#2563eb',
+            fontFamily: 'monospace'
           }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#555' }}>
-                Tanggal Mulai
-              </label>
-              <input
-                type="date"
-                value={filter.startDate}
-                onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  border: '1px solid #ddd',
-                  borderRadius: '6px',
-                  fontSize: '0.9rem'
-                }}
-              />
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#555' }}>
-                Tanggal Akhir
-              </label>
-              <input
-                type="date"
-                value={filter.endDate}
-                onChange={(e) => setFilter({ ...filter, endDate: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  border: '1px solid #ddd',
-                  borderRadius: '6px',
-                  fontSize: '0.9rem'
-                }}
-              />
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#555' }}>
-                Metode Pembayaran
-              </label>
-              <select 
-                value={filter.paymentMethod} 
-                onChange={(e) => setFilter({ ...filter, paymentMethod: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  border: '1px solid #ddd',
-                  borderRadius: '6px',
-                  fontSize: '0.9rem'
-                }}
-              >
-                <option value="">Semua</option>
-                <option value="TUNAI">Tunai</option>
-                <option value="QRIS">QRIS</option>
-                <option value="TRANSFER">Transfer</option>
-                <option value="DEBIT">Debit</option>
-              </select>
-            </div>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: '#555' }}>
-                Status
-              </label>
-              <select 
-                value={filter.status} 
-                onChange={(e) => setFilter({ ...filter, status: e.target.value })}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  border: '1px solid #ddd',
-                  borderRadius: '6px',
-                  fontSize: '0.9rem'
-                }}
-              >
-                <option value="">Semua</option>
-                <option value="completed">Selesai</option>
-                <option value="VOID">Void</option>
-              </select>
-            </div>
+            {currentTime.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
           </div>
         </div>
 

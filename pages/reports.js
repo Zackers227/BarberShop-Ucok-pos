@@ -12,6 +12,10 @@ export default function Reports() {
     thisYear: { transactions: 0, income: 0, items: 0 }
   });
   const [transactions, setTransactions] = useState([]);
+  const [kapsters, setKapsters] = useState([]);
+  const [shifts, setShifts] = useState([]);
+  const [kapsterMonthlyIncome, setKapsterMonthlyIncome] = useState([]);
+  const [shiftMonthlyIncome, setShiftMonthlyIncome] = useState([]);
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -25,16 +29,17 @@ export default function Reports() {
   const fetchReportData = async (token) => {
     try {
       console.log('🔄 Fetching report data...');
-      const response = await fetch('/api/transactions', {
+      
+      // Fetch transactions
+      const txResponse = await fetch('/api/transactions', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
-      console.log('📡 Response status:', response.status, response.ok);
+      console.log('📡 Response status:', txResponse.status, txResponse.ok);
       
-      if (response.ok) {
-        const data = await response.json();
+      if (txResponse.ok) {
+        const data = await txResponse.json();
         console.log('✅ Transactions received:', data.length, 'items');
-        console.log('📊 Sample transaction:', data[0]);
         
         const txs = Array.isArray(data) ? data.filter(t => t.status?.toLowerCase() === 'completed') : [];
         console.log('✅ Completed transactions:', txs.length);
@@ -58,7 +63,6 @@ export default function Reports() {
               }
             }, 0)
           };
-          console.log('📈 Calculated stats:', stats);
           return stats;
         };
         
@@ -70,8 +74,72 @@ export default function Reports() {
         
         console.log('📊 Final report data:', reportStats);
         setReportData(reportStats);
+        
+        // Fetch kapsters
+        const kapsterResponse = await fetch('/api/kapsters', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (kapsterResponse.ok) {
+          const kapsterData = await kapsterResponse.json();
+          setKapsters(kapsterData);
+          
+          // Calculate monthly income per kapster
+          const kapsterIncome = kapsterData.map(kapster => {
+            const kapsterTxs = txs.filter(t => t.kapster_id === kapster.id);
+            const monthlyData = {};
+            
+            kapsterTxs.forEach(tx => {
+              const month = new Date(tx.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
+              if (!monthlyData[month]) {
+                monthlyData[month] = 0;
+              }
+              monthlyData[month] += parseFloat(tx.total) || 0;
+            });
+            
+            return {
+              id: kapster.id,
+              name: kapster.name,
+              monthlyData: monthlyData,
+              total: Object.values(monthlyData).reduce((sum, val) => sum + val, 0)
+            };
+          }).filter(k => k.total > 0);
+          
+          setKapsterMonthlyIncome(kapsterIncome);
+        }
+        
+        // Fetch shifts
+        const shiftResponse = await fetch('/api/shifts', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (shiftResponse.ok) {
+          const shiftData = await shiftResponse.json();
+          setShifts(shiftData);
+          
+          // Calculate monthly income per shift
+          const shiftIncome = shiftData.map(shift => {
+            const shiftTxs = txs.filter(t => t.shift_id === shift.id);
+            const monthlyData = {};
+            
+            shiftTxs.forEach(tx => {
+              const month = new Date(tx.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
+              if (!monthlyData[month]) {
+                monthlyData[month] = 0;
+              }
+              monthlyData[month] += parseFloat(tx.total) || 0;
+            });
+            
+            return {
+              id: shift.id,
+              name: shift.name,
+              monthlyData: monthlyData,
+              total: Object.values(monthlyData).reduce((sum, val) => sum + val, 0)
+            };
+          }).filter(s => s.total > 0);
+          
+          setShiftMonthlyIncome(shiftIncome);
+        }
       } else {
-        console.error('❌ Response not OK:', response.status);
+        console.error('❌ Response not OK:', txResponse.status);
       }
     } catch (error) {
       console.error('❌ Error fetching report data:', error);
@@ -183,16 +251,22 @@ export default function Reports() {
         </div>
 
         {/* Recent Transactions */}
-        <div className="card">
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          marginBottom: '30px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
           <h3 style={{ marginBottom: '20px' }}>Transaksi Terbaru (10)</h3>
-          <div className="table-responsive">
-            <table className="data-table">
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Tanggal</th>
-                  <th>Customer</th>
-                  <th>Total</th>
+                <tr style={{ background: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
+                  <th style={{ padding: '12px', textAlign: 'left', fontSize: '0.9rem', fontWeight: '600' }}>ID</th>
+                  <th style={{ padding: '12px', textAlign: 'left', fontSize: '0.9rem', fontWeight: '600' }}>Tanggal</th>
+                  <th style={{ padding: '12px', textAlign: 'left', fontSize: '0.9rem', fontWeight: '600' }}>Customer</th>
+                  <th style={{ padding: '12px', textAlign: 'right', fontSize: '0.9rem', fontWeight: '600' }}>Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -204,23 +278,172 @@ export default function Reports() {
                   </tr>
                 ) : (
                   transactions.slice(0, 10).map(t => (
-                    <tr key={t.id}>
-                      <td>#{t.id}</td>
-                      <td>{new Date(t.created_at).toLocaleString('id-ID', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}</td>
-                      <td>{t.customer_name || 'Walk-in'}</td>
-                      <td className="text-right">{formatRupiah(t.total || 0)}</td>
+                    <tr key={t.id} style={{ borderBottom: '1px solid #e9ecef' }}>
+                      <td style={{ padding: '12px', fontSize: '0.9rem' }}>#{t.id}</td>
+                      <td style={{ padding: '12px', fontSize: '0.9rem' }}>
+                        {new Date(t.created_at).toLocaleString('id-ID', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </td>
+                      <td style={{ padding: '12px', fontSize: '0.9rem' }}>{t.customer_name || 'Walk-in'}</td>
+                      <td style={{ padding: '12px', fontSize: '0.9rem', textAlign: 'right', fontWeight: '600' }}>
+                        {formatRupiah(t.total || 0)}
+                      </td>
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
           </div>
+        </div>
+
+        {/* Pendapatan Per Kapster */}
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          marginBottom: '30px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ marginBottom: '20px', color: '#333', fontSize: '1.2rem' }}>
+            💈 Pendapatan Perbulan Per Kapster
+          </h3>
+          {kapsterMonthlyIncome.length === 0 ? (
+            <p style={{ textAlign: 'center', padding: '30px', color: '#999' }}>
+              Belum ada data pendapatan kapster
+            </p>
+          ) : (
+            kapsterMonthlyIncome.map(kapster => (
+              <div key={kapster.id} style={{
+                marginBottom: '24px',
+                padding: '20px',
+                background: '#f8f9fa',
+                borderRadius: '8px',
+                border: '1px solid #e9ecef'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '16px'
+                }}>
+                  <h4 style={{ margin: 0, color: '#2563eb', fontSize: '1.1rem' }}>
+                    {kapster.name}
+                  </h4>
+                  <div style={{
+                    background: '#10b981',
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    fontWeight: '600',
+                    fontSize: '0.95rem'
+                  }}>
+                    Total: {formatRupiah(kapster.total)}
+                  </div>
+                </div>
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', background: 'white' }}>
+                    <thead>
+                      <tr style={{ background: '#e9ecef' }}>
+                        <th style={{ padding: '10px', textAlign: 'left', fontSize: '0.85rem', fontWeight: '600' }}>
+                          Bulan
+                        </th>
+                        <th style={{ padding: '10px', textAlign: 'right', fontSize: '0.85rem', fontWeight: '600' }}>
+                          Pendapatan
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(kapster.monthlyData).map(([month, income]) => (
+                        <tr key={month} style={{ borderBottom: '1px solid #e9ecef' }}>
+                          <td style={{ padding: '10px', fontSize: '0.9rem' }}>{month}</td>
+                          <td style={{ padding: '10px', fontSize: '0.9rem', textAlign: 'right', fontWeight: '600', color: '#10b981' }}>
+                            {formatRupiah(income)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Pendapatan Per Shift */}
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ marginBottom: '20px', color: '#333', fontSize: '1.2rem' }}>
+            🕐 Pendapatan Perbulan Per Shift
+          </h3>
+          {shiftMonthlyIncome.length === 0 ? (
+            <p style={{ textAlign: 'center', padding: '30px', color: '#999' }}>
+              Belum ada data pendapatan shift
+            </p>
+          ) : (
+            shiftMonthlyIncome.map(shift => (
+              <div key={shift.id} style={{
+                marginBottom: '24px',
+                padding: '20px',
+                background: '#f8f9fa',
+                borderRadius: '8px',
+                border: '1px solid #e9ecef'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '16px'
+                }}>
+                  <h4 style={{ margin: 0, color: '#f59e0b', fontSize: '1.1rem' }}>
+                    {shift.name}
+                  </h4>
+                  <div style={{
+                    background: '#f59e0b',
+                    color: 'white',
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    fontWeight: '600',
+                    fontSize: '0.95rem'
+                  }}>
+                    Total: {formatRupiah(shift.total)}
+                  </div>
+                </div>
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', background: 'white' }}>
+                    <thead>
+                      <tr style={{ background: '#e9ecef' }}>
+                        <th style={{ padding: '10px', textAlign: 'left', fontSize: '0.85rem', fontWeight: '600' }}>
+                          Bulan
+                        </th>
+                        <th style={{ padding: '10px', textAlign: 'right', fontSize: '0.85rem', fontWeight: '600' }}>
+                          Pendapatan
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(shift.monthlyData).map(([month, income]) => (
+                        <tr key={month} style={{ borderBottom: '1px solid #e9ecef' }}>
+                          <td style={{ padding: '10px', fontSize: '0.9rem' }}>{month}</td>
+                          <td style={{ padding: '10px', fontSize: '0.9rem', textAlign: 'right', fontWeight: '600', color: '#f59e0b' }}>
+                            {formatRupiah(income)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </Layout>
     </>

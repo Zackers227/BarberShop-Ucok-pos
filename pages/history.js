@@ -7,7 +7,12 @@ export default function History() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [transactions, setTransactions] = useState([]);
-  const [filter, setFilter] = useState('all'); // all, completed, pending
+  const [filter, setFilter] = useState({
+    startDate: '',
+    endDate: '',
+    paymentMethod: '',
+    status: ''
+  });
 
   // Force cache bust
   console.log('🆕 History component loaded - Build:', Date.now());
@@ -52,8 +57,20 @@ export default function History() {
   };
 
   const filteredTransactions = transactions.filter(t => {
-    if (filter === 'all') return true;
-    return t.status?.toLowerCase() === filter;
+    // Filter by date range
+    if (filter.startDate) {
+      const txDate = new Date(t.created_at).toISOString().split('T')[0];
+      if (txDate < filter.startDate) return false;
+    }
+    if (filter.endDate) {
+      const txDate = new Date(t.created_at).toISOString().split('T')[0];
+      if (txDate > filter.endDate) return false;
+    }
+    // Filter by payment method
+    if (filter.paymentMethod && t.payment_method !== filter.paymentMethod) return false;
+    // Filter by status
+    if (filter.status && t.status?.toLowerCase() !== filter.status.toLowerCase()) return false;
+    return true;
   });
 
   const formatRupiah = (amount) => {
@@ -111,87 +128,165 @@ export default function History() {
             📜 Riwayat Transaksi
           </h1>
           <p style={{ fontSize: '0.9rem', color: '#999', margin: 0 }}>
-            Daftar semua transaksi yang telah dilakukan
+            Daftar semua riwayat transaksi dengan filter pencarian
           </p>
         </div>
 
-        {/* Filter Tabs */}
-        <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }} role="group" aria-label="Filter transaksi">
+        {/* Filter Card */}
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          marginBottom: '24px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '20px', color: '#333' }}>
+            🔍 Filter Pencarian
+          </h3>
+          
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: '16px',
+            marginBottom: '16px'
+          }}>
+            {/* Start Date */}
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', fontWeight: '600', color: '#555' }}>
+                Tanggal Mulai
+              </label>
+              <input
+                type="date"
+                value={filter.startDate}
+                onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ddd',
+                  fontSize: '0.9rem'
+                }}
+              />
+            </div>
+
+            {/* End Date */}
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', fontWeight: '600', color: '#555' }}>
+                Tanggal Akhir
+              </label>
+              <input
+                type="date"
+                value={filter.endDate}
+                onChange={(e) => setFilter({ ...filter, endDate: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ddd',
+                  fontSize: '0.9rem'
+                }}
+              />
+            </div>
+
+            {/* Payment Method */}
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', fontWeight: '600', color: '#555' }}>
+                Metode Pembayaran
+              </label>
+              <select
+                value={filter.paymentMethod}
+                onChange={(e) => setFilter({ ...filter, paymentMethod: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ddd',
+                  fontSize: '0.9rem',
+                  background: 'white'
+                }}
+              >
+                <option value="">Semua Metode</option>
+                <option value="cash">Cash</option>
+                <option value="debit">Debit</option>
+                <option value="qris">QRIS</option>
+              </select>
+            </div>
+
+            {/* Status */}
+            <div>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', fontWeight: '600', color: '#555' }}>
+                Status
+              </label>
+              <select
+                value={filter.status}
+                onChange={(e) => setFilter({ ...filter, status: e.target.value })}
+                style={{
+                  width: '100%',
+                  padding: '10px 12px',
+                  borderRadius: '8px',
+                  border: '1px solid #ddd',
+                  fontSize: '0.9rem',
+                  background: 'white'
+                }}
+              >
+                <option value="">Semua Status</option>
+                <option value="completed">Selesai</option>
+                <option value="pending">Pending</option>
+                <option value="VOID">Void</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Reset Filter Button */}
           <button
-            type="button"
-            onClick={() => setFilter('all')}
+            onClick={() => setFilter({ startDate: '', endDate: '', paymentMethod: '', status: '' })}
             style={{
+              background: '#6b7280',
+              color: 'white',
+              border: 'none',
               padding: '10px 20px',
               borderRadius: '8px',
-              border: 'none',
-              background: filter === 'all' ? '#2563eb' : '#f3f4f6',
-              color: filter === 'all' ? 'white' : '#333',
+              fontSize: '0.9rem',
               fontWeight: '600',
               cursor: 'pointer'
             }}
-            aria-pressed={filter === 'all'}
           >
-            Semua ({transactions.length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setFilter('completed')}
-            style={{
-              padding: '10px 20px',
-              borderRadius: '8px',
-              border: 'none',
-              background: filter === 'completed' ? '#10b981' : '#f3f4f6',
-              color: filter === 'completed' ? 'white' : '#333',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}
-            aria-pressed={filter === 'completed'}
-          >
-            Selesai ({transactions.filter(t => t.status?.toLowerCase() === 'completed').length})
-          </button>
-          <button
-            type="button"
-            onClick={() => setFilter('pending')}
-            style={{
-              padding: '10px 20px',
-              borderRadius: '8px',
-              border: 'none',
-              background: filter === 'pending' ? '#f59e0b' : '#f3f4f6',
-              color: filter === 'pending' ? 'white' : '#333',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}
-            aria-pressed={filter === 'pending'}
-          >
-            Pending ({transactions.filter(t => t.status?.toLowerCase() === 'pending').length})
+            🔄 Reset Filter
           </button>
         </div>
 
-        <div className="card">
-          <h3>Daftar Transaksi</h3>
+        {/* Transaction Table */}
+        <div style={{
+          background: 'white',
+          borderRadius: '12px',
+          padding: '24px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <h3 style={{ marginBottom: '20px' }}>Daftar Transaksi</h3>
           <p style={{ marginBottom: '15px', color: '#666' }}>
             Menampilkan {filteredTransactions.length} dari {transactions.length} transaksi
           </p>
-          <div className="table-responsive">
-            <table className="data-table">
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Tanggal</th>
-                  <th>Customer</th>
-                  <th>Kapster</th>
-                  <th>Total</th>
-                  <th>Bayar</th>
-                  <th>Kembalian</th>
-                  <th>Status</th>
-                  <th>Aksi</th>
+                <tr style={{ background: '#f8f9fa', borderBottom: '2px solid #dee2e6' }}>
+                  <th style={{ padding: '12px', textAlign: 'left', fontSize: '0.9rem', fontWeight: '600' }}>ID</th>
+                  <th style={{ padding: '12px', textAlign: 'left', fontSize: '0.9rem', fontWeight: '600' }}>Tanggal</th>
+                  <th style={{ padding: '12px', textAlign: 'left', fontSize: '0.9rem', fontWeight: '600' }}>Customer</th>
+                  <th style={{ padding: '12px', textAlign: 'left', fontSize: '0.9rem', fontWeight: '600' }}>Kapster</th>
+                  <th style={{ padding: '12px', textAlign: 'right', fontSize: '0.9rem', fontWeight: '600' }}>Total</th>
+                  <th style={{ padding: '12px', textAlign: 'right', fontSize: '0.9rem', fontWeight: '600' }}>Bayar</th>
+                  <th style={{ padding: '12px', textAlign: 'right', fontSize: '0.9rem', fontWeight: '600' }}>Kembalian</th>
+                  <th style={{ padding: '12px', textAlign: 'left', fontSize: '0.9rem', fontWeight: '600' }}>Pembayaran</th>
+                  <th style={{ padding: '12px', textAlign: 'center', fontSize: '0.9rem', fontWeight: '600' }}>Status</th>
+                  <th style={{ padding: '12px', textAlign: 'center', fontSize: '0.9rem', fontWeight: '600' }}>Aksi</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredTransactions.length === 0 ? (
                   <tr>
-                    <td colSpan="9" style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
-                      Belum ada transaksi dengan filter "{filter}"
+                    <td colSpan="10" style={{ textAlign: 'center', padding: '40px', color: '#999' }}>
+                      Tidak ada transaksi sesuai filter
                     </td>
                   </tr>
                 ) : (
@@ -199,24 +294,48 @@ export default function History() {
                     try {
                       console.log(`Rendering row ${index}:`, t.id, t.customer_name);
                       return (
-                        <tr key={t.id}>
-                          <td>#{t.id}</td>
-                          <td>{new Date(t.created_at).toLocaleString('id-ID')}</td>
-                          <td>{t.customer_name || 'Walk-in'}</td>
-                          <td>{t.kapster_name || '-'}</td>
-                          <td className="text-right">{formatRupiah(t.total || 0)}</td>
-                          <td className="text-right">{formatRupiah(t.paid_amount || 0)}</td>
-                          <td className="text-right">{formatRupiah(t.change_amount || 0)}</td>
-                          <td>{getStatusBadge(t.status)}</td>
-                          <td>
+                        <tr key={t.id} style={{ borderBottom: '1px solid #e9ecef' }}>
+                          <td style={{ padding: '12px', fontSize: '0.9rem' }}>#{t.id}</td>
+                          <td style={{ padding: '12px', fontSize: '0.9rem' }}>
+                            {new Date(t.created_at).toLocaleString('id-ID', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </td>
+                          <td style={{ padding: '12px', fontSize: '0.9rem' }}>{t.customer_name || 'Walk-in'}</td>
+                          <td style={{ padding: '12px', fontSize: '0.9rem' }}>{t.kapster_name || '-'}</td>
+                          <td style={{ padding: '12px', fontSize: '0.9rem', textAlign: 'right', fontWeight: '600' }}>
+                            {formatRupiah(t.total || 0)}
+                          </td>
+                          <td style={{ padding: '12px', fontSize: '0.9rem', textAlign: 'right' }}>
+                            {formatRupiah(t.paid_amount || 0)}
+                          </td>
+                          <td style={{ padding: '12px', fontSize: '0.9rem', textAlign: 'right' }}>
+                            {formatRupiah(t.change_amount || 0)}
+                          </td>
+                          <td style={{ padding: '12px', fontSize: '0.9rem' }}>{t.payment_method || 'cash'}</td>
+                          <td style={{ padding: '12px', textAlign: 'center' }}>{getStatusBadge(t.status)}</td>
+                          <td style={{ padding: '12px', textAlign: 'center' }}>
                             <button
                               type="button"
                               onClick={() => window.open(`/print/${t.id}`, '_blank')}
-                              className="btn btn-sm btn-secondary"
+                              style={{
+                                background: '#2563eb',
+                                color: 'white',
+                                border: 'none',
+                                padding: '6px 12px',
+                                borderRadius: '6px',
+                                fontSize: '0.85rem',
+                                fontWeight: '600',
+                                cursor: 'pointer'
+                              }}
                               title="Cetak Struk"
                               aria-label={`Cetak struk transaksi #${t.id}`}
                             >
-                              🖨️
+                              🖨️ Cetak
                             </button>
                           </td>
                         </tr>
