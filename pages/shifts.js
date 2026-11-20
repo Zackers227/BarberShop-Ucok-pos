@@ -144,7 +144,12 @@ export default function Shifts() {
   };
 
   if (loading) {
-    return null;
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Memuat data shift...</div>
+      </div>
+    );
   }
 
   return (

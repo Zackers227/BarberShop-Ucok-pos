@@ -138,7 +138,12 @@ export default function Customers() {
   };
 
   if (loading) {
-    return null;
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Memuat data pelanggan...</div>
+      </div>
+    );
   }
 
   return (

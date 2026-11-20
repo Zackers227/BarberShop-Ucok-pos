@@ -140,7 +140,12 @@ export default function Products() {
   };
 
   if (loading) {
-    return null; // Remove loading screen, render directly
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Memuat data produk...</div>
+      </div>
+    );
   }
 
   return (

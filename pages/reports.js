@@ -90,7 +90,12 @@ export default function Reports() {
   };
 
   if (loading) {
-    return null;
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Memuat laporan...</div>
+      </div>
+    );
   }
 
   console.log('🎨 Rendering reports page');

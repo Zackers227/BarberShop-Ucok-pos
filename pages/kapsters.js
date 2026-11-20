@@ -126,7 +126,12 @@ export default function Kapsters() {
   };
 
   if (loading) {
-    return null;
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Memuat data kapster...</div>
+      </div>
+    );
   }
 
   return (

@@ -86,7 +86,12 @@ export default function History() {
   };
 
   if (loading) {
-    return null;
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Memuat riwayat transaksi...</div>
+      </div>
+    );
   }
 
   console.log('🎨 Rendering history page with', transactions.length, 'transactions');

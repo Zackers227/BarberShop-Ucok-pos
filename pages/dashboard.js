@@ -436,7 +436,12 @@ export default function Dashboard() {
   };
 
   if (loading) {
-    return null;
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Memuat dashboard...</div>
+      </div>
+    );
   }
 
   // Chart data for Income Perbulan (Line Chart) - Using real data

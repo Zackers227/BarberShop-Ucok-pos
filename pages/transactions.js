@@ -93,7 +93,12 @@ export default function Transactions() {
   };
 
   if (loading) {
-    return null;
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Memuat data transaksi...</div>
+      </div>
+    );
   }
 
   return (

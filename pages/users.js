@@ -201,7 +201,12 @@ export default function Users() {
   };
 
   if (loading) {
-    return null; // Remove loading screen
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Memuat data pengguna...</div>
+      </div>
+    );
   }
 
   return (

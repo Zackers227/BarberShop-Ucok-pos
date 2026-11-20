@@ -35,7 +35,12 @@ export default function Pending() {
   };
 
   if (loading) {
-    return null;
+    return (
+      <div className="loading-screen">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Memuat transaksi pending...</div>
+      </div>
+    );
   }
 
   return (
