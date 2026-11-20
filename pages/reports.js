@@ -13,9 +13,9 @@ export default function Reports() {
   });
   const [transactions, setTransactions] = useState([]);
   const [kapsters, setKapsters] = useState([]);
-  const [shifts, setShifts] = useState([]);
+  const [users, setUsers] = useState([]);
   const [kapsterMonthlyIncome, setKapsterMonthlyIncome] = useState([]);
-  const [shiftMonthlyIncome, setShiftMonthlyIncome] = useState([]);
+  const [userMonthlyIncome, setUserMonthlyIncome] = useState([]);
 
   useEffect(() => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -107,20 +107,20 @@ export default function Reports() {
           setKapsterMonthlyIncome(kapsterIncome);
         }
         
-        // Fetch shifts
-        const shiftResponse = await fetch('/api/shifts', {
+        // Fetch users (kasir)
+        const userResponse = await fetch('/api/users', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        if (shiftResponse.ok) {
-          const shiftData = await shiftResponse.json();
-          setShifts(shiftData);
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          setUsers(userData);
           
-          // Calculate monthly income per shift
-          const shiftIncome = shiftData.map(shift => {
-            const shiftTxs = txs.filter(t => t.shift_id === shift.id);
+          // Calculate monthly income per user/kasir
+          const userIncome = userData.map(user => {
+            const userTxs = txs.filter(t => t.user_id === user.id || t.cashier_id === user.id);
             const monthlyData = {};
             
-            shiftTxs.forEach(tx => {
+            userTxs.forEach(tx => {
               const month = new Date(tx.created_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
               if (!monthlyData[month]) {
                 monthlyData[month] = 0;
@@ -128,27 +128,16 @@ export default function Reports() {
               monthlyData[month] += parseFloat(tx.total) || 0;
             });
             
-            // Create shift name from cashier and date
-            const openedDate = new Date(shift.opened_at);
-            const shiftName = `Shift #${shift.id} - ${shift.cashier_name || 'Kasir'} (${openedDate.toLocaleDateString('id-ID', { 
-              day: '2-digit', 
-              month: 'short', 
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })})`;
-            
             return {
-              id: shift.id,
-              name: shiftName,
-              cashier_name: shift.cashier_name,
-              opened_at: shift.opened_at,
+              id: user.id,
+              name: user.full_name || user.username,
+              role: user.role,
               monthlyData: monthlyData,
               total: Object.values(monthlyData).reduce((sum, val) => sum + val, 0)
             };
-          }).filter(s => s.total > 0);
+          }).filter(u => u.total > 0);
           
-          setShiftMonthlyIncome(shiftIncome);
+          setUserMonthlyIncome(userIncome);
         }
       } else {
         console.error('❌ Response not OK:', txResponse.status);
@@ -386,7 +375,7 @@ export default function Reports() {
           )}
         </div>
 
-        {/* Pendapatan Per Shift */}
+        {/* Pendapatan Per User/Kasir */}
         <div style={{
           background: 'white',
           borderRadius: '12px',
@@ -394,15 +383,15 @@ export default function Reports() {
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
         }}>
           <h3 style={{ marginBottom: '20px', color: '#333', fontSize: '1.2rem' }}>
-            🕐 Pendapatan Perbulan Per Shift
+            👤 Pendapatan Perbulan Per Kasir
           </h3>
-          {shiftMonthlyIncome.length === 0 ? (
+          {userMonthlyIncome.length === 0 ? (
             <p style={{ textAlign: 'center', padding: '30px', color: '#999' }}>
-              Belum ada data pendapatan shift
+              Belum ada data pendapatan kasir
             </p>
           ) : (
-            shiftMonthlyIncome.map(shift => (
-              <div key={shift.id} style={{
+            userMonthlyIncome.map(user => (
+              <div key={user.id} style={{
                 marginBottom: '24px',
                 padding: '20px',
                 background: '#f8f9fa',
@@ -415,9 +404,14 @@ export default function Reports() {
                   alignItems: 'center',
                   marginBottom: '16px'
                 }}>
-                  <h4 style={{ margin: 0, color: '#f59e0b', fontSize: '1.1rem' }}>
-                    {shift.name}
-                  </h4>
+                  <div>
+                    <h4 style={{ margin: 0, color: '#f59e0b', fontSize: '1.1rem' }}>
+                      {user.name}
+                    </h4>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '0.85rem', color: '#666' }}>
+                      Role: {user.role}
+                    </p>
+                  </div>
                   <div style={{
                     background: '#f59e0b',
                     color: 'white',
@@ -426,7 +420,7 @@ export default function Reports() {
                     fontWeight: '600',
                     fontSize: '0.95rem'
                   }}>
-                    Total: {formatRupiah(shift.total)}
+                    Total: {formatRupiah(user.total)}
                   </div>
                 </div>
                 <div style={{ overflowX: 'auto' }}>
@@ -442,7 +436,7 @@ export default function Reports() {
                       </tr>
                     </thead>
                     <tbody>
-                      {Object.entries(shift.monthlyData).map(([month, income]) => (
+                      {Object.entries(user.monthlyData).map(([month, income]) => (
                         <tr key={month} style={{ borderBottom: '1px solid #e9ecef' }}>
                           <td style={{ padding: '10px', fontSize: '0.9rem' }}>{month}</td>
                           <td style={{ padding: '10px', fontSize: '0.9rem', textAlign: 'right', fontWeight: '600', color: '#f59e0b' }}>
