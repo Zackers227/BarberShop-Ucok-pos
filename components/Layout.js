@@ -354,38 +354,40 @@ export default function Layout({ children, activePage = '' }) {
               </div>
 
               {/* Laporan */}
-              <div
-                onClick={() => {
-                  setSidebarOpen(false);
-                  router.push('/reports');
-                }}
-                style={{
-                  padding: '12px 15px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontSize: '14px',
-                  background: activePage === 'reports' ? '#2563eb' : 'transparent',
-                  color: activePage === 'reports' ? 'white' : '#ccc',
-                  fontWeight: activePage === 'reports' ? '600' : 'normal',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => {
-                  if (activePage !== 'reports') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  if (activePage !== 'reports') e.currentTarget.style.background = 'transparent';
-                }}
-              >
-                <span>📈</span>
-                <span>Laporan</span>
-              </div>
+              {hasPermission(user, 'reports') && (
+                <div
+                  onClick={() => {
+                    setSidebarOpen(false);
+                    router.push('/reports');
+                  }}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    background: activePage === 'reports' ? '#2563eb' : 'transparent',
+                    color: activePage === 'reports' ? 'white' : '#ccc',
+                    fontWeight: activePage === 'reports' ? '600' : 'normal',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (activePage !== 'reports') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activePage !== 'reports') e.currentTarget.style.background = 'transparent';
+                  }}
+                >
+                  <span>📈</span>
+                  <span>Laporan</span>
+                </div>
+              )}
 
               {/* Riwayat */}
               <div
-                onClick={() => { setSidebarOpen(false); router.push('/'); }}
+                onClick={() => { setSidebarOpen(false); router.push('/history'); }}
                 style={{
                   padding: '12px 15px',
                   borderRadius: '6px',

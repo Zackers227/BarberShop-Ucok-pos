@@ -929,28 +929,30 @@ export default function Dashboard() {
               </div>
 
               {/* Laporan */}
-              <div
-                onClick={() => {
-                  setSidebarOpen(false);
-                  router.push('/reports');
-                }}
-                style={{
-                  padding: '12px 15px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontSize: '14px',
-                  color: '#ccc',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-              >
-                <span>📈</span>
-                <span>Laporan</span>
-              </div>
+              {hasPermission(user, 'reports') && (
+                <div
+                  onClick={() => {
+                    setSidebarOpen(false);
+                    router.push('/reports');
+                  }}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    color: '#ccc',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
+                  <span>📈</span>
+                  <span>Laporan</span>
+                </div>
+              )}
 
               {/* Riwayat */}
               <div

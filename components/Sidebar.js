@@ -150,9 +150,10 @@ export default function Sidebar({ user, pendingCount = 0, currentPage = '' }) {
           </div>
 
           {/* Laporan */}
-          <div
-            onClick={() => router.push('/reports')}
-            style={{
+          {hasPermission(user, 'reports') && (
+            <div
+              onClick={() => router.push('/reports')}
+              style={{
               padding: '12px 15px',
               borderRadius: '6px',
               cursor: 'pointer',
@@ -179,6 +180,7 @@ export default function Sidebar({ user, pendingCount = 0, currentPage = '' }) {
             <span>📈</span>
             <span>Laporan</span>
           </div>
+          )}
 
           {/* Riwayat */}
           <div
