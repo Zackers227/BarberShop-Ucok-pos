@@ -4,6 +4,11 @@ import { hasPermission } from '../lib/permissions';
 export default function Sidebar({ user, pendingCount = 0, currentPage = '' }) {
   const router = useRouter();
 
+  // Wait for user data to load before rendering permission-based menus
+  const isUserLoaded = user !== null && user !== undefined;
+  
+  console.log('🔄 Sidebar render - User:', user?.username, 'isUserLoaded:', isUserLoaded, 'Permissions:', user?.permissions);
+
   return (
     <aside style={{
       width: '280px',
@@ -118,103 +123,107 @@ export default function Sidebar({ user, pendingCount = 0, currentPage = '' }) {
 
         {/* Menu Items */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-          {/* Dashboard */}
-          {hasPermission(user, 'dashboard') && (
-            <div
-              onClick={() => router.push('/dashboard')}
-              style={{
-                padding: '12px 15px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                fontSize: '14px',
-                background: currentPage === 'dashboard' ? '#2563eb' : 'transparent',
-                color: currentPage === 'dashboard' ? 'white' : '#ccc',
-                fontWeight: currentPage === 'dashboard' ? '600' : 'normal',
-                transition: 'all 0.3s'
-              }}
-              onMouseEnter={(e) => {
-                if (currentPage !== 'dashboard') {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (currentPage !== 'dashboard') {
-                  e.currentTarget.style.background = 'transparent';
-                }
-              }}
-            >
-              <span>📊</span>
-              <span>Dashboard</span>
-            </div>
-          )}
+          {isUserLoaded && (
+            <>
+              {/* Dashboard */}
+              {hasPermission(user, 'dashboard') && (
+                <div
+                  onClick={() => router.push('/dashboard')}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    background: currentPage === 'dashboard' ? '#2563eb' : 'transparent',
+                    color: currentPage === 'dashboard' ? 'white' : '#ccc',
+                    fontWeight: currentPage === 'dashboard' ? '600' : 'normal',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (currentPage !== 'dashboard') {
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (currentPage !== 'dashboard') {
+                      e.currentTarget.style.background = 'transparent';
+                    }
+                  }}
+                >
+                  <span>📊</span>
+                  <span>Dashboard</span>
+                </div>
+              )}
 
-          {/* Laporan */}
-          {hasPermission(user, 'reports') && (
-            <div
-              onClick={() => router.push('/reports')}
-              style={{
-              padding: '12px 15px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              fontSize: '14px',
-              background: currentPage === 'reports' ? '#2563eb' : 'transparent',
-              color: currentPage === 'reports' ? 'white' : '#ccc',
-              fontWeight: currentPage === 'reports' ? '600' : 'normal',
-              transition: 'all 0.3s'
-            }}
-            onMouseEnter={(e) => {
-              if (currentPage !== 'reports') {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (currentPage !== 'reports') {
-                e.currentTarget.style.background = 'transparent';
-              }
-            }}
-          >
-            <span>📈</span>
-            <span>Laporan</span>
-          </div>
-          )}
+              {/* Laporan */}
+              {hasPermission(user, 'reports') && (
+                <div
+                  onClick={() => router.push('/reports')}
+                  style={{
+                  padding: '12px 15px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  fontSize: '14px',
+                  background: currentPage === 'reports' ? '#2563eb' : 'transparent',
+                  color: currentPage === 'reports' ? 'white' : '#ccc',
+                  fontWeight: currentPage === 'reports' ? '600' : 'normal',
+                  transition: 'all 0.3s'
+                }}
+                onMouseEnter={(e) => {
+                  if (currentPage !== 'reports') {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (currentPage !== 'reports') {
+                    e.currentTarget.style.background = 'transparent';
+                  }
+                }}
+              >
+                <span>📈</span>
+                <span>Laporan</span>
+              </div>
+              )}
 
-          {/* Riwayat */}
-          {hasPermission(user, 'history') && (
-            <div
-              onClick={() => router.push('/history')}
-              style={{
-                padding: '12px 15px',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                fontSize: '14px',
-                background: currentPage === 'history' ? '#2563eb' : 'transparent',
-                color: currentPage === 'history' ? 'white' : '#ccc',
-                fontWeight: currentPage === 'history' ? '600' : 'normal',
-                transition: 'all 0.3s'
-              }}
-              onMouseEnter={(e) => {
-                if (currentPage !== 'history') {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (currentPage !== 'history') {
-                  e.currentTarget.style.background = 'transparent';
-                }
-              }}
-            >
-              <span>📜</span>
-              <span>Riwayat</span>
-            </div>
+              {/* Riwayat */}
+              {hasPermission(user, 'history') && (
+                <div
+                  onClick={() => router.push('/history')}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    background: currentPage === 'history' ? '#2563eb' : 'transparent',
+                    color: currentPage === 'history' ? 'white' : '#ccc',
+                    fontWeight: currentPage === 'history' ? '600' : 'normal',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (currentPage !== 'history') {
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (currentPage !== 'history') {
+                      e.currentTarget.style.background = 'transparent';
+                    }
+                  }}
+                >
+                  <span>📜</span>
+                  <span>Riwayat</span>
+                </div>
+              )}
+            </>
           )}
 
           {/* Transaksi */}
