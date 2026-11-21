@@ -119,35 +119,37 @@ export default function Sidebar({ user, pendingCount = 0, currentPage = '' }) {
         {/* Menu Items */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
           {/* Dashboard */}
-          <div
-            onClick={() => router.push('/dashboard')}
-            style={{
-              padding: '12px 15px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              fontSize: '14px',
-              background: currentPage === 'dashboard' ? '#2563eb' : 'transparent',
-              color: currentPage === 'dashboard' ? 'white' : '#ccc',
-              fontWeight: currentPage === 'dashboard' ? '600' : 'normal',
-              transition: 'all 0.3s'
-            }}
-            onMouseEnter={(e) => {
-              if (currentPage !== 'dashboard') {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (currentPage !== 'dashboard') {
-                e.currentTarget.style.background = 'transparent';
-              }
-            }}
-          >
-            <span>📊</span>
-            <span>Dashboard</span>
-          </div>
+          {hasPermission(user, 'dashboard') && (
+            <div
+              onClick={() => router.push('/dashboard')}
+              style={{
+                padding: '12px 15px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                fontSize: '14px',
+                background: currentPage === 'dashboard' ? '#2563eb' : 'transparent',
+                color: currentPage === 'dashboard' ? 'white' : '#ccc',
+                fontWeight: currentPage === 'dashboard' ? '600' : 'normal',
+                transition: 'all 0.3s'
+              }}
+              onMouseEnter={(e) => {
+                if (currentPage !== 'dashboard') {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (currentPage !== 'dashboard') {
+                  e.currentTarget.style.background = 'transparent';
+                }
+              }}
+            >
+              <span>📊</span>
+              <span>Dashboard</span>
+            </div>
+          )}
 
           {/* Laporan */}
           {hasPermission(user, 'reports') && (
@@ -183,35 +185,37 @@ export default function Sidebar({ user, pendingCount = 0, currentPage = '' }) {
           )}
 
           {/* Riwayat */}
-          <div
-            onClick={() => router.push('/history')}
-            style={{
-              padding: '12px 15px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              fontSize: '14px',
-              background: currentPage === 'history' ? '#2563eb' : 'transparent',
-              color: currentPage === 'history' ? 'white' : '#ccc',
-              fontWeight: currentPage === 'history' ? '600' : 'normal',
-              transition: 'all 0.3s'
-            }}
-            onMouseEnter={(e) => {
-              if (currentPage !== 'history') {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (currentPage !== 'history') {
-                e.currentTarget.style.background = 'transparent';
-              }
-            }}
-          >
-            <span>📜</span>
-            <span>Riwayat</span>
-          </div>
+          {hasPermission(user, 'history') && (
+            <div
+              onClick={() => router.push('/history')}
+              style={{
+                padding: '12px 15px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                fontSize: '14px',
+                background: currentPage === 'history' ? '#2563eb' : 'transparent',
+                color: currentPage === 'history' ? 'white' : '#ccc',
+                fontWeight: currentPage === 'history' ? '600' : 'normal',
+                transition: 'all 0.3s'
+              }}
+              onMouseEnter={(e) => {
+                if (currentPage !== 'history') {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (currentPage !== 'history') {
+                  e.currentTarget.style.background = 'transparent';
+                }
+              }}
+            >
+              <span>📜</span>
+              <span>Riwayat</span>
+            </div>
+          )}
 
           {/* Transaksi */}
           <div

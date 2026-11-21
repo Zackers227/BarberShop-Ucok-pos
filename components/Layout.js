@@ -324,34 +324,36 @@ export default function Layout({ children, activePage = '' }) {
             {/* Menu Items */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
               {/* Dashboard */}
-              <div
-                onClick={() => {
-                  setSidebarOpen(false);
-                  router.push('/dashboard');
-                }}
-                style={{
-                  padding: '12px 15px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontSize: '14px',
-                  background: activePage === 'dashboard' ? '#2563eb' : 'transparent',
-                  color: activePage === 'dashboard' ? 'white' : '#ccc',
-                  fontWeight: activePage === 'dashboard' ? '600' : 'normal',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => {
-                  if (activePage !== 'dashboard') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  if (activePage !== 'dashboard') e.currentTarget.style.background = 'transparent';
-                }}
-              >
-                <span>📊</span>
-                <span>Dashboard</span>
-              </div>
+              {hasPermission(user, 'dashboard') && (
+                <div
+                  onClick={() => {
+                    setSidebarOpen(false);
+                    router.push('/dashboard');
+                  }}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    background: activePage === 'dashboard' ? '#2563eb' : 'transparent',
+                    color: activePage === 'dashboard' ? 'white' : '#ccc',
+                    fontWeight: activePage === 'dashboard' ? '600' : 'normal',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (activePage !== 'dashboard') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activePage !== 'dashboard') e.currentTarget.style.background = 'transparent';
+                  }}
+                >
+                  <span>📊</span>
+                  <span>Dashboard</span>
+                </div>
+              )}
 
               {/* Laporan */}
               {hasPermission(user, 'reports') && (
@@ -386,31 +388,33 @@ export default function Layout({ children, activePage = '' }) {
               )}
 
               {/* Riwayat */}
-              <div
-                onClick={() => { setSidebarOpen(false); router.push('/history'); }}
-                style={{
-                  padding: '12px 15px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  fontSize: '14px',
-                  background: activePage === 'history' ? '#2563eb' : 'transparent',
-                  color: activePage === 'history' ? 'white' : '#ccc',
-                  fontWeight: activePage === 'history' ? '600' : 'normal',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => {
-                  if (activePage !== 'history') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                }}
-                onMouseLeave={(e) => {
-                  if (activePage !== 'history') e.currentTarget.style.background = 'transparent';
-                }}
-              >
-                <span>📜</span>
-                <span>Riwayat</span>
-              </div>
+              {hasPermission(user, 'history') && (
+                <div
+                  onClick={() => { setSidebarOpen(false); router.push('/history'); }}
+                  style={{
+                    padding: '12px 15px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    fontSize: '14px',
+                    background: activePage === 'history' ? '#2563eb' : 'transparent',
+                    color: activePage === 'history' ? 'white' : '#ccc',
+                    fontWeight: activePage === 'history' ? '600' : 'normal',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (activePage !== 'history') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activePage !== 'history') e.currentTarget.style.background = 'transparent';
+                  }}
+                >
+                  <span>📜</span>
+                  <span>Riwayat</span>
+                </div>
+              )}
 
               {/* Transaksi */}
               <div
