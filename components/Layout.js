@@ -10,10 +10,19 @@ export default function Layout({ children, activePage = '' }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [menuVisible, setMenuVisible] = useState(true);
 
+  // Debug log untuk tracking user state
+  console.log('🔄 Layout render - User:', user?.username, 'Permissions:', user?.permissions);
+
   useEffect(() => {
     const userData = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
     if (userData) {
-      setUser(JSON.parse(userData));
+      try {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+        console.log('✅ User loaded:', parsedUser.username, 'Role:', parsedUser.role, 'Permissions:', parsedUser.permissions);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
     }
     
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -324,7 +333,11 @@ export default function Layout({ children, activePage = '' }) {
             {/* Menu Items */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
               {/* Dashboard */}
-              {hasPermission(user, 'dashboard') && (
+              {(() => {
+                const canAccessDashboard = hasPermission(user, 'dashboard');
+                console.log('🔍 Dashboard permission check:', { user: user?.username, role: user?.role, permissions: user?.permissions, canAccess: canAccessDashboard });
+                return canAccessDashboard;
+              })() && (
                 <div
                   onClick={() => {
                     setSidebarOpen(false);
@@ -388,7 +401,11 @@ export default function Layout({ children, activePage = '' }) {
               )}
 
               {/* Riwayat */}
-              {hasPermission(user, 'history') && (
+              {(() => {
+                const canAccessHistory = hasPermission(user, 'history');
+                console.log('🔍 History permission check:', { user: user?.username, role: user?.role, permissions: user?.permissions, canAccess: canAccessHistory });
+                return canAccessHistory;
+              })() && (
                 <div
                   onClick={() => { setSidebarOpen(false); router.push('/history'); }}
                   style={{
