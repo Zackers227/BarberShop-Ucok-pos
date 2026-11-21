@@ -13,6 +13,9 @@ export default function Layout({ children, activePage = '' }) {
   // Debug log untuk tracking user state
   console.log('🔄 Layout render - User:', user?.username, 'Permissions:', user?.permissions);
 
+  // Don't render menu items until user is loaded
+  const isUserLoaded = user !== null;
+
   useEffect(() => {
     const userData = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
     if (userData) {
@@ -332,105 +335,109 @@ export default function Layout({ children, activePage = '' }) {
 
             {/* Menu Items */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-              {/* Dashboard */}
-              {(() => {
-                const canAccessDashboard = hasPermission(user, 'dashboard');
-                console.log('🔍 Dashboard permission check:', { user: user?.username, role: user?.role, permissions: user?.permissions, canAccess: canAccessDashboard });
-                return canAccessDashboard;
-              })() && (
-                <div
-                  onClick={() => {
-                    setSidebarOpen(false);
-                    router.push('/dashboard');
-                  }}
-                  style={{
-                    padding: '12px 15px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    fontSize: '14px',
-                    background: activePage === 'dashboard' ? '#2563eb' : 'transparent',
-                    color: activePage === 'dashboard' ? 'white' : '#ccc',
-                    fontWeight: activePage === 'dashboard' ? '600' : 'normal',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (activePage !== 'dashboard') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (activePage !== 'dashboard') e.currentTarget.style.background = 'transparent';
-                  }}
-                >
-                  <span>📊</span>
-                  <span>Dashboard</span>
-                </div>
-              )}
+              {isUserLoaded && (
+                <>
+                  {/* Dashboard */}
+                  {(() => {
+                    const canAccessDashboard = hasPermission(user, 'dashboard');
+                    console.log('🔍 Dashboard permission check:', { user: user?.username, role: user?.role, permissions: user?.permissions, canAccess: canAccessDashboard });
+                    return canAccessDashboard;
+                  })() && (
+                    <div
+                      onClick={() => {
+                        setSidebarOpen(false);
+                        router.push('/dashboard');
+                      }}
+                      style={{
+                        padding: '12px 15px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        fontSize: '14px',
+                        background: activePage === 'dashboard' ? '#2563eb' : 'transparent',
+                        color: activePage === 'dashboard' ? 'white' : '#ccc',
+                        fontWeight: activePage === 'dashboard' ? '600' : 'normal',
+                        transition: 'all 0.3s'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (activePage !== 'dashboard') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        if (activePage !== 'dashboard') e.currentTarget.style.background = 'transparent';
+                      }}
+                    >
+                      <span>📊</span>
+                      <span>Dashboard</span>
+                    </div>
+                  )}
 
-              {/* Laporan */}
-              {hasPermission(user, 'reports') && (
-                <div
-                  onClick={() => {
-                    setSidebarOpen(false);
-                    router.push('/reports');
-                  }}
-                  style={{
-                    padding: '12px 15px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    fontSize: '14px',
-                    background: activePage === 'reports' ? '#2563eb' : 'transparent',
-                    color: activePage === 'reports' ? 'white' : '#ccc',
-                    fontWeight: activePage === 'reports' ? '600' : 'normal',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (activePage !== 'reports') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (activePage !== 'reports') e.currentTarget.style.background = 'transparent';
-                  }}
-                >
-                  <span>📈</span>
-                  <span>Laporan</span>
-                </div>
-              )}
+                  {/* Laporan */}
+                  {hasPermission(user, 'reports') && (
+                    <div
+                      onClick={() => {
+                        setSidebarOpen(false);
+                        router.push('/reports');
+                      }}
+                      style={{
+                        padding: '12px 15px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        fontSize: '14px',
+                        background: activePage === 'reports' ? '#2563eb' : 'transparent',
+                        color: activePage === 'reports' ? 'white' : '#ccc',
+                        fontWeight: activePage === 'reports' ? '600' : 'normal',
+                        transition: 'all 0.3s'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (activePage !== 'reports') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        if (activePage !== 'reports') e.currentTarget.style.background = 'transparent';
+                      }}
+                    >
+                      <span>📈</span>
+                      <span>Laporan</span>
+                    </div>
+                  )}
 
-              {/* Riwayat */}
-              {(() => {
-                const canAccessHistory = hasPermission(user, 'history');
-                console.log('🔍 History permission check:', { user: user?.username, role: user?.role, permissions: user?.permissions, canAccess: canAccessHistory });
-                return canAccessHistory;
-              })() && (
-                <div
-                  onClick={() => { setSidebarOpen(false); router.push('/history'); }}
-                  style={{
-                    padding: '12px 15px',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    fontSize: '14px',
-                    background: activePage === 'history' ? '#2563eb' : 'transparent',
-                    color: activePage === 'history' ? 'white' : '#ccc',
-                    fontWeight: activePage === 'history' ? '600' : 'normal',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseEnter={(e) => {
-                    if (activePage !== 'history') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (activePage !== 'history') e.currentTarget.style.background = 'transparent';
-                  }}
-                >
-                  <span>📜</span>
-                  <span>Riwayat</span>
-                </div>
+                  {/* Riwayat */}
+                  {(() => {
+                    const canAccessHistory = hasPermission(user, 'history');
+                    console.log('🔍 History permission check:', { user: user?.username, role: user?.role, permissions: user?.permissions, canAccess: canAccessHistory });
+                    return canAccessHistory;
+                  })() && (
+                    <div
+                      onClick={() => { setSidebarOpen(false); router.push('/history'); }}
+                      style={{
+                        padding: '12px 15px',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        fontSize: '14px',
+                        background: activePage === 'history' ? '#2563eb' : 'transparent',
+                        color: activePage === 'history' ? 'white' : '#ccc',
+                        fontWeight: activePage === 'history' ? '600' : 'normal',
+                        transition: 'all 0.3s'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (activePage !== 'history') e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                      }}
+                      onMouseLeave={(e) => {
+                        if (activePage !== 'history') e.currentTarget.style.background = 'transparent';
+                      }}
+                    >
+                      <span>📜</span>
+                      <span>Riwayat</span>
+                    </div>
+                  )}
+                </>
               )}
 
               {/* Transaksi */}
